@@ -6,7 +6,7 @@ An informational portal for art events across Europe. The calendar is the main p
 
 **Audience:** artists, designers, curators, and anyone with a general interest in the arts across Europe.
 
-**Data sources:** art event databases — specific integrations to be defined.
+**Data sources:** scraped daily from art event websites via a GitHub Actions cron job. Events are normalised and stored in a Neon (serverless Postgres) database using Drizzle ORM.
 
 ---
 
@@ -23,8 +23,11 @@ src/
 │   ├── mobile/             # Mobile-specific views (agenda)
 │   └── ui/                 # Shared UI primitives (shadcn/ui components)
 ├── data/                   # Mock event data (temporary, until real sources are wired)
+├── db/                     # Database layer (Drizzle schema + Neon connection)
 ├── lib/                    # Utility functions (calendar logic, cn helper)
 └── types/                  # Shared TypeScript types
+drizzle/                    # Auto-generated SQL migrations (drizzle-kit)
+scripts/                    # Scraper scripts (run via GitHub Actions cron)
 ```
 
 ---
@@ -39,6 +42,8 @@ src/
 | Styling | Tailwind CSS v4 |
 | Components | shadcn/ui, Base UI |
 | Icons | lucide-react |
+| Database | Neon (serverless Postgres) |
+| ORM | Drizzle ORM |
 | Deployment | Vercel |
 
 ### Constraints
@@ -46,6 +51,39 @@ src/
 - **SEO-first.** All content must be server-rendered and crawler-accessible (Google, GPT Search, etc.). Client-only rendering should be avoided for anything that carries indexable content.
 - **Mobile-first.** Layouts are designed for mobile and scaled up to desktop — not the other way around.
 - **No authentication at launch.** Email marketing subscription opt-in may be added later as the only user account surface.
+
+---
+
+## Database
+
+The app uses [Neon](https://neon.tech) (serverless Postgres) with [Drizzle ORM](https://orm.drizzle.team). The schema lives in [`src/db/schema.ts`](src/db/schema.ts).
+
+### Local setup
+
+1. Create a free project at [console.neon.tech](https://console.neon.tech)
+2. Copy the connection string and add it to `.env.local`:
+   ```
+   DATABASE_URL=postgres://...
+   ```
+3. Push the schema to your database:
+   ```bash
+   npm run db:push
+   ```
+
+### Migration workflow
+
+```bash
+npm run db:generate   # generate a new migration from schema changes
+npm run db:migrate    # apply pending migrations
+npm run db:push       # push schema directly (dev shortcut, skips migration files)
+npm run db:studio     # open Drizzle Studio to browse data locally
+```
+
+Migrations are stored in `drizzle/` and should be committed to the repo.
+
+### Event pipeline
+
+Events are scraped daily by a GitHub Actions cron job (scripts to be added in `scripts/`). The scraper upserts rows using `INSERT ... ON CONFLICT (id) DO UPDATE`, so re-running never creates duplicates. The deduplication key is a hash of `sourceUrl + title + startDate`.
 
 ---
 
