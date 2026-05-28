@@ -2,6 +2,7 @@
 
 import { CalendarFilters } from '@/types';
 import FilterBar from '@/components/filters/FilterBar';
+import { FilterSelect } from '@/components/ui/FilterSelect';
 
 interface Props {
   year: number;
@@ -41,20 +42,11 @@ export default function AppHeader({ year, onYearChange, filters, onFiltersChange
 
       {/* Year + filters row */}
       <div className="flex items-center justify-between px-6 pb-[1.5vh]">
-        <div className="relative inline-flex items-center gap-1">
-          <select
-            value={year}
-            onChange={(e) => onYearChange(Number(e.target.value))}
-            className="appearance-none text-sm font-bold text-zinc-900 bg-transparent cursor-pointer pr-4 focus:outline-none"
-          >
-            {YEARS.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-          <svg className="pointer-events-none absolute right-0 w-3 h-3 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
+        <FilterSelect
+          value={String(year)}
+          onChange={(v) => onYearChange(Number(v))}
+          options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
+        />
 
         <FilterBar filters={filters} onChange={onFiltersChange} />
       </div>

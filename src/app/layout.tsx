@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 const hostGrotesk = Host_Grotesk({
-  weight: ["600", "800"],
+  weight: ["400", "500", "600", "800"],
   subsets: ["latin"],
   variable: "--font-host-grotesk",
 });
