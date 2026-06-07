@@ -21,7 +21,7 @@ Retool (free plan) provides the CRUD UI over the Neon `events` table. The app li
 - **Revert to scraped:** set the relevant override to `NULL`. Show the scraped base value next to each override field so the editor can compare.
 
 ## Image-upload query
-- `POST https://<prod-domain>/api/admin/upload` (grab the prod domain from the Vercel dashboard).
+- `POST https://thebigartcalendar.vercel.app/api/admin/upload`
 - Headers: `Authorization: Bearer {{ retoolSecret }}`, `Content-Type: application/json`.
 - Body:
   ```json
