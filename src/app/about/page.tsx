@@ -31,7 +31,7 @@ export default function AboutPage() {
           </p>
 
           <p>
-            <strong style={{ fontWeight: 700 }}>The problem it solves:</strong> art lovers and creative professionals often miss events or find out too late to plan travel and book tickets at a good price. This portal gives them a single place to discover what's happening, plan ahead, and never miss an event that matters to them.
+            <strong style={{ fontWeight: 700 }}>The problem it solves:</strong> art lovers and creative professionals often miss events or find out too late to plan travel and book tickets at a good price. This portal gives them a single place to discover what&apos;s happening, plan ahead, and never miss an event that matters to them.
           </p>
 
           <p>

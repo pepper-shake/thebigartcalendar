@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Host_Grotesk, Oxygen } from "next/font/google";
 import RootHeader from "@/components/layout/RootHeader";
+import JsonLd from "@/components/seo/JsonLd";
+import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
+import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,8 +29,25 @@ const oxygen = Oxygen({
 });
 
 export const metadata: Metadata = {
-  title: "ArtCal — Art Events Calendar",
-  description: "Discover art events, exhibitions, fairs, auctions, and performances across Europe and the US",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Art Events Across Europe`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Art Events Across Europe`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Art Events Across Europe`,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
@@ -43,6 +63,8 @@ export default function RootLayout({
       <body className="h-full flex flex-col text-zinc-900" style={{ backgroundColor: '#FBFAF6' }}>
         <RootHeader />
         <div className="flex-1 min-h-0">{children}</div>
+        <JsonLd data={websiteJsonLd()} />
+        <JsonLd data={organizationJsonLd()} />
       </body>
     </html>
   );

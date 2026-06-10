@@ -10,10 +10,16 @@ interface Props {
 }
 
 const NAV_LINKS = [
-  { label: 'Calendar', href: '/' },
-  { label: 'About',    href: '/about' },
-  { label: 'Blog',     href: '/blog' },
-  { label: 'Contact',  href: '/contact' },
+  { label: 'Calendar',     href: '/' },
+  { label: 'Exhibitions',  href: '/exhibitions' },
+  { label: 'Art Fairs',    href: '/art-fairs' },
+  { label: 'Workshops',    href: '/workshops' },
+  { label: 'Performances', href: '/performances' },
+  { label: 'Auctions',     href: '/auctions' },
+  { label: 'Cities',       href: '/cities' },
+  { label: 'About',        href: '/about' },
+  { label: 'Blog',         href: '/blog' },
+  { label: 'Contact',      href: '/contact' },
 ];
 
 const linkStyle = {
@@ -72,7 +78,10 @@ export default function MenuPanel({ isOpen, onClose }: Props) {
       </button>
 
       {/* Nav links */}
-      <div className="flex flex-col items-end mt-8" style={{ gap: 17 }}>
+      <div
+        className="flex flex-col items-end mt-8 w-full flex-1 min-h-0 overflow-y-auto"
+        style={{ gap: 17 }}
+      >
         {NAV_LINKS.map(({ label, href }) => (
           <Link
             key={label}

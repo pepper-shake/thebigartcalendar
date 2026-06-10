@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { EventTypeBadge } from '@/components/calendar/EventTypeBadge';
+import { eventSlug } from '@/lib/slug';
 import { useEffect } from 'react';
 
 interface Props {
@@ -146,6 +148,16 @@ export default function EventModal({ event, onClose }: Props) {
               ))}
             </div>
           )}
+
+          {/* Full event page link */}
+          <div>
+            <Link
+              href={`/events/${eventSlug(event)}`}
+              className="inline-flex items-center gap-1 text-sm font-medium text-zinc-700 underline underline-offset-2 hover:text-zinc-900"
+            >
+              View full event page →
+            </Link>
+          </div>
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-2 border-t border-zinc-100">

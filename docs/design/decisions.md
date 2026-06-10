@@ -4,6 +4,7 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 
 | # | Decision | Status | Date |
 |---|---|---|---|
+| 0006 | SEO routing: per-event/city/type pages + sitemap/robots/JSON-LD, slugs derived in code | Accepted | 2026-06-10 |
 | 0005 | Apply schema changes with `db:push` (no migration files) | Accepted | 2026-06-07 |
 | 0004 | Blog content lives in a Postgres `posts` table (not a CMS) | Accepted | 2026-06-07 |
 | 0003 | Host images on Vercel Blob via an auth-gated upload route | Accepted | 2026-06-07 |
@@ -41,3 +42,9 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 **Decision:** Continue applying schema changes with `npm run db:push`. (`drizzle.config.ts` loads `.env.local`, so `DATABASE_URL` is available.)
 **Why:** `db:generate` + `db:migrate` with no baseline emits a full `CREATE TABLE` and fails against the existing live table. `db:push` diffs the schema against the live DB and applies only the delta.
 **Consequences:** No versioned/committed migration SQL. To switch to migrations later, baseline the existing schema first (see tech-debt). README's "migration workflow" section is aspirational, not current.
+
+## 0006 — SEO routing: per-event/city/type pages with derived slugs
+**Context:** The whole calendar lived under one client-rendered route (`/`), so individual events, cities, and event types had no indexable URLs — the core SEO asset for an events portal was missing.
+**Decision:** Add server-rendered routes — `/events/[slug]`, `/cities/[city]` (+ `/cities` index), and five type hubs (`/exhibitions`, `/art-fairs`, `/workshops`, `/performances`, `/auctions`) — plus `metadataBase`, per-page `generateMetadata` (canonical + OpenGraph), schema.org JSON-LD (`Event`/`ItemList`/`BreadcrumbList`/`WebSite`/`Organization`), `sitemap.ts`, and `robots.ts`. Event slugs are **derived in code** (`title-city-<id8>`), not stored.
+**Why:** Per-event pages with structured data are what earn event rich results and rank location/type queries. Deriving slugs from the stable dedup-hash `id` avoids a schema change (and the scraper/curation landmines) while staying unique and stable. All selectors ([src/lib/events.ts](../../src/lib/events.ts)) reuse the `getAllEvents → toArtEvent` chokepoint, so curation (status + overrides) is honored — no second read path.
+**Consequences:** SEO routes are `force-dynamic` (read the DB per request → reflect the daily scrape + curation edits without a redeploy). Hubs and the sitemap list only ongoing/upcoming events (fresh, no thin/stale pages); event pages still resolve past events if linked. Slugs change only if the `id` changes (i.e. a different event). Public origin via `NEXT_PUBLIC_SITE_URL` (fallback `https://thebigartcalendar.com`) — custom-domain steps in [references/domain-setup.md](../references/domain-setup.md). Map: [ARCHITECTURE.md](../ARCHITECTURE.md) §SEO & routing.

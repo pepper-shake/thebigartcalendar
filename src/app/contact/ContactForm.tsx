@@ -23,7 +23,7 @@ export default function ContactForm() {
         className="text-black"
         style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
       >
-        Thank you — we'll be in touch soon.
+        Thank you — we&apos;ll be in touch soon.
       </p>
     );
   }

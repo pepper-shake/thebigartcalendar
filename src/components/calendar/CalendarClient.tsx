@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { ArtEvent, CalendarFilters } from '@/types';
 import AppHeader from '@/components/layout/AppHeader';
@@ -18,7 +18,7 @@ interface Props {
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
 export default function CalendarClient({ events, cities }: Props) {
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -61,24 +61,27 @@ export default function CalendarClient({ events, cities }: Props) {
     return [...new Set(dates)].sort();
   }, [monthEvents, year, month]);
 
-  // Auto-select first event date when month/filters change
-  useEffect(() => {
-    if (eventDates.length === 0) { setSelectedDate(null); return; }
-    if (selectedDate && eventDates.includes(selectedDate)) return;
+  // The date to show: keep the user's explicit selection while it's still a
+  // valid event date this month, otherwise fall back to the current day-of-month
+  // (when it has events) or the first event date. Derived during render rather
+  // than pushed into state from an effect, to avoid cascading renders.
+  const effectiveSelectedDate = useMemo<string | null>(() => {
+    if (eventDates.length === 0) return null;
+    if (selectedDate && eventDates.includes(selectedDate)) return selectedDate;
     const todayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    setSelectedDate(eventDates.includes(todayStr) ? todayStr : eventDates[0]);
-  }, [eventDates]);
+    return eventDates.includes(todayStr) ? todayStr : eventDates[0];
+  }, [eventDates, selectedDate, year, month, today]);
 
   // Events for the selected date
   const selectedEvents = useMemo(() => {
-    if (!selectedDate) return [];
+    if (!effectiveSelectedDate) return [];
     const firstOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
     return monthEvents.filter((e) => {
       const [y, m] = e.date.split('-').map(Number);
       const effectiveDate = y === year && m - 1 === month ? e.date : firstOfMonth;
-      return effectiveDate === selectedDate;
+      return effectiveDate === effectiveSelectedDate;
     });
-  }, [monthEvents, selectedDate, year, month]);
+  }, [monthEvents, effectiveSelectedDate, year, month]);
 
   const handleMonthChange = (m: number) => {
     setMonth(m);
@@ -112,7 +115,7 @@ export default function CalendarClient({ events, cities }: Props) {
           onScroll={handleScroll}
         >
           <MonthStrip month={month} onChange={handleMonthChange} />
-          <DateStrip eventDates={eventDates} selectedDate={selectedDate} onChange={setSelectedDate} />
+          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
 
           <main className="px-6 py-4">
             {selectedEvents.length === 0 ? (
@@ -156,7 +159,7 @@ export default function CalendarClient({ events, cities }: Props) {
           onYearChange={setYear}
           month={month}
           onMonthChange={handleMonthChange}
-          selectedDate={selectedDate}
+          selectedDate={effectiveSelectedDate}
           onSelectedDateChange={setSelectedDate}
           eventDates={eventDates}
           selectedEvents={selectedEvents}

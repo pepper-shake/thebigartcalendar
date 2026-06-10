@@ -18,13 +18,14 @@ Start with **[AGENTS.md](AGENTS.md)** (how to build/run, constraints, landmines)
 
 ```
 src/
-├── app/                    # Next.js App Router — pages and layouts
+├── app/                    # App Router — calendar, /events/[slug], /cities, type hubs, sitemap, robots
 ├── components/
 │   ├── calendar/           # Calendar UI (grid, date strip, month strip, badges)
 │   ├── events/             # Event cards, modals, and preview components
 │   ├── filters/            # Filter bar
 │   ├── layout/             # App-wide layout (header)
 │   ├── mobile/             # Mobile-specific views (agenda)
+│   ├── seo/                # SEO pages (event/city/type detail), breadcrumbs, JSON-LD
 │   └── ui/                 # Shared UI primitives (shadcn/ui components)
 ├── data/                   # Mock event data (temporary, until real sources are wired)
 ├── db/                     # Database layer (Drizzle schema + Neon connection)
@@ -68,6 +69,8 @@ The app uses [Neon](https://neon.tech) (serverless Postgres) with [Drizzle ORM](
 2. Copy the connection string and add it to `.env.local`:
    ```
    DATABASE_URL=postgres://...
+   # Public site origin for SEO (canonical URLs, sitemap, JSON-LD); optional locally.
+   NEXT_PUBLIC_SITE_URL=https://thebigartcalendar.com
    ```
 3. Push the schema to your database:
    ```bash
