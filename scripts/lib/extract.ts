@@ -43,7 +43,10 @@ export async function extractEventsFromHtml(
 
   const response = await anthropic.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 4096,
+    // 4096 was too small for sources with many events — a full JSON array of
+    // ~12+ events overflowed it and the truncated response failed to parse.
+    // Haiku 4.5 allows up to 64K; 8192 is plenty of headroom here.
+    max_tokens: 8192,
     system: `You are an event data extractor for an art calendar. Extract upcoming art events from website text and return a JSON array.
 
 Today is ${today}. Only include events whose end date (or start date if no end date) is on or after today. Skip past events entirely.
@@ -99,6 +102,11 @@ Return ONLY valid JSON — a single array, no markdown, no explanation. Return [
 
   return drafts
     .filter((d) => d.title && d.startDate && d.sourceUrl)
+    // Enforce the "no past events" rule deterministically — the model is asked
+    // to drop past events but occasionally keeps a recently-passed one. Compare
+    // the event's end date (or start date) against today; ISO YYYY-MM-DD strings
+    // sort lexicographically, so a plain string compare is correct.
+    .filter((d) => ((d.endDate as string | null) ?? (d.startDate as string)) >= today)
     .map((d) => ({
       id: makeId(d.sourceUrl as string, d.title as string, d.startDate as string),
       title: d.title as string,
