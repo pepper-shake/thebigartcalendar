@@ -12,7 +12,11 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx scripts/seed.ts",
-    "scrape": "tsx scripts/run-all.ts"
+    "scrape": "tsx scripts/run-all.ts",
+    "radar": "tsx scripts/ig-radar/run.ts",
+    "radar:seed": "tsx scripts/ig-radar/seed-accounts.ts",
+    "radar:gate": "tsx scripts/ig-radar/gate-run.ts",
+    "radar:extract": "tsx scripts/ig-radar/extract-run.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.102.0",
