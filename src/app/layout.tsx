@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Host_Grotesk, Oxygen } from "next/font/google";
 import RootHeader from "@/components/layout/RootHeader";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import JsonLd from "@/components/seo/JsonLd";
 import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
@@ -65,6 +66,7 @@ export default function RootLayout({
         <div className="flex-1 min-h-0">{children}</div>
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />
+        <GoogleAnalytics />
       </body>
     </html>
   );
