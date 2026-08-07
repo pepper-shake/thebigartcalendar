@@ -124,8 +124,11 @@ export default function CalendarClient({ events, cities }: Props) {
               </div>
             ) : (
               <div
-                className="grid gap-4"
-                style={{ gridTemplateColumns: `repeat(${Math.min(selectedEvents.length, 4)}, 1fr)` }}
+                className="grid gap-4 justify-items-start grid-cols-[repeat(var(--cols-tablet),minmax(0,1fr))] lg:grid-cols-[repeat(var(--cols-web),minmax(0,1fr))]"
+                style={{
+                  '--cols-web': Math.min(selectedEvents.length, 4),
+                  '--cols-tablet': Math.min(selectedEvents.length, 2),
+                } as React.CSSProperties}
               >
                 {selectedEvents.map((event) => (
                   <EventCard key={event.id} event={event} onClick={setModalEvent} />
