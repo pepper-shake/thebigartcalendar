@@ -3,6 +3,7 @@
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
 import { formatDateShort } from '@/lib/format';
+import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 
 const CARD_COLORS = ['#E06927', '#EFCEEE', '#C8CC17', '#BFDBD8'];
 
@@ -103,6 +104,7 @@ export default function EventCard({ event, onClick, fullWidth = false }: Props) 
             >
               {event.startTime}
               {event.city ? ` ${event.city}` : ''}
+              <ViewerLocalTime event={event} />
             </p>
           )}
         </div>
