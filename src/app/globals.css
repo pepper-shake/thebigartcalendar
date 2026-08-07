@@ -11,6 +11,22 @@
   display: none;
 }
 
+/* Event-card grid: adaptive column cap — up to 2 cards per row on tablet,
+   4 on web. The per-render counts come from --cols-tablet / --cols-web set
+   inline on the element (min of the event count and the cap). Plain CSS so
+   the responsive columns can't be dropped by Tailwind's class scanner. */
+.event-grid {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  grid-template-columns: repeat(var(--cols-tablet, 1), minmax(0, 1fr));
+}
+@media (min-width: 1024px) {
+  .event-grid {
+    grid-template-columns: repeat(var(--cols-web, 1), minmax(0, 1fr));
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

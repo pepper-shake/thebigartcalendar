@@ -124,7 +124,7 @@ export default function CalendarClient({ events, cities }: Props) {
               </div>
             ) : (
               <div
-                className="grid gap-4 justify-items-start grid-cols-[repeat(var(--cols-tablet),minmax(0,1fr))] lg:grid-cols-[repeat(var(--cols-web),minmax(0,1fr))]"
+                className="event-grid"
                 style={{
                   '--cols-web': Math.min(selectedEvents.length, 4),
                   '--cols-tablet': Math.min(selectedEvents.length, 2),
