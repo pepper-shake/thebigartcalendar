@@ -40,12 +40,15 @@ export default function MonthStrip({ month, onChange, scrollable = false }: Prop
             key={i}
             ref={isActive ? activeRef : null}
             onClick={() => onChange(i)}
-            className="flex-none transition-colors"
+            aria-current={isActive ? 'true' : undefined}
+            className="flex-none transition-all"
             style={{
               fontFamily: 'var(--font-oxygen)',
               fontWeight: isActive ? 700 : 300,
               fontSize: 24,
               color: '#000000',
+              paddingBottom: 2,
+              borderBottom: `2px solid ${isActive ? '#000000' : 'transparent'}`,
             }}
           >
             {name}

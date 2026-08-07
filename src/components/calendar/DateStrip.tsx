@@ -55,12 +55,15 @@ export default function DateStrip({ eventDates, selectedDate, onChange, fullDayN
             key={dateStr}
             ref={isActive ? activeRef : null}
             onClick={() => onChange(dateStr)}
-            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap transition-colors"
+            aria-current={isActive ? 'date' : undefined}
+            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap transition-all"
             style={{
               fontFamily: 'var(--font-oxygen)',
               fontWeight: isActive ? 700 : 300,
               fontSize: 18,
               color: '#000000',
+              paddingBottom: 2,
+              borderBottom: `2px solid ${isActive ? '#000000' : 'transparent'}`,
             }}
           >
             <span>{d}</span>
