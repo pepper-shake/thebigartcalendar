@@ -3,18 +3,9 @@
 import { useState } from 'react';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
+import { getCardColor } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import ViewerLocalTime from '@/components/events/ViewerLocalTime';
-
-const CARD_COLORS = ['#E06927', '#EFCEEE', '#C8CC17', '#BFDBD8'];
-
-function getCardColor(id: string): string {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 31 + id.charCodeAt(i)) & 0xffffffff;
-  }
-  return CARD_COLORS[Math.abs(hash) % CARD_COLORS.length];
-}
 
 function placeLabel(event: ArtEvent): string {
   const parts = [event.city, event.country].filter(Boolean);

@@ -28,6 +28,7 @@ interface Props {
   onSelectedDateChange: (d: string) => void;
   eventDates: string[];
   selectedEvents: ArtEvent[];
+  orderedEvents: ArtEvent[];
   filters: CalendarFilters;
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
@@ -42,6 +43,7 @@ export default function MobileAgenda({
   onSelectedDateChange,
   eventDates,
   selectedEvents,
+  orderedEvents,
   filters,
   onFiltersChange,
   cities,
@@ -134,7 +136,12 @@ export default function MobileAgenda({
         <ArrowUp className="size-6 text-white" strokeWidth={2} />
       </button>
 
-      <EventModal event={modalEvent} onClose={() => setModalEvent(null)} />
+      <EventModal
+        event={modalEvent}
+        events={orderedEvents}
+        onClose={() => setModalEvent(null)}
+        onNavigate={setModalEvent}
+      />
     </div>
   );
 }

@@ -83,6 +83,18 @@ export default function CalendarClient({ events, cities }: Props) {
     });
   }, [monthEvents, effectiveSelectedDate, year, month]);
 
+  // Full list, chronologically ordered — drives the modal's prev/next arrows.
+  const orderedEvents = useMemo(
+    () =>
+      [...events].sort(
+        (a, b) =>
+          a.date.localeCompare(b.date) ||
+          (a.startTime ?? '').localeCompare(b.startTime ?? '') ||
+          a.title.localeCompare(b.title),
+      ),
+    [events],
+  );
+
   const handleMonthChange = (m: number) => {
     setMonth(m);
     setSelectedDate(null);
@@ -146,7 +158,12 @@ export default function CalendarClient({ events, cities }: Props) {
           <ArrowUp className="size-6 text-white" strokeWidth={2} />
         </button>
 
-        <EventModal event={modalEvent} onClose={() => setModalEvent(null)} />
+        <EventModal
+          event={modalEvent}
+          events={orderedEvents}
+          onClose={() => setModalEvent(null)}
+          onNavigate={setModalEvent}
+        />
       </div>
 
       {/* ── Mobile ──────────────────────────────────────── */}
@@ -160,6 +177,7 @@ export default function CalendarClient({ events, cities }: Props) {
           onSelectedDateChange={setSelectedDate}
           eventDates={eventDates}
           selectedEvents={selectedEvents}
+          orderedEvents={orderedEvents}
           filters={filters}
           onFiltersChange={setFilters}
           cities={cities}
