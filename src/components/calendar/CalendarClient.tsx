@@ -123,13 +123,7 @@ export default function CalendarClient({ events, cities }: Props) {
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
               </div>
             ) : (
-              <div
-                className="event-grid"
-                style={{
-                  '--cols-web': Math.min(selectedEvents.length, 4),
-                  '--cols-tablet': Math.min(selectedEvents.length, 2),
-                } as React.CSSProperties}
-              >
+              <div className="event-grid">
                 {selectedEvents.map((event) => (
                   <EventCard key={event.id} event={event} onClick={setModalEvent} />
                 ))}

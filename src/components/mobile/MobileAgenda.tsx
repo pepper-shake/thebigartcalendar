@@ -113,7 +113,6 @@ export default function MobileAgenda({
                   key={event.id}
                   event={event}
                   onClick={setModalEvent}
-                  fullWidth
                 />
               ))}
             </div>

@@ -31,10 +31,9 @@ const metaStyle: React.CSSProperties = {
 interface Props {
   event: ArtEvent;
   onClick: (e: ArtEvent) => void;
-  fullWidth?: boolean;
 }
 
-export default function EventCard({ event, onClick, fullWidth = false }: Props) {
+export default function EventCard({ event, onClick }: Props) {
   const bgColor = getCardColor(event.id);
   const [hovered, setHovered] = useState(false);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
@@ -46,7 +45,7 @@ export default function EventCard({ event, onClick, fullWidth = false }: Props) 
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
-      className={`w-full text-left focus:outline-none ${fullWidth ? '' : 'max-w-[346px]'}`}
+      className="w-full text-left focus:outline-none"
     >
       <div
         className="w-full flex flex-col items-start"
