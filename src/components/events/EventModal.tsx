@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Heart, Copy, Share2, Minus, ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { ArtEvent } from '@/types';
@@ -63,6 +63,42 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
       document.body.style.overflow = '';
     };
   }, [event]);
+
+  // ── Make the modal behave like a page ──
+  // While open, reflect the event's own URL so it is shareable and the back
+  // button closes it. Next 16 integrates pushState/replaceState with its router.
+  const returnUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!event) return;
+    const url = `/events/${eventSlug(event)}`;
+    if (returnUrlRef.current === null) {
+      // Opening: remember where we came from, add one history entry.
+      returnUrlRef.current = window.location.pathname + window.location.search + window.location.hash;
+      window.history.pushState(null, '', url);
+    } else {
+      // Navigating between events: update in place, no new entry.
+      window.history.replaceState(null, '', url);
+    }
+  }, [event]);
+
+  useEffect(() => {
+    // Closing (via button/Esc/backdrop): restore the original URL.
+    if (event || returnUrlRef.current === null) return;
+    window.history.replaceState(null, '', returnUrlRef.current);
+    returnUrlRef.current = null;
+  }, [event]);
+
+  useEffect(() => {
+    if (!event) return;
+    const onPop = () => {
+      // Back/forward already changed the URL; just close without re-restoring.
+      returnUrlRef.current = null;
+      onClose();
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [event, onClose]);
 
   if (!event || typeof document === 'undefined') return null;
 
@@ -202,7 +238,7 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
     ) : null;
 
   const content = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-stretch md:items-center justify-center p-0 md:p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Desktop: floating side arrows */}
@@ -234,7 +270,7 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
       {/* Modal */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-[1123px] max-h-[95vh] md:max-h-[90vh] overflow-y-auto rounded-[24px] md:rounded-[32px]"
+        className="relative z-10 w-full md:max-w-[1123px] h-full md:h-auto md:max-h-[90vh] overflow-y-auto rounded-none md:rounded-[32px]"
         style={{ backgroundColor: bgColor }}
       >
         <div className="p-6 md:p-[42px]">
