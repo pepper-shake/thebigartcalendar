@@ -1,6 +1,8 @@
 'use client';
 
 import { ArtEvent } from '@/types';
+import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
+import { formatDateShort } from '@/lib/format';
 
 const CARD_COLORS = ['#E06927', '#EFCEEE', '#C8CC17', '#BFDBD8'];
 
@@ -12,6 +14,11 @@ function getCardColor(id: string): string {
   return CARD_COLORS[Math.abs(hash) % CARD_COLORS.length];
 }
 
+function placeLabel(event: ArtEvent): string {
+  const parts = [event.city, event.country].filter(Boolean);
+  return parts.length ? parts.join(', ') : 'Virtual';
+}
+
 interface Props {
   event: ArtEvent;
   onClick: (e: ArtEvent) => void;
@@ -20,11 +27,12 @@ interface Props {
 
 export default function EventCard({ event, onClick, fullWidth = false }: Props) {
   const bgColor = getCardColor(event.id);
+  const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
   return (
     <button
       onClick={() => onClick(event)}
-      className="w-full max-w-[346px] text-left"
+      className={`w-full text-left ${fullWidth ? '' : 'max-w-[346px]'}`}
     >
       <div
         className="w-full flex flex-col"
@@ -37,7 +45,26 @@ export default function EventCard({ event, onClick, fullWidth = false }: Props) 
           maxHeight: 460,
         }}
       >
-        {/* Title */}
+        {/* Event type pill */}
+        <div className="flex-none">
+          <span
+            className="inline-block"
+            style={{
+              backgroundColor: '#FBFAF6',
+              color: '#000',
+              fontFamily: 'var(--font-host-grotesk)',
+              fontWeight: 600,
+              fontSize: 16,
+              lineHeight: '20px',
+              padding: '10px 20px',
+              borderRadius: 9999,
+            }}
+          >
+            {typeLabel}
+          </span>
+        </div>
+
+        {/* Title — max 2 lines */}
         <h3
           className="text-black line-clamp-2 flex-none"
           style={{
@@ -51,7 +78,36 @@ export default function EventCard({ event, onClick, fullWidth = false }: Props) 
           {event.title}
         </h3>
 
-        {/* Image — grows to fill available space */}
+        {/* Place · date, then time (event-local; viewer's local time added in Phase B) */}
+        <div className="flex-none flex flex-col" style={{ gap: 4 }}>
+          <p
+            className="text-black"
+            style={{
+              fontFamily: 'var(--font-host-grotesk)',
+              fontWeight: 500,
+              fontSize: 18,
+              lineHeight: '24px',
+            }}
+          >
+            {placeLabel(event)} · {formatDateShort(event.date)}
+          </p>
+          {event.startTime && (
+            <p
+              className="text-black"
+              style={{
+                fontFamily: 'var(--font-host-grotesk)',
+                fontWeight: 500,
+                fontSize: 18,
+                lineHeight: '24px',
+              }}
+            >
+              {event.startTime}
+              {event.city ? ` ${event.city}` : ''}
+            </p>
+          )}
+        </div>
+
+        {/* Image — grows to fill remaining space */}
         <div className="flex-1 min-h-0 overflow-hidden" style={{ borderRadius: 12 }}>
           {event.image ? (
             <img
@@ -63,36 +119,6 @@ export default function EventCard({ event, onClick, fullWidth = false }: Props) 
             <div className="w-full h-full bg-black/10" />
           )}
         </div>
-
-        {/* Description */}
-        <p
-          className="flex-none text-black"
-          style={{
-            fontFamily: 'var(--font-oxygen)',
-            fontWeight: 300,
-            fontSize: 16,
-            lineHeight: '24px',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          {event.description}
-        </p>
-
-        {/* Details link */}
-        <span
-          className="flex-none text-black hover:underline underline-offset-2"
-          style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 600,
-            fontSize: 18,
-            lineHeight: '24px',
-          }}
-        >
-          Details
-        </span>
       </div>
     </button>
   );
