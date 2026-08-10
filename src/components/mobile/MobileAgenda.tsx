@@ -8,7 +8,6 @@ import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
-import EventModal from '@/components/events/EventModal';
 
 const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
 
@@ -28,7 +27,6 @@ interface Props {
   onSelectedDateChange: (d: string) => void;
   eventDates: string[];
   selectedEvents: ArtEvent[];
-  orderedEvents: ArtEvent[];
   filters: CalendarFilters;
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
@@ -43,12 +41,10 @@ export default function MobileAgenda({
   onSelectedDateChange,
   eventDates,
   selectedEvents,
-  orderedEvents,
   filters,
   onFiltersChange,
   cities,
 }: Props) {
-  const [modalEvent, setModalEvent] = useState<ArtEvent | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -111,11 +107,7 @@ export default function MobileAgenda({
           ) : (
             <div className="flex flex-col gap-6">
               {selectedEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onClick={setModalEvent}
-                />
+                <EventCard key={event.id} event={event} />
               ))}
             </div>
           )}
@@ -135,13 +127,6 @@ export default function MobileAgenda({
       >
         <ArrowUp className="size-6 text-white" strokeWidth={2} />
       </button>
-
-      <EventModal
-        event={modalEvent}
-        events={orderedEvents}
-        onClose={() => setModalEvent(null)}
-        onNavigate={setModalEvent}
-      />
     </div>
   );
 }

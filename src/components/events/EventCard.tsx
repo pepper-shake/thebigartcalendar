@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
 import { getCardColor } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
+import { eventSlug } from '@/lib/slug';
 import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 
 function placeLabel(event: ArtEvent): string {
@@ -21,22 +23,22 @@ const metaStyle: React.CSSProperties = {
 
 interface Props {
   event: ArtEvent;
-  onClick: (e: ArtEvent) => void;
 }
 
-export default function EventCard({ event, onClick }: Props) {
+export default function EventCard({ event }: Props) {
   const bgColor = getCardColor(event.id);
   const [hovered, setHovered] = useState(false);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
   return (
-    <button
-      onClick={() => onClick(event)}
+    <Link
+      href={`/events/${eventSlug(event)}`}
+      prefetch={false}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
-      className="w-full text-left focus:outline-none"
+      className="block w-full text-left focus:outline-none"
     >
       <div
         className="w-full flex flex-col items-start"
@@ -112,6 +114,6 @@ export default function EventCard({ event, onClick }: Props) {
           )}
         </div>
       </div>
-    </button>
+    </Link>
   );
 }

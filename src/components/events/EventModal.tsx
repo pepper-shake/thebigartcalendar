@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { Heart, Copy, Share2, Minus, ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { Minus, ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
-import { getCardColor, tint } from '@/lib/eventColor';
+import { getCardColor, tint, hexToRgba } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
 import ViewerLocalTime from '@/components/events/ViewerLocalTime';
@@ -31,7 +30,6 @@ function placeLabel(e: ArtEvent): string {
 
 export default function EventModal({ event, events = [], onClose, onNavigate }: Props) {
   // Track by id so like/copied reset automatically when the shown event changes.
-  const [likedId, setLikedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const index = event ? events.findIndex((e) => e.id === event.id) : -1;
@@ -64,48 +62,13 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
     };
   }, [event]);
 
-  // ── Make the modal behave like a page ──
-  // While open, reflect the event's own URL so it is shareable and the back
-  // button closes it. Next 16 integrates pushState/replaceState with its router.
-  const returnUrlRef = useRef<string | null>(null);
+  if (!event) return null;
 
-  useEffect(() => {
-    if (!event) return;
-    const url = `/events/${eventSlug(event)}`;
-    if (returnUrlRef.current === null) {
-      // Opening: remember where we came from, add one history entry.
-      returnUrlRef.current = window.location.pathname + window.location.search + window.location.hash;
-      window.history.pushState(null, '', url);
-    } else {
-      // Navigating between events: update in place, no new entry.
-      window.history.replaceState(null, '', url);
-    }
-  }, [event]);
-
-  useEffect(() => {
-    // Closing (via button/Esc/backdrop): restore the original URL.
-    if (event || returnUrlRef.current === null) return;
-    window.history.replaceState(null, '', returnUrlRef.current);
-    returnUrlRef.current = null;
-  }, [event]);
-
-  useEffect(() => {
-    if (!event) return;
-    const onPop = () => {
-      // Back/forward already changed the URL; just close without re-restoring.
-      returnUrlRef.current = null;
-      onClose();
-    };
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
-  }, [event, onClose]);
-
-  if (!event || typeof document === 'undefined') return null;
-
-  const liked = likedId === event.id;
   const copied = copiedId === event.id;
   const cardColor = getCardColor(event.id);
   const bgColor = tint(cardColor, 0.8);
+  // Header fades to transparent so scrolling content shows through beneath it.
+  const headerGradient = `linear-gradient(to bottom, ${bgColor} 60%, ${hexToRgba(bgColor, 0)} 100%)`;
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
   const eventUrl =
@@ -123,16 +86,8 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
     }
   };
 
-  const handleShare = async () => {
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({ title: event.title, url: eventUrl });
-      } catch {
-        /* share cancelled */
-      }
-    } else {
-      handleCopy();
-    }
+  const openInNewTab = () => {
+    window.open(eventUrl, '_blank', 'noopener,noreferrer');
   };
 
   // ── Shared building blocks (rendered in both desktop and mobile layouts) ──
@@ -270,24 +225,22 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
       {/* Modal */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full md:max-w-[1123px] h-full md:h-auto md:max-h-[90vh] overflow-y-auto rounded-none md:rounded-[32px]"
+        className="relative z-10 w-full md:max-w-[1123px] h-full md:h-auto md:max-h-[calc(100vh-32px)] overflow-y-auto md:overflow-hidden rounded-none md:rounded-[32px] md:flex md:flex-col"
         style={{ backgroundColor: bgColor }}
       >
-        <div className="p-6 md:p-[42px]">
-          {/* Header: actions + close */}
-          <div className="flex items-center justify-between">
+        <div className="p-6 md:p-[42px] md:flex md:flex-col md:flex-1 md:min-h-0">
+          {/* Header: actions + close. Pinned on both web (flex-none) and mobile
+              (sticky), with a background so content scrolls under it. */}
+          <div
+            className="sticky top-0 z-20 flex items-center justify-between -mx-6 px-6 -mt-6 pt-[62px] pb-8 md:relative md:z-10 md:flex-none md:-mx-[42px] md:px-[42px] md:mt-0 md:pt-0 md:pb-0"
+            style={{ background: headerGradient }}
+          >
             <div className="flex items-center gap-3">
-              <IconButton label={liked ? 'Unlike' : 'Like'} onClick={() => setLikedId(liked ? null : event.id)}>
-                <Heart
-                  className="w-6 h-6"
-                  style={{ fill: liked ? '#e0245e' : 'transparent', color: liked ? '#e0245e' : '#000' }}
-                />
-              </IconButton>
               <IconButton label="Copy link" onClick={handleCopy}>
-                {copied ? <Check className="w-6 h-6 text-black" /> : <Copy className="w-6 h-6 text-black" />}
+                {copied ? <Check className="w-6 h-6 text-black" /> : <CopyIcon />}
               </IconButton>
-              <IconButton label="Share" onClick={handleShare}>
-                <Share2 className="w-6 h-6 text-black" />
+              <IconButton label="Open event page in a new tab" onClick={openInNewTab}>
+                <RedirectIcon />
               </IconButton>
             </div>
             <button onClick={onClose} aria-label="Close" className="w-[54px] h-[54px] flex items-center justify-center">
@@ -308,13 +261,20 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
             </NavButton>
           </div>
 
-          {/* Desktop layout: two columns (About | image + meta + tags) */}
-          <div className="hidden md:flex md:gap-4 mt-8">
-            <div className="md:w-[455px] md:shrink-0">{aboutEl}</div>
-            <div className="md:flex-1 md:min-w-0">
+          {/* Desktop layout: About (scrolls) | image + meta + tags. Spacing per
+              Figma 199:1991 — 32px header→body, ~19px between right-column blocks,
+              455px left column with 432px text (23px inset), 16px column gap. */}
+          <div className="hidden md:flex md:flex-1 md:min-h-0 md:gap-4 mt-8">
+            <div
+              key={event.id}
+              className="md:w-[455px] md:shrink-0 md:min-h-0 md:overflow-y-auto md:pr-[23px]"
+            >
+              {aboutEl}
+            </div>
+            <div className="md:flex-1 md:min-w-0 md:min-h-0 md:overflow-y-auto">
               {renderImage('568 / 438')}
               <div className="mt-5">{titleEl}</div>
-              <div className="mt-4">{metaLines(true)}</div>
+              <div className="mt-5">{metaLines(true)}</div>
               {tagsEl && <div className="mt-5">{tagsEl}</div>}
             </div>
           </div>
@@ -332,7 +292,7 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
     </div>
   );
 
-  return createPortal(content, document.body);
+  return content;
 }
 
 function IconButton({
@@ -348,11 +308,80 @@ function IconButton({
     <button
       onClick={onClick}
       aria-label={label}
-      className="w-11 h-11 rounded-full flex items-center justify-center transition-colors hover:brightness-95"
-      style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
+      className="flex items-center justify-center rounded-[4px] p-[10px] transition-colors hover:brightness-95"
+      style={{ backgroundColor: 'rgba(251,250,246,0.7)' }}
     >
       {children}
     </button>
+  );
+}
+
+// Icons inlined from Figma (node 205:2747 copy, 202:2219 redirect), preserving
+// the exact paths and positioning.
+function CopyIcon() {
+  return (
+    <span className="relative block w-6 h-6" aria-hidden>
+      <span className="absolute" style={{ inset: '19.79% 36.46% 36.46% 19.79%' }}>
+        <span className="absolute" style={{ inset: '-9.52%' }}>
+          <svg viewBox="0 0 12.5 12.5" fill="none" preserveAspectRatio="none" className="block w-full h-full">
+            <path
+              d="M2.75 11.5C1.7835 11.5 1 10.7165 1 9.75V3C1 1.89543 1.89543 1 3 1H9.75C10.7165 1 11.5 1.7835 11.5 2.75"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+      <span className="absolute" style={{ inset: '36.46% 19.79% 19.79% 36.46%' }}>
+        <span className="absolute" style={{ inset: '-9.52%' }}>
+          <svg viewBox="0 0 12.5 12.5" fill="none" preserveAspectRatio="none" className="block w-full h-full">
+            <path
+              d="M9.5 1H3C1.89543 1 1 1.89543 1 3V9.5C1 10.6046 1.89543 11.5 3 11.5H9.5C10.6046 11.5 11.5 10.6046 11.5 9.5V3C11.5 1.89543 10.6046 1 9.5 1Z"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function RedirectIcon() {
+  return (
+    <span className="relative block w-6 h-6" aria-hidden>
+      <span className="absolute" style={{ inset: '19.79%' }}>
+        <span className="absolute" style={{ inset: '-6.9%' }}>
+          <svg viewBox="0 0 16.5 16.5" fill="none" preserveAspectRatio="none" className="block w-full h-full">
+            <path
+              d="M5.5 1H3C1.89543 1 1 1.89543 1 3V13.5C1 14.6046 1.89543 15.5 3 15.5H13.5C14.6046 15.5 15.5 14.6046 15.5 13.5V11"
+              stroke="black"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </span>
+      <span className="absolute" style={{ inset: '19.79% 19.79% 61.46% 61.46%' }}>
+        <span className="absolute" style={{ inset: '-22.22%' }}>
+          <svg viewBox="0 0 6.5 6.5" fill="none" preserveAspectRatio="none" className="block w-full h-full">
+            <path d="M5.5 5.5V1H1" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </span>
+      <span className="absolute" style={{ inset: '20.83% 20.83% 48.96% 48.96%' }}>
+        <span className="absolute" style={{ inset: '-13.79%' }}>
+          <svg viewBox="0 0 9.25 9.25" fill="none" preserveAspectRatio="none" className="block w-full h-full">
+            <path d="M8.25 1L1 8.25" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </span>
+    </span>
   );
 }
 

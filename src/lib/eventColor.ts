@@ -19,3 +19,12 @@ export function tint(hex: string, amount: number): string {
   const mix = (c: number) => Math.round(c + (255 - c) * amount);
   return `#${[mix(r), mix(g), mix(b)].map((c) => c.toString(16).padStart(2, '0')).join('')}`;
 }
+
+/** "#f4f5d1" → "rgba(244, 245, 209, <alpha>)". */
+export function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
