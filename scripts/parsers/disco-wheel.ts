@@ -32,8 +32,18 @@ export async function run(): Promise<void> {
   const { products } = (await res.json()) as { products: ShopifyProduct[] };
 
   const today = new Date().toISOString().split('T')[0];
-  const events: NewEvent[] = [];
-  const seen = new Set<string>();
+
+  // Disco Wheel runs many sessions a day; we surface just one evening session per
+  // date so the calendar isn't flooded. Collect every upcoming session first, then
+  // keep the latest-starting one on each date (the evening slot).
+  interface Session {
+    startDate: string;
+    startHour: number;
+    handle: string;
+    price: string;
+    sku: string | null;
+  }
+  const byDate = new Map<string, Session>();
 
   for (const p of products) {
     if (!/WORKSHOP/i.test(p.title)) continue;
@@ -47,41 +57,48 @@ export async function run(): Promise<void> {
       if (startDate < today) continue; // upcoming sessions only
 
       const startHour = Number(hh);
-      const startTime = `${hh}:00`;
-      // Workshops run 90 minutes.
-      const endTime = `${String(startHour + 1).padStart(2, '0')}:30`;
-
-      const sourceUrl = `${BASE}/products/${p.handle}`;
-      const id = makeId(sourceUrl, 'Ceramic Workshop at Disco Wheel', `${startDate} ${startTime}`);
-      if (seen.has(id)) continue;
-      seen.add(id);
-
-      events.push({
-        id,
-        title: 'Ceramic Workshop at Disco Wheel',
-        type: 'workshop',
-        startDate,
-        endDate: null,
-        startTime,
-        endTime,
-        venue: 'Disco Wheel',
-        city: 'Lisbon',
-        country: 'Portugal',
-        address: 'Rua de São Paulo 150, Lisbon',
-        description:
-          'A 90-minute immersive drop-in ceramic workshop guided by a teacher, in a studio with dimmed lighting, music and scents. Up to 8 people.',
-        imageUrl: null,
-        ticketsUrl: sourceUrl,
-        price: `€${Math.round(Number(v.price))}`,
-        tags: ['ceramics', 'pottery', 'workshop'],
-        sourceUrl,
-        sourceName: 'Disco Wheel',
-        externalId: v.sku,
-        scrapedAt: new Date(),
-      });
+      const existing = byDate.get(startDate);
+      // Prefer the latest start time on the day (the evening session).
+      if (!existing || startHour > existing.startHour) {
+        byDate.set(startDate, { startDate, startHour, handle: p.handle, price: v.price, sku: v.sku });
+      }
     }
   }
 
-  console.log(`[Disco Wheel] ${events.length} upcoming session(s) found`);
+  const events: NewEvent[] = [];
+  for (const s of byDate.values()) {
+    const startTime = `${String(s.startHour).padStart(2, '0')}:00`;
+    // Workshops run 90 minutes.
+    const endTime = `${String(s.startHour + 1).padStart(2, '0')}:30`;
+
+    const sourceUrl = `${BASE}/products/${s.handle}`;
+    const id = makeId(sourceUrl, 'Ceramic Workshop at Disco Wheel', `${s.startDate} ${startTime}`);
+
+    events.push({
+      id,
+      title: 'Ceramic Workshop at Disco Wheel',
+      type: 'workshop',
+      startDate: s.startDate,
+      endDate: null,
+      startTime,
+      endTime,
+      venue: 'Disco Wheel',
+      city: 'Lisbon',
+      country: 'Portugal',
+      address: 'Rua de São Paulo 150, Lisbon',
+      description:
+        'A 90-minute immersive drop-in ceramic workshop guided by a teacher, in a studio with dimmed lighting, music and scents. Up to 8 people.',
+      imageUrl: '/venues/disco-wheel.jpg',
+      ticketsUrl: sourceUrl,
+      price: `€${Math.round(Number(s.price))}`,
+      tags: ['ceramics', 'pottery', 'workshop'],
+      sourceUrl,
+      sourceName: 'Disco Wheel',
+      externalId: s.sku,
+      scrapedAt: new Date(),
+    });
+  }
+
+  console.log(`[Disco Wheel] ${events.length} evening session(s) found (one per day)`);
   await upsertEvents(events);
 }
