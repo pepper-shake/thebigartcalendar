@@ -47,7 +47,7 @@ export default async function EventPage({ params }: Params) {
   const meta = typeMeta(event.type);
 
   return (
-    <PageShell>
+    <PageShell wide>
       <Breadcrumbs
         items={[
           { name: 'Calendar', href: '/' },

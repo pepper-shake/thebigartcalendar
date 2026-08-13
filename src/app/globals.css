@@ -11,6 +11,29 @@
   display: none;
 }
 
+/* Event-card grid: fixed-width cards, left-aligned — up to 2 per row on
+   tablet, 4 on web (mobile uses the agenda list instead). Cards cap at 330px
+   (per the Figma layout) and the row packs to the left, so extra width shows
+   as empty space on the right rather than stretching the cards. Columns can
+   shrink below 330px on narrow web widths so four still fit without overflow.
+   Plain CSS so the responsive columns can't be dropped by Tailwind's scanner. */
+.event-grid {
+  display: grid;
+  gap: 32px 24px; /* row-gap 32, column-gap 24 */
+  justify-content: start;
+  grid-template-columns: minmax(0, 330px);
+}
+@media (min-width: 768px) {
+  .event-grid {
+    grid-template-columns: repeat(2, minmax(0, 330px));
+  }
+}
+@media (min-width: 1024px) {
+  .event-grid {
+    grid-template-columns: repeat(4, minmax(0, 330px));
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

@@ -8,7 +8,6 @@ import AppHeader from '@/components/layout/AppHeader';
 import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
-import EventModal from '@/components/events/EventModal';
 import MobileAgenda from '@/components/mobile/MobileAgenda';
 
 interface Props {
@@ -24,7 +23,6 @@ export default function CalendarClient({ events, cities }: Props) {
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filters, setFilters] = useState<CalendarFilters>(DEFAULT_FILTERS);
-  const [modalEvent, setModalEvent] = useState<ArtEvent | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -137,12 +135,9 @@ export default function CalendarClient({ events, cities }: Props) {
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
               </div>
             ) : (
-              <div
-                className="grid gap-4"
-                style={{ gridTemplateColumns: `repeat(${Math.min(selectedEvents.length, 4)}, 1fr)` }}
-              >
+              <div className="event-grid">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} onClick={setModalEvent} />
+                  <EventCard key={event.id} event={event} />
                 ))}
               </div>
             )}
@@ -162,8 +157,6 @@ export default function CalendarClient({ events, cities }: Props) {
         >
           <ArrowUp className="size-6 text-white" strokeWidth={2} />
         </button>
-
-        <EventModal event={modalEvent} onClose={() => setModalEvent(null)} />
       </div>
 
       {/* ── Mobile ──────────────────────────────────────── */}
