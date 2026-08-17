@@ -4,6 +4,10 @@ import { toArtEvent } from '@/lib/transform';
 import CalendarClient from '@/components/calendar/CalendarClient';
 import { SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from '@/lib/site';
 
+// Read the DB at request time (like the SEO routes) so the daily scrape and
+// curation edits appear without a redeploy, instead of freezing at build time.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: { absolute: `${SITE_NAME} — Art Events Across Europe` },
   description: SITE_DESCRIPTION,
