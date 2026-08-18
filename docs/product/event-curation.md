@@ -27,3 +27,12 @@ The scraper's `onConflictDoUpdate` set block in [scripts/lib/upsert.ts](../../sc
 Events publish immediately (`status` defaults to `published`). The operator uses the editor to fix images/titles/descriptions and set `status='hidden'` for junk — "fix & hide", not "approve everything". To switch to opt-in moderation later, default `status` to `pending` (the read query already filters to `published`).
 
 Editing happens in Retool: [references/retool.md](../references/retool.md). Image uploads: [references/vercel-blob.md](../references/vercel-blob.md). Rationale: [decision #0002](../design/decisions.md).
+
+## Manually-added sources
+Some sources publish **no scrapable dated schedule** (dates live only on Instagram, "on request", etc.). Until their real source is onboarded, sessions are hand-seeded by a one-off `tsx` script that upserts via [scripts/lib/upsert.ts](../../scripts/lib/upsert.ts) — same dedup id as the scraper, so re-running is idempotent and a future automated source won't duplicate them.
+
+| Script | Source | Follow-up |
+|---|---|---|
+| [scripts/add-ajuda-lab.ts](../../scripts/add-ajuda-lab.ts) | Ajuda Lab (Lisbon jewellery workshops) | Onboard their Instagram via the `ig_*` pipeline, then retire this script. |
+
+These rows carry a real `source_url`/`organiser_url`, so they behave like any scraped event in the editor.
