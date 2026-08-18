@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Minus, ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
+import { EventImage } from '@/components/events/EventImage';
 import { getCardColor, tint, hexToRgba } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
@@ -93,11 +94,11 @@ export default function EventModal({ event, events = [], onClose, onNavigate }: 
   // ── Shared building blocks (rendered in both desktop and mobile layouts) ──
   const renderImage = (aspect: string) => (
     <div className="relative w-full overflow-hidden rounded-[24px]" style={{ aspectRatio: aspect }}>
-      {event.image ? (
-        <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
-      ) : (
-        <div className="w-full h-full" style={{ backgroundColor: '#FBFAF6' }} />
-      )}
+      <EventImage
+        candidates={event.imageCandidates ?? []}
+        alt={event.title}
+        className="w-full h-full object-cover"
+      />
       <span
         className="absolute left-4 bottom-4 inline-block"
         style={{

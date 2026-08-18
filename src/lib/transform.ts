@@ -1,8 +1,9 @@
 import { type ArtEvent, type EventType } from '@/types';
-import { resolveEventImage } from '@/lib/organiser-images';
+import { eventImageCandidates } from '@/lib/organiser-images';
 import { type EventWithDefault } from '@/db/queries';
 
 export function toArtEvent(row: EventWithDefault): ArtEvent {
+  const imageCandidates = eventImageCandidates(row, row.organiserDefaultImage);
   return {
     id: row.id,
     title: row.titleOverride ?? row.title,
@@ -19,7 +20,8 @@ export function toArtEvent(row: EventWithDefault): ArtEvent {
     organiserName: row.organiserName ?? undefined,
     organiserUrl: row.organiserUrl ?? undefined,
     description: row.descriptionOverride ?? row.description ?? '',
-    image: resolveEventImage(row, row.organiserDefaultImage),
+    image: imageCandidates[0],
+    imageCandidates,
     ticketsUrl: row.ticketsUrl ?? undefined,
     price: row.price ?? undefined,
     tags: row.tags ?? undefined,

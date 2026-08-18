@@ -22,6 +22,7 @@ export interface ArtEvent {
   organiserUrl?: string;
   description: string;
   image?: string;
+  imageCandidates?: string[]; // ordered image fallback ladder; client walks it on load error
   ticketsUrl?: string;
   price?: string;
   participants?: string[];

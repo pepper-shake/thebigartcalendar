@@ -2,6 +2,7 @@
 
 import { ArtEvent } from '@/types';
 import { EventTypeBadge } from '@/components/calendar/EventTypeBadge';
+import { EventImage } from '@/components/events/EventImage';
 
 interface Props {
   event: ArtEvent;
@@ -15,15 +16,13 @@ export default function EventListCard({ event, onClick }: Props) {
       className="w-full flex gap-0 rounded-xl overflow-hidden border border-zinc-200 bg-white hover:border-zinc-400 hover:shadow-md transition-all text-left group"
     >
       {/* Image */}
-      {event.image && (
-        <div className="w-52 shrink-0 relative overflow-hidden">
-          <img
-            src={event.image}
-            alt=""
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-      )}
+      <div className="w-52 shrink-0 relative overflow-hidden">
+        <EventImage
+          candidates={event.imageCandidates ?? []}
+          alt=""
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-between p-5 min-w-0">

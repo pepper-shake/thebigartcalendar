@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
+import { EventImage } from '@/components/events/EventImage';
 import { getCardColor, tint } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { typeMeta } from '@/lib/eventTypes';
@@ -26,11 +27,11 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
   const image = (aspect: string) => (
     <div className="relative w-full overflow-hidden rounded-[24px]" style={{ aspectRatio: aspect }}>
-      {event.image ? (
-        <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
-      ) : (
-        <div className="w-full h-full" style={{ backgroundColor: '#FBFAF6' }} />
-      )}
+      <EventImage
+        candidates={event.imageCandidates ?? []}
+        alt={event.title}
+        className="w-full h-full object-cover"
+      />
       <Link
         href={`/${meta.slug}`}
         aria-label={`Browse ${meta.plural}`}
