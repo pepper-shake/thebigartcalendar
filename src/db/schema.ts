@@ -46,7 +46,7 @@ export type NewEvent = typeof events.$inferInsert;
 // never by the scraper.
 export const organiserDefaults = pgTable('organiser_defaults', {
   sourceName: text('source_name').primaryKey(), // matches events.source_name
-  imageUrl: text('image_url').notNull(),        // hosted default image URL
+  imageUrl: text('image_url'),                  // hosted default image URL (nullable in prod)
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
