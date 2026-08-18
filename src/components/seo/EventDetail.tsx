@@ -84,47 +84,53 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           <ViewerLocalTime event={event} />
         </p>
       )}
-      {event.venue && (
-        <p className="text-black" style={metaStyle}>
-          Venue:{' '}
-          {event.venueUrl ? (
-            <a
-              href={event.venueUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2"
-            >
-              {event.venue}
-            </a>
-          ) : (
-            event.venue
-          )}
-        </p>
-      )}
       {event.price && (
         <p className="text-black" style={metaStyle}>
           Price: {event.price}
         </p>
       )}
-      {event.organiserName && (
-        <p className="text-black" style={metaStyle}>
-          Organised by{' '}
-          {event.organiserUrl ? (
-            <a
-              href={event.organiserUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2"
-            >
-              {event.organiserName}
-            </a>
-          ) : (
-            event.organiserName
-          )}
-        </p>
-      )}
     </div>
   );
+
+  // Organiser + venue as clickable pills. Each opens its website in a new tab
+  // when we have a URL; otherwise it's a plain (non-clickable) pill. A prefix
+  // keeps the pill self-explanatory ("Organiser: …" / "Venue: …").
+  const pillStyle: React.CSSProperties = {
+    backgroundColor: '#FBFAF6',
+    color: '#000',
+    fontFamily: 'var(--font-host-grotesk)',
+    fontWeight: 400,
+    fontSize: 14,
+    lineHeight: '22px',
+    padding: '8px 16px',
+    borderRadius: 42,
+  };
+
+  const entityPill = (label: string, name: string, url?: string) =>
+    url ? (
+      <a
+        key={label}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={pillStyle}
+        className="inline-flex items-center hover:opacity-80 transition-opacity"
+      >
+        {label}: {name}
+      </a>
+    ) : (
+      <span key={label} style={pillStyle} className="inline-flex items-center">
+        {label}: {name}
+      </span>
+    );
+
+  const entityPills =
+    event.organiserName || event.venue ? (
+      <div className="flex flex-wrap" style={{ gap: 8 }}>
+        {event.organiserName && entityPill('Organiser', event.organiserName, event.organiserUrl)}
+        {event.venue && entityPill('Venue', event.venue, event.venueUrl)}
+      </div>
+    ) : null;
 
   const tickets =
     event.ticketsUrl && event.ticketsUrl !== '#' ? (
@@ -190,6 +196,7 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
             <div className="mt-5">{titleEl}</div>
             <div className="mt-5">{metaLines}</div>
             {tickets && <div className="mt-6">{tickets}</div>}
+            {entityPills && <div className="mt-5">{entityPills}</div>}
             {tagsEl && <div className="mt-5">{tagsEl}</div>}
           </div>
         </div>
@@ -200,6 +207,7 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           <div className="mt-5">{titleEl}</div>
           <div className="mt-4">{metaLines}</div>
           {tickets && <div className="mt-6">{tickets}</div>}
+          {entityPills && <div className="mt-6">{entityPills}</div>}
           <div className="mt-6">{aboutEl}</div>
           {tagsEl && <div className="mt-6">{tagsEl}</div>}
         </div>
