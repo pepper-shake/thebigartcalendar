@@ -4,6 +4,7 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 
 | # | Decision | Status | Date |
 |---|---|---|---|
+| 0007 | Normalized event data model: occurrences + wall-time/zone, Type≠Tags, materialize recurrence | Proposed | 2026-08-18 |
 | 0006 | SEO routing: per-event/city/type pages + sitemap/robots/JSON-LD, slugs derived in code | Accepted | 2026-06-10 |
 | 0005 | Apply schema changes with `db:push` (no migration files) | Accepted | 2026-06-07 |
 | 0004 | Blog content lives in a Postgres `posts` table (not a CMS) | Accepted | 2026-06-07 |
@@ -12,6 +13,13 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 | 0001 | Edit scraped events with Retool (not Strapi) | Accepted | 2026-06-07 |
 
 ---
+
+## 0007 — Normalized event data model (occurrences + wall-time/zone)
+**Status:** Proposed (design captured, not yet implemented).
+**Context:** The live schema is a single flat scraper-owned `events` table with text-ish columns and `start_date`/`end_date`. It can't cleanly express one event across multiple dates/venues/organisers, separate Type from Tags, or survive DST correctly for a Europe-wide calendar.
+**Decision:** Adopt a normalized model — `event` + `event_occurrence` (dates/times), taxonomy tables for `event_type` and `tag` (kept separate: Type = "what kind", Tags = "topics/characteristics"), and `city`/`venue`/`organiser` entities with N:M joins. Occurrences store `local_start`/`local_end` (wall-clock) + IANA `timezone` as the source of truth, with `start_at`/`end_at` (UTC `timestamptz`, indexed) **computed in the scraper's normalize step** for querying. Recurrence is **materialized** into occurrence rows at scrape time (bounded horizon); `event.rrule` is provenance only, never queried at request time. Add `attendance_mode` (`in_person|online|hybrid`), which drives "Event time" vs "My time" display.
+**Why:** Occurrences make multi-date/multi-venue events and per-instance cancellation trivial while keeping calendar/SEO queries plain SQL. Wall-time + IANA zone keeps "18:00 in Berlin" stable across CET↔CEST; computing the instant app-side (not a DB generated column) sidesteps generated-column/`db:push` (drizzle-kit) risk — see [#0005](#0005--schema-changes-via-dbpush-no-migration-files). Type-vs-Tags separation powers type hubs + faceted filtering independently.
+**Consequences:** Requires a migration from the flat table (backfill occurrences, seed taxonomies, assign `attendance_mode`) — respect the curation-column guard ([#0002](#0002--curate-events-with-status--override-columns)). Full model, rationale, dedup/normalization rules, and open items: [event-data-model.md](event-data-model.md).
 
 ## 0001 — Edit scraped events with Retool
 **Context:** Need a comfortable, low-effort UI to fix auto-parsed events. The `events` table is owned by our scraper + Drizzle schema.
