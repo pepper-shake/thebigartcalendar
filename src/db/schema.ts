@@ -12,6 +12,8 @@ export const events = pgTable('events', {
   city: text('city'),
   country: text('country'),
   address: text('address'),
+  organiserName: text('organiser_name'), // who runs the event, for credit + link
+  organiserUrl: text('organiser_url'),   // organiser's website
   description: text('description'),
   imageUrl: text('image_url'),
   ticketsUrl: text('tickets_url'),

@@ -14,6 +14,8 @@ export function toArtEvent(row: Event): ArtEvent {
     city: row.city ?? '',
     country: row.country ?? '',
     address: row.address ?? '',
+    organiserName: row.organiserName ?? undefined,
+    organiserUrl: row.organiserUrl ?? undefined,
     description: row.descriptionOverride ?? row.description ?? '',
     image: row.imageUrlOverride ?? row.imageUrl ?? undefined,
     ticketsUrl: row.ticketsUrl ?? undefined,

@@ -89,6 +89,23 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           Price: {event.price}
         </p>
       )}
+      {event.organiserName && (
+        <p className="text-black" style={metaStyle}>
+          Organised by{' '}
+          {event.organiserUrl ? (
+            <a
+              href={event.organiserUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2"
+            >
+              {event.organiserName}
+            </a>
+          ) : (
+            event.organiserName
+          )}
+        </p>
+      )}
     </div>
   );
 

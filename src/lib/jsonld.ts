@@ -69,6 +69,14 @@ export function eventJsonLd(event: ArtEvent): Record<string, unknown> {
     };
   }
 
+  if (event.organiserName) {
+    data.organizer = {
+      '@type': 'Organization',
+      name: event.organiserName,
+      ...(event.organiserUrl ? { url: event.organiserUrl } : {}),
+    };
+  }
+
   if (event.price || event.ticketsUrl) {
     data.offers = {
       '@type': 'Offer',
