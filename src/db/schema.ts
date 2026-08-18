@@ -9,9 +9,12 @@ export const events = pgTable('events', {
   startTime: text('start_time'),
   endTime: text('end_time'),
   venue: text('venue'),
+  venueUrl: text('venue_url'), // venue's website
   city: text('city'),
   country: text('country'),
   address: text('address'),
+  organiserName: text('organiser_name'), // who runs the event, for credit + link
+  organiserUrl: text('organiser_url'),   // organiser's website
   description: text('description'),
   imageUrl: text('image_url'),
   ticketsUrl: text('tickets_url'),

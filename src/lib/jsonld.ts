@@ -60,12 +60,21 @@ export function eventJsonLd(event: ArtEvent): Record<string, unknown> {
     data.location = {
       '@type': 'Place',
       name: event.venue || event.city,
+      ...(event.venueUrl ? { url: event.venueUrl } : {}),
       address: {
         '@type': 'PostalAddress',
         streetAddress: event.address || undefined,
         addressLocality: event.city || undefined,
         addressCountry: event.country || undefined,
       },
+    };
+  }
+
+  if (event.organiserName) {
+    data.organizer = {
+      '@type': 'Organization',
+      name: event.organiserName,
+      ...(event.organiserUrl ? { url: event.organiserUrl } : {}),
     };
   }
 

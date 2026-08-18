@@ -14,9 +14,12 @@ export interface ArtEvent {
   startTime?: string;
   endTime?: string;
   venue: string;
+  venueUrl?: string;
   city: string;
   country: string;
   address: string;
+  organiserName?: string;
+  organiserUrl?: string;
   description: string;
   image?: string;
   ticketsUrl?: string;
