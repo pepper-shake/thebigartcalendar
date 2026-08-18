@@ -1,8 +1,8 @@
-import { type Event } from '@/db/schema';
 import { type ArtEvent, type EventType } from '@/types';
 import { resolveEventImage } from '@/lib/organiser-images';
+import { type EventWithDefault } from '@/db/queries';
 
-export function toArtEvent(row: Event): ArtEvent {
+export function toArtEvent(row: EventWithDefault): ArtEvent {
   return {
     id: row.id,
     title: row.titleOverride ?? row.title,
@@ -19,7 +19,7 @@ export function toArtEvent(row: Event): ArtEvent {
     organiserName: row.organiserName ?? undefined,
     organiserUrl: row.organiserUrl ?? undefined,
     description: row.descriptionOverride ?? row.description ?? '',
-    image: resolveEventImage(row),
+    image: resolveEventImage(row, row.organiserDefaultImage),
     ticketsUrl: row.ticketsUrl ?? undefined,
     price: row.price ?? undefined,
     tags: row.tags ?? undefined,
