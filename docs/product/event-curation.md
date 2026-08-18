@@ -15,6 +15,7 @@ Scraped values stay pristine in their base columns. Human edits go in parallel *
 
 ## How it takes effect
 - [src/lib/transform.ts](../../src/lib/transform.ts) `toArtEvent()` merges `override ?? base` for title, description, and image.
+- **Image fallback ladder** — an event's picture resolves in [src/lib/organiser-images.ts](../../src/lib/organiser-images.ts) as: `image_url_override` → scraped `image_url` → **organiser default** → **site placeholder**, so no event ever renders imageless. Organiser defaults are committed files under `public/venues/<slug>.jpg`, mapped by `source_name` in that file (add a line when onboarding a source). Final catch-all: `public/default-event.svg`.
 - [src/db/queries.ts](../../src/db/queries.ts) `getAllEvents()` filters `status = 'published'`.
 - **Revert an edit** by setting its override back to `NULL` (falls back to the latest scraped value).
 - Edits appear on the next render of the calendar page (it reads the DB at request time). If ISR/caching is added later, revalidate after edits — see [references/next-16.md](../references/next-16.md).

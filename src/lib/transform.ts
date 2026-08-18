@@ -1,5 +1,6 @@
 import { type Event } from '@/db/schema';
 import { type ArtEvent, type EventType } from '@/types';
+import { resolveEventImage } from '@/lib/organiser-images';
 
 export function toArtEvent(row: Event): ArtEvent {
   return {
@@ -18,7 +19,7 @@ export function toArtEvent(row: Event): ArtEvent {
     organiserName: row.organiserName ?? undefined,
     organiserUrl: row.organiserUrl ?? undefined,
     description: row.descriptionOverride ?? row.description ?? '',
-    image: row.imageUrlOverride ?? row.imageUrl ?? undefined,
+    image: resolveEventImage(row),
     ticketsUrl: row.ticketsUrl ?? undefined,
     price: row.price ?? undefined,
     tags: row.tags ?? undefined,

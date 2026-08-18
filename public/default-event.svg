@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Art event">
+  <rect width="800" height="600" fill="#e7e3dc"/>
+  <rect x="250" y="180" width="300" height="220" rx="6" fill="#d8d2c7" stroke="#b9b1a3" stroke-width="4"/>
+  <circle cx="330" cy="250" r="26" fill="#c4bcac"/>
+  <path d="M285 360 L370 275 L420 325 L470 260 L515 360 Z" fill="#c4bcac"/>
+  <text x="400" y="460" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#8a8072">The Big Art Calendar</text>
+</svg>
