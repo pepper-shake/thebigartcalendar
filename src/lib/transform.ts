@@ -11,6 +11,7 @@ export function toArtEvent(row: Event): ArtEvent {
     startTime: row.startTime ?? undefined,
     endTime: row.endTime ?? undefined,
     venue: row.venue ?? '',
+    venueUrl: row.venueUrl ?? undefined,
     city: row.city ?? '',
     country: row.country ?? '',
     address: row.address ?? '',

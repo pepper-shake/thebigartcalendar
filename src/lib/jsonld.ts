@@ -60,6 +60,7 @@ export function eventJsonLd(event: ArtEvent): Record<string, unknown> {
     data.location = {
       '@type': 'Place',
       name: event.venue || event.city,
+      ...(event.venueUrl ? { url: event.venueUrl } : {}),
       address: {
         '@type': 'PostalAddress',
         streetAddress: event.address || undefined,

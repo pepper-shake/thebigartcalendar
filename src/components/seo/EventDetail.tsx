@@ -84,6 +84,23 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           <ViewerLocalTime event={event} />
         </p>
       )}
+      {event.venue && (
+        <p className="text-black" style={metaStyle}>
+          Venue:{' '}
+          {event.venueUrl ? (
+            <a
+              href={event.venueUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2"
+            >
+              {event.venue}
+            </a>
+          ) : (
+            event.venue
+          )}
+        </p>
+      )}
       {event.price && (
         <p className="text-black" style={metaStyle}>
           Price: {event.price}
