@@ -1,4 +1,4 @@
-import { extractEventsFromHtml, stripHtml } from '../lib/extract';
+import { extractEventsFromHtml, extractOgImage, stripHtml } from '../lib/extract';
 import { upsertEvents } from '../lib/upsert';
 
 const BASE = 'https://pinkdolphinlisbon.com';
@@ -28,12 +28,17 @@ export async function run(): Promise<void> {
 
   console.log(`[Pink Dolphin] Found ${productPaths.length} product link(s) — fetching details…`);
 
-  // Fetch product pages with a small delay to be polite
-  const pages: { url: string; text: string }[] = [];
+  // Fetch product pages with a small delay to be polite. Capture each page's
+  // real URL + og:image so the extractor can snap the LLM's transcribed
+  // sourceUrl/imageUrl back to ground truth.
+  const pages: { url: string; text: string; imageUrl: string | null }[] = [];
   for (const path of productPaths) {
     const url = `${BASE}${path}`;
     const r = await fetch(url);
-    if (r.ok) pages.push({ url, text: stripHtml(await r.text()) });
+    if (r.ok) {
+      const raw = await r.text();
+      pages.push({ url, text: stripHtml(raw), imageUrl: extractOgImage(raw) });
+    }
     await new Promise((resolve) => setTimeout(resolve, 300));
   }
 
@@ -43,13 +48,17 @@ export async function run(): Promise<void> {
     .map((p) => `[URL: ${p.url}]\n${p.text}`)
     .join('\n\n---\n\n');
 
-  const events = await extractEventsFromHtml(combined, {
-    sourceName: 'Pink Dolphin Lisbon',
-    defaultCity: 'Lisbon',
-    defaultCountry: 'Portugal',
-    defaultVenue: 'Pink Dolphin',
-    defaultAddress: 'Rua Poço dos Negros 37, Lisbon',
-  });
+  const events = await extractEventsFromHtml(
+    combined,
+    {
+      sourceName: 'Pink Dolphin Lisbon',
+      defaultCity: 'Lisbon',
+      defaultCountry: 'Portugal',
+      defaultVenue: 'Pink Dolphin',
+      defaultAddress: 'Rua Poço dos Negros 37, Lisbon',
+    },
+    { pages: pages.map((p) => ({ url: p.url, imageUrl: p.imageUrl })) },
+  );
 
   console.log(`[Pink Dolphin] ${events.length} upcoming event(s) found`);
   await upsertEvents(events);
