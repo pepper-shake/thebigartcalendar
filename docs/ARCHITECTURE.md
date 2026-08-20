@@ -16,7 +16,7 @@ art websites → scraper (GitHub Actions, daily) → Neon `events` table
                                                        │
                                             calendar UI (indexable)
 ```
-1. **Scrape** ([scripts/](../scripts/)): `run-all.ts` drives per-site parsers in `parsers/`; `lib/extract.ts` uses Claude (Haiku) to turn page text into structured events; `lib/upsert.ts` writes them with `INSERT ... ON CONFLICT (id) DO UPDATE`. Dedup id = `hash(sourceUrl + title + startDate)`.
+1. **Scrape** ([scripts/](../scripts/)): `run-all.ts` drives per-site parsers in `parsers/`; `lib/extract.ts` uses Claude (Haiku) to turn page text into structured events; `lib/upsert.ts` writes them with `INSERT ... ON CONFLICT (id) DO UPDATE`. Dedup id = `hash(sourceUrl + title + startDate)`. For follow-detail-link parsers (nacre-creative, pink-dolphin, dvi-taures), the parser passes the real fetched page URLs + their `og:image` as `pages` to `extractEventsFromHtml`, which **snaps the LLM's transcribed `sourceUrl`/`imageUrl` back to ground truth** — LLMs drop emoji and mangle URLs, which otherwise yields 404 source links and broken images.
 2. **Store**: Neon Postgres; schema in [src/db/schema.ts](../src/db/schema.ts). Snapshot: [generated/db-schema.md](generated/db-schema.md).
 3. **Read path** (one chokepoint — reuse it):
    [src/db/queries.ts](../src/db/queries.ts) `getAllEvents()` (filters `status='published'`)

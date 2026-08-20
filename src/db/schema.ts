@@ -39,3 +39,15 @@ export const events = pgTable('events', {
 
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
+
+// Per-organiser default image, uploaded via the admin UI (Retool → Vercel Blob).
+// Used as a fallback when an event has no image of its own. Keyed by
+// `events.source_name` (always set by the parser). Written only by the admin UI,
+// never by the scraper.
+export const organiserDefaults = pgTable('organiser_defaults', {
+  sourceName: text('source_name').primaryKey(), // matches events.source_name
+  imageUrl: text('image_url'),                  // hosted default image URL (nullable in prod)
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type OrganiserDefault = typeof organiserDefaults.$inferSelect;

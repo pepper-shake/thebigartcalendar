@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArtEvent } from '@/types';
+import { EventImage } from '@/components/events/EventImage';
 import { eventSlug } from '@/lib/slug';
 import { formatDateRange } from '@/lib/format';
 import { typeMeta } from '@/lib/eventTypes';
@@ -58,16 +59,14 @@ export default function EventList({ events }: { events: ArtEvent[] }) {
                   {e.title}
                 </h2>
 
-                {e.image && (
-                  <div className="overflow-hidden" style={{ borderRadius: 12, aspectRatio: '4 / 3' }}>
-                    <img
-                      src={e.image}
-                      alt={e.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+                <div className="overflow-hidden" style={{ borderRadius: 12, aspectRatio: '4 / 3' }}>
+                  <EventImage
+                    candidates={e.imageCandidates ?? []}
+                    alt={e.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
                 {(e.city || e.country) && (
                   <p
