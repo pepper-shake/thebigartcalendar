@@ -25,26 +25,28 @@ interface Props {
   event: ArtEvent;
 }
 
+/** Today as YYYY-MM-DD, for lexicographic comparison against event dates. */
+function todayISO(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export default function EventCard({ event }: Props) {
   const bgColor = getCardColor(event.id);
   const [hovered, setHovered] = useState(false);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
-  return (
-    <Link
-      href={`/events/${eventSlug(event)}`}
-      prefetch={false}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-      className="block w-full text-left focus:outline-none"
-    >
+  // Past events stay visible (e.g. on earlier calendar months) but are shown
+  // in grayscale and are NOT linked — we don't suggest navigating to them.
+  const isPast = (event.endDate ?? event.date) < todayISO();
+  const active = hovered && !isPast;
+
+  const card = (
       <div
         className="w-full flex flex-col items-start"
         style={{
-          backgroundColor: hovered ? '#FFFFFF' : bgColor,
-          border: `1px ${hovered ? 'dashed' : 'solid'} ${hovered ? bgColor : 'transparent'}`,
+          backgroundColor: active ? '#FFFFFF' : bgColor,
+          border: `1px ${active ? 'dashed' : 'solid'} ${active ? bgColor : 'transparent'}`,
           borderRadius: 24,
           padding: 24,
           gap: 16,
@@ -108,12 +110,32 @@ export default function EventCard({ event }: Props) {
               src={event.image}
               alt={event.title}
               className="w-full h-full object-cover"
+              style={isPast ? { filter: 'grayscale(1)' } : undefined}
             />
           ) : (
             <div className="w-full h-full" style={{ backgroundColor: '#FBFAF6' }} />
           )}
         </div>
       </div>
+  );
+
+  // Past events render as a non-interactive card (no link); current events link
+  // to their detail page with the hover treatment.
+  if (isPast) {
+    return <div className="block w-full text-left">{card}</div>;
+  }
+
+  return (
+    <Link
+      href={`/events/${eventSlug(event)}`}
+      prefetch={false}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      className="block w-full text-left focus:outline-none"
+    >
+      {card}
     </Link>
   );
 }

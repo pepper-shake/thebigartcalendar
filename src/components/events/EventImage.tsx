@@ -11,11 +11,13 @@ export function EventImage({
   candidates,
   alt,
   className,
+  style,
   loading,
 }: {
   candidates: string[];
   alt: string;
   className?: string;
+  style?: React.CSSProperties;
   loading?: 'lazy' | 'eager';
 }) {
   const list = candidates.length ? candidates : [SITE_DEFAULT_IMAGE];
@@ -28,6 +30,7 @@ export function EventImage({
       alt={alt}
       loading={loading}
       className={className}
+      style={style}
       onError={() => setIdx((i) => (i < list.length - 1 ? i + 1 : i))}
     />
   );

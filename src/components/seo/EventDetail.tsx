@@ -45,6 +45,12 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
   const eventUrl = absoluteUrl(`/events/${eventSlug(event)}`);
   const typeLabel = typeMeta(event.type).label;
 
+  // A finished event's hero is shown in grayscale (it's kept for reference but
+  // no longer promoted).
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isPast = (event.endDate ?? event.date) < todayStr;
+
   const titleEl = (
     <h1
       className="text-black"
@@ -159,6 +165,7 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
         candidates={event.imageCandidates ?? []}
         alt={event.title}
         className="w-full h-full object-cover"
+        style={isPast ? { filter: 'grayscale(1)' } : undefined}
       />
       {withTypePill && (
         <span
