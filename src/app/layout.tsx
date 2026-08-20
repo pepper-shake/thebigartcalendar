@@ -53,10 +53,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html
@@ -66,7 +64,6 @@ export default function RootLayout({
       <body className="h-full flex flex-col text-zinc-900" style={{ backgroundColor: '#FBFAF6' }}>
         <RootHeader />
         <div className="flex-1 min-h-0">{children}</div>
-        {modal}
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />
         <GoogleAnalytics />

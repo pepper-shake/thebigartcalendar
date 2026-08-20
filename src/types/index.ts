@@ -24,6 +24,7 @@ export interface ArtEvent {
   image?: string;
   imageCandidates?: string[]; // ordered image fallback ladder; client walks it on load error
   ticketsUrl?: string;
+  sourceUrl?: string; // original page the event was scraped from (redirect target)
   price?: string;
   participants?: string[];
   agenda?: AgendaItem[];

@@ -23,6 +23,7 @@ export function toArtEvent(row: EventWithDefault): ArtEvent {
     image: imageCandidates[0],
     imageCandidates,
     ticketsUrl: row.ticketsUrl ?? undefined,
+    sourceUrl: row.sourceUrl ?? undefined,
     price: row.price ?? undefined,
     tags: row.tags ?? undefined,
   };
