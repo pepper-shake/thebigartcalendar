@@ -221,4 +221,24 @@ export const PLACES: NewPlace[] = [
     websiteUrl: 'https://www.macba.cat/en/',
     instagramUrl: 'https://www.instagram.com/macba_barcelona',
   },
+
+  // --- Added by hand ---
+  {
+    id: 'galeria-1758',
+    slug: 'galeria-1758',
+    name: 'Galeria 1758',
+    aliases: ['Galeria 1758 Lisboa', 'Atelier 1758'],
+    kind: 'both',
+    category: 'gallery',
+    description:
+      'Contemporary art gallery in Ajuda, Lisbon, born from the atelier of curator Cristina Cabrita, with a focus on accessible, inclusive art. Shows exhibitions by contemporary artists, sells original works and limited editions, and runs traditional azulejo (tile) painting workshops and custom group sessions.',
+    imageUrl: 'https://galeria1758.pt/wp-content/uploads/2025/05/IMG_7104-copiar-scaled-e1753722927884.jpg',
+    address: 'Travessa da Memória 47A, 1300-402 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7027294, // street-level (Nominatim had no house number)
+    lng: -9.2008251,
+    websiteUrl: 'https://galeria1758.pt/',
+    instagramUrl: 'https://www.instagram.com/galeria_1758/',
+  },
 ];
