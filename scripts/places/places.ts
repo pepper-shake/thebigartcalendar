@@ -241,4 +241,22 @@ export const PLACES: NewPlace[] = [
     websiteUrl: 'https://galeria1758.pt/',
     instagramUrl: 'https://www.instagram.com/galeria_1758/',
   },
+  {
+    id: 'kitulu',
+    slug: 'kitulu',
+    name: 'Kitulu',
+    aliases: ['kitulu.pt', 'Kitulu Casa & Jardim'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Contemporary floral art studio in Lisbon: flowers and plants for weddings and events, a weekly flower subscription ("Flor à Porta"), crafts and mini gardens.',
+    city: 'Lisbon',
+    country: 'Portugal',
+    instagramUrl: 'https://www.instagram.com/kitulu.pt/',
+    openingHours: {
+      mon: '10:00-18:00', tue: '10:00-18:00', wed: '10:00-18:00',
+      thu: '10:00-18:00', fri: '10:00-18:00', sat: '10:00-16:00',
+      note: 'Orders via WhatsApp or Instagram.',
+    },
+  },
 ];
