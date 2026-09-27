@@ -205,6 +205,30 @@ export const PLACES: NewPlace[] = [
     websiteUrl: 'https://linktr.ee/fablelisbon',
   },
 
+  {
+    id: 'oficina-mescla',
+    slug: 'oficina-mescla',
+    name: 'Oficina Mescla',
+    aliases: ['Mescla'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Printmaking studio in central Porto, opened in 2019 by Alexandra Rafael and Tomás Dias. Runs monthly courses in screenprinting, etching and lithography, one-off workshops (linocut, bookbinding, tetrapak printing), artist residencies, equipment rental and limited editions.',
+    imageUrl: 'https://oficinamescla.com/wp-content/uploads/2026/07/OUT_seri.png',
+    address: 'Pátio do Bolhão 90, 4000-110 Porto',
+    city: 'Porto',
+    country: 'Portugal',
+    lat: 41.1515323, // Nominatim: Pátio do Bolhão (a small courtyard)
+    lng: -8.6068191,
+    websiteUrl: 'https://oficinamescla.com/en/',
+    instagramUrl: 'https://www.instagram.com/oficinamescla/',
+    openingHours: {
+      mon: '14:00-18:00', tue: '14:00-18:00', wed: '14:00-18:00',
+      thu: '14:00-18:00', fri: '14:00-18:00',
+      note: 'Email ahead if you would like to visit.',
+    },
+  },
+
   // --- Scraped sources with no current events ---
   {
     id: 'bryon-studios',
