@@ -37,6 +37,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Decisions & rationale | [docs/design/decisions.md](docs/design/decisions.md) |
 | Roadmap & in-flight work | [docs/exec-plans/](docs/exec-plans/) |
 | Event editing / curation | [docs/product/event-curation.md](docs/product/event-curation.md) |
+| Portugal-only mode (feature flag) | [docs/product/portugal-only-mode.md](docs/product/portugal-only-mode.md) |
 | Places directory (add/edit places) | [docs/product/places.md](docs/product/places.md) |
 | Integrations (Vercel Blob, Retool) | [docs/references/](docs/references/) |
 | DB schema snapshot | [docs/generated/db-schema.md](docs/generated/db-schema.md) |
