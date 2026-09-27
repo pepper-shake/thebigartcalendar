@@ -8,7 +8,8 @@ import type { ArtEvent, EventType } from '../src/types';
 import { run as fableLisbon } from './parsers/fable-lisbon';
 import { run as oficinaMescla } from './parsers/oficina-mescla';
 import { run as dobarro } from './parsers/dobarro';
-import { run as bryonStudios } from './parsers/bryon-studios';
+// bryon-studios: disabled 2026-09-27 — its events collection 404s (page removed).
+// Re-add to `parsers` if Bryon Studios publishes events again.
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
 import { run as pinkDolphin } from './parsers/pink-dolphin';
@@ -47,7 +48,6 @@ const parsers = [
   { name: 'Fable', fn: fableLisbon },
   { name: 'Oficina Mescla', fn: oficinaMescla },
   { name: 'DoBarro', fn: dobarro },
-  { name: 'Bryon Studios', fn: bryonStudios },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },
   { name: 'Pink Dolphin', fn: pinkDolphin },
@@ -88,13 +88,17 @@ async function main() {
   const sql = neon(process.env.DATABASE_URL!);
   const before = new Set((await sql`select id from events`).map((r) => r.id as string));
 
+  const failures: { name: string; message: string }[] = [];
   for (const { name, fn } of parsers) {
     console.log(`\n--- ${name} ---`);
     try {
       await fn();
     } catch (err) {
-      // Log and continue — one failed site should not block the others
-      console.error(`[${name}] Error:`, err instanceof Error ? err.message : err);
+      // Log and continue — one failed site should not block the others — but
+      // remember it, so the run is marked failed at the end (see below).
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[${name}] Error:`, message);
+      failures.push({ name, message });
     }
   }
 
@@ -106,6 +110,23 @@ async function main() {
   await submitToIndexNow(pagesFor(added));
 
   console.log(`\nScrape finished at ${new Date().toISOString()}`);
+
+  // Fail loudly: any failed source turns the GitHub Actions run red (and
+  // emails the repo owner), instead of a green run that silently scraped
+  // nothing — e.g. the Anthropic API running out of credit.
+  if (failures.length > 0) {
+    const credit = failures.some((f) => /credit balance/i.test(f.message));
+    console.error(`\n✗ ${failures.length} of ${parsers.length} source(s) failed: ${failures.map((f) => f.name).join(', ')}`);
+    if (credit) {
+      console.error('  → Anthropic API credit is used up: top up at console.anthropic.com → Plans & Billing.');
+      // GitHub Actions annotation, shown on the run summary page.
+      if (process.env.GITHUB_ACTIONS) console.log('::error title=Anthropic API credit used up::Top up at console.anthropic.com → Plans & Billing');
+    }
+    for (const f of failures) {
+      if (process.env.GITHUB_ACTIONS) console.log(`::warning title=${f.name} failed::${f.message.slice(0, 300)}`);
+    }
+    process.exitCode = 1;
+  }
 }
 
 main().catch((err) => {
