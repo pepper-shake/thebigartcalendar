@@ -6,7 +6,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import PlaceCard from '@/components/places/PlaceCard';
 import { listPlaces, categoryLabel } from '@/lib/places';
 import { citySlug } from '@/lib/slug';
-import { absoluteUrl, SITE_NAME } from '@/lib/site';
+import { absoluteUrl, REGION, SITE_NAME } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +17,8 @@ const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { city, category } = await searchParams;
   return {
-    title: 'Art places across Europe',
-    description: `Galleries, studios, museums and workshop spaces across Europe on ${SITE_NAME} — with their upcoming art events.`,
+    title: `Art places across ${REGION}`,
+    description: `Galleries, studios, museums and workshop spaces across ${REGION} on ${SITE_NAME} — with their upcoming art events.`,
     // Filtered views are the same list narrowed down; keep one canonical URL.
     alternates: { canonical: absoluteUrl('/places') },
     robots: one(city) || one(category) ? { index: false, follow: true } : undefined,

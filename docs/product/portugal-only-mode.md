@@ -12,7 +12,8 @@ When `true`, events and places whose `country` isn't in `VISIBLE_COUNTRIES` (`['
 - `/places` (cards and city/category chips) and `/places/[slug]` (non-Portugal places 404)
 - `sitemap.xml`
 
+- **Wording:** titles, meta descriptions and copy say "Portugal" / "Portuguese" instead of "Europe" / "European", via `REGION`, `REGION_ADJECTIVE` and `SITE_TAGLINE` in [src/lib/site.ts](../../src/lib/site.ts). Use those helpers — never hardcode "Europe" — so new pages follow the flag too.
+
 ## What it doesn't do
 - **No data changes.** The scraper keeps collecting every source, and rows stay in the DB untouched; the flag only filters reads.
-- **No copy changes.** Site titles still say "Across Europe".
 - Empty type hubs (e.g. `/exhibitions`) are not caused by the flag: with it off they're equally empty, because there are no upcoming international events of those types.

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { REGION } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'About — The Big Art Calendar',
-  description: 'The Big Art Calendar is a free portal that aggregates art events across Europe — exhibitions, workshops, fairs, performances, and more — so you never miss what matters.',
+  description: `The Big Art Calendar is a free portal that aggregates art events across ${REGION} — exhibitions, workshops, fairs, performances, and more — so you never miss what matters.`,
 };
 
 export default function AboutPage() {
@@ -27,7 +28,7 @@ export default function AboutPage() {
           style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
         >
           <p>
-            The Big Art Calendar is a free portal for art events across Europe. The calendar is the main page — every visitor lands there and can browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
+            The Big Art Calendar is a free portal for art events across {REGION}. The calendar is the main page — every visitor lands there and can browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
           </p>
 
           <p>
@@ -35,7 +36,7 @@ export default function AboutPage() {
           </p>
 
           <p>
-            <strong style={{ fontWeight: 700 }}>Audience:</strong> artists, designers, curators, and anyone with a general interest in the arts across Europe.
+            <strong style={{ fontWeight: 700 }}>Audience:</strong> artists, designers, curators, and anyone with a general interest in the arts across {REGION}.
           </p>
 
           <p>

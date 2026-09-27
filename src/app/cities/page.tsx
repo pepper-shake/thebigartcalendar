@@ -4,13 +4,13 @@ import PageShell from '@/components/seo/PageShell';
 import PageHeading from '@/components/seo/PageHeading';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import { listCities } from '@/lib/events';
-import { absoluteUrl, SITE_NAME } from '@/lib/site';
+import { absoluteUrl, REGION, REGION_ADJECTIVE, SITE_NAME } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Art events by city',
-  description: `Browse art events across European cities on ${SITE_NAME} — exhibitions, fairs, workshops, performances, and auctions near you.`,
+  description: `Browse art events across ${REGION_ADJECTIVE} cities on ${SITE_NAME} — exhibitions, fairs, workshops, performances, and auctions near you.`,
   alternates: { canonical: absoluteUrl('/cities') },
 };
 
@@ -25,7 +25,7 @@ export default async function CitiesPage() {
           { name: 'Cities', href: '/cities' },
         ]}
       />
-      <PageHeading sub="Find art events in cities across Europe.">Browse by city</PageHeading>
+      <PageHeading sub={`Find art events in cities across ${REGION}.`}>Browse by city</PageHeading>
 
       {cities.length === 0 ? (
         <p

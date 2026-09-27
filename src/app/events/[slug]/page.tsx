@@ -8,7 +8,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import { getEventBySlug, getCurrentEvents } from '@/lib/events';
 import { eventJsonLd } from '@/lib/jsonld';
 import { typeMeta } from '@/lib/eventTypes';
-import { absoluteUrl, SITE_NAME } from '@/lib/site';
+import { absoluteUrl, REGION, SITE_NAME } from '@/lib/site';
 import { formatDateRange } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   const description = event.description
     ? event.description.replace(/\s+/g, ' ').trim().slice(0, 155)
-    : `${typeMeta(event.type).label} in ${event.city || 'Europe'} — ${formatDateRange(event)}.`;
+    : `${typeMeta(event.type).label} in ${event.city || REGION} — ${formatDateRange(event)}.`;
   const url = absoluteUrl(`/events/${slug}`);
 
   return {
