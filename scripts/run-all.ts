@@ -6,6 +6,7 @@ import { run as pinkDolphin } from './parsers/pink-dolphin';
 import { run as dviTaures } from './parsers/dvi-taures';
 import { run as collageClub } from './parsers/collage-club';
 import { run as discoWheel } from './parsers/disco-wheel';
+import { run as ajudaLab } from './parsers/ajuda-lab';
 
 // Load .env.local for local development. In CI, env vars are injected via secrets.
 // We parse manually so we can overwrite empty-string vars (process.loadEnvFile skips them).
@@ -40,6 +41,7 @@ const parsers = [
   { name: '2 Taurės', fn: dviTaures },
   { name: 'Collage Club', fn: collageClub },
   { name: 'Disco Wheel', fn: discoWheel },
+  { name: 'Ajuda Lab', fn: ajudaLab },
 ];
 
 async function main() {
