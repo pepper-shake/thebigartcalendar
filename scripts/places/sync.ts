@@ -1,9 +1,9 @@
 import { sql } from 'drizzle-orm';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
 import { places } from '../../src/db/schema';
 import { PLACES } from './places';
 
+// Existing env vars win, so `DATABASE_URL=… npm run places:sync` targets
+// another DB (e.g. the local PGlite server from `npm run db:local`).
 process.loadEnvFile('.env.local');
 
 // Upsert every entry in places.ts into the `places` table. Idempotent: re-run
@@ -11,8 +11,8 @@ process.loadEnvFile('.env.local');
 // the DB — set `status: 'hidden'` instead (no destructive ops without sign-off).
 
 async function main() {
-  const url = (process.env.DATABASE_URL ?? '').replace(/^["']|["']$/g, '');
-  const db = drizzle(neon(url));
+  // Imported after the env is loaded: src/db picks Neon or node-postgres from the URL.
+  const { db } = await import('../../src/db');
 
   const slugs = new Set<string>();
   for (const p of PLACES) {

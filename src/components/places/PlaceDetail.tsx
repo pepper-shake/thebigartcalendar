@@ -154,7 +154,7 @@ export default function PlaceDetail({ place }: { place: Place }) {
 
   return (
     <div
-      className="w-full -mx-6 rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
+      className="-mx-6 w-[calc(100%+3rem)] lg:w-full rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
       style={{
         backgroundColor: '#FBFAF6',
         backgroundImage: `linear-gradient(0deg, ${hexToRgba(cardColor, 0.2)}, ${hexToRgba(cardColor, 0.2)})`,
