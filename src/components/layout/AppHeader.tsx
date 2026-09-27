@@ -1,29 +1,29 @@
 'use client';
 
-import { CalendarFilters } from '@/types';
+import { CalendarFilters, EventType } from '@/types';
 import FilterBar from '@/components/filters/FilterBar';
 import { FilterSelect } from '@/components/ui/FilterSelect';
 
 interface Props {
   year: number;
+  years: number[]; // only years that have events
   onYearChange: (y: number) => void;
   filters: CalendarFilters;
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
+  types: EventType[];
 }
 
-const YEARS = [2024, 2025, 2026, 2027, 2028];
-
-export default function AppHeader({ year, onYearChange, filters, onFiltersChange, cities }: Props) {
+export default function AppHeader({ year, years, onYearChange, filters, onFiltersChange, cities, types }: Props) {
   return (
     <div className="flex-none flex items-center justify-between px-6 pb-[1.5vh]">
       <FilterSelect
         value={String(year)}
         onChange={(v) => onYearChange(Number(v ?? year))}
-        options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
+        options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
       />
 
-      <FilterBar filters={filters} onChange={onFiltersChange} cities={cities} />
+      <FilterBar filters={filters} onChange={onFiltersChange} cities={cities} types={types} />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import MenuPanel from './MenuPanel';
 
-export default function RootHeader() {
+export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -36,7 +36,7 @@ export default function RootHeader() {
         </button>
       </div>
 
-      <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
     </>
   );
 }

@@ -7,6 +7,8 @@ import { Minus } from 'lucide-react';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  /** Links to hide, e.g. type hubs with no upcoming events ("/auctions"). */
+  hiddenHrefs?: string[];
 }
 
 const NAV_LINKS = [
@@ -31,7 +33,7 @@ const linkStyle = {
   letterSpacing: '-0.64px',
 } as const;
 
-export default function MenuPanel({ isOpen, onClose }: Props) {
+export default function MenuPanel({ isOpen, onClose, hiddenHrefs = [] }: Props) {
   // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -83,7 +85,7 @@ export default function MenuPanel({ isOpen, onClose }: Props) {
         className="flex flex-col items-end mt-8 w-full flex-1 min-h-0 overflow-y-auto"
         style={{ gap: 17 }}
       >
-        {NAV_LINKS.map(({ label, href }) => (
+        {NAV_LINKS.filter(({ href }) => !hiddenHrefs.includes(href)).map(({ label, href }) => (
           <Link
             key={label}
             href={href}

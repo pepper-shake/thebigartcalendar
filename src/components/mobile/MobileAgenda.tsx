@@ -7,21 +7,14 @@ import { FilterSelect } from '@/components/ui/FilterSelect';
 import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
-import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
-
-const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
-
-const YEARS = [2024, 2025, 2026, 2027, 2028];
-
-const ALL_TYPES: { value: EventType | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Types' },
-  ...EVENT_TYPES.map((t) => ({ value: t, label: eventTypeColors[t].label })),
-];
+import { typeOptions } from '@/components/filters/FilterBar';
 
 interface Props {
   year: number;
+  years: number[]; // only years that have events
   onYearChange: (y: number) => void;
   month: number;
+  months: number[]; // only months (0-indexed) of `year` that have events
   onMonthChange: (m: number) => void;
   selectedDate: string | null;
   onSelectedDateChange: (d: string) => void;
@@ -30,12 +23,15 @@ interface Props {
   filters: CalendarFilters;
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
+  types: EventType[];
 }
 
 export default function MobileAgenda({
   year,
+  years,
   onYearChange,
   month,
+  months,
   onMonthChange,
   selectedDate,
   onSelectedDateChange,
@@ -44,6 +40,7 @@ export default function MobileAgenda({
   filters,
   onFiltersChange,
   cities,
+  types,
 }: Props) {
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -77,17 +74,17 @@ export default function MobileAgenda({
             size="sm"
             value={filters.type}
             onChange={(v) => onFiltersChange({ ...filters, type: (v ?? 'all') as EventType | 'all' })}
-            options={ALL_TYPES}
+            options={typeOptions(types)}
           />
           <FilterSelect
             size="sm"
             value={String(year)}
             onChange={(v) => onYearChange(Number(v ?? year))}
-            options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
+            options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
           />
         </div>
 
-        <MonthStrip month={month} onChange={onMonthChange} scrollable />
+        <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
         <DateStrip
           eventDates={eventDates}
           selectedDate={selectedDate}

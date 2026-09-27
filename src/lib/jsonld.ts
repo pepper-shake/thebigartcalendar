@@ -2,6 +2,7 @@ import { ArtEvent } from '@/types';
 import { type Place } from '@/db/schema';
 import { absoluteUrl, SITE_NAME, SITE_URL } from '@/lib/site';
 import { eventSlug } from '@/lib/slug';
+import { eventTimeZone, isoWithOffset } from '@/lib/timezone';
 
 // schema.org JSON-LD builders. These power Google's event rich results and
 // help LLM crawlers understand the content. Rendered via <JsonLd>.
@@ -15,14 +16,21 @@ const SCHEMA_TYPE: Record<string, string> = {
   auction: 'Event',
 };
 
+// Date-times carry the venue's UTC offset (DST-correct), e.g.
+// "2026-09-27T10:00:00+01:00"; date-only events stay plain dates.
+function withOffset(e: ArtEvent, date: string, time: string): string {
+  const tz = eventTimeZone(e.country);
+  return (tz && isoWithOffset(date, time, tz)) || `${date}T${time}`;
+}
+
 function startDateTime(e: ArtEvent): string {
-  return e.startTime ? `${e.date}T${e.startTime}` : e.date;
+  return e.startTime ? withOffset(e, e.date, e.startTime) : e.date;
 }
 
 function endDateTime(e: ArtEvent): string | undefined {
-  if (e.endDate && e.endTime) return `${e.endDate}T${e.endTime}`;
+  if (e.endDate && e.endTime) return withOffset(e, e.endDate, e.endTime);
   if (e.endDate) return e.endDate;
-  if (e.endTime) return `${e.date}T${e.endTime}`;
+  if (e.endTime) return withOffset(e, e.date, e.endTime);
   return undefined;
 }
 
