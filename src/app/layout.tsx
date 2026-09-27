@@ -5,7 +5,20 @@ import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import JsonLd from "@/components/seo/JsonLd";
 import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { EVENT_TYPES } from "@/lib/eventTypes";
+import { listActiveTypes } from "@/lib/events";
 import "./globals.css";
+
+// Menu links to type hubs with no upcoming events (those pages 404). If the DB
+// is unreachable, hide nothing rather than break every page's header.
+async function hiddenTypeHrefs(): Promise<string[]> {
+  try {
+    const active = await listActiveTypes();
+    return EVENT_TYPES.filter((t) => !active.includes(t.type)).map((t) => `/${t.slug}`);
+  } catch {
+    return [];
+  }
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,18 +64,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const hiddenHrefs = await hiddenTypeHrefs();
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${hostGrotesk.variable} ${oxygen.variable} h-full antialiased`}
     >
       <body className="h-full flex flex-col text-zinc-900" style={{ backgroundColor: '#FBFAF6' }}>
-        <RootHeader />
+        <RootHeader hiddenHrefs={hiddenHrefs} />
         <div className="flex-1 min-h-0">{children}</div>
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />

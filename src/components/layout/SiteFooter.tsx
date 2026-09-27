@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { EVENT_TYPES } from '@/lib/eventTypes';
+import { listActiveTypes } from '@/lib/events';
 
 // Server-rendered footer. Its real <a> links give crawlers a path from every
 // content page to the type + city hubs (which in turn link to event pages).
-export default function SiteFooter() {
+export default async function SiteFooter() {
+  const active = await listActiveTypes();
   return (
     <footer
       className="border-t border-black/10 px-6 py-12 mt-16"
@@ -29,7 +31,7 @@ export default function SiteFooter() {
         </div>
 
         <FooterCol title="Browse">
-          {EVENT_TYPES.map((t) => (
+          {EVENT_TYPES.filter((t) => active.includes(t.type)).map((t) => (
             <FooterLink key={t.slug} href={`/${t.slug}`}>
               {t.plural}
             </FooterLink>
