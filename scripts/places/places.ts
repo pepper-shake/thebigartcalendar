@@ -239,4 +239,46 @@ export const PLACES: NewPlace[] = [
     websiteUrl: 'https://www.macba.cat/en/',
     instagramUrl: 'https://www.instagram.com/macba_barcelona',
   },
+
+  // --- Added by hand ---
+  {
+    id: 'galeria-1758',
+    slug: 'galeria-1758',
+    name: 'Galeria 1758',
+    aliases: ['Galeria 1758 Lisboa', 'Atelier 1758'],
+    kind: 'both',
+    category: 'gallery',
+    description:
+      'Contemporary art gallery in Ajuda, Lisbon, born from the atelier of curator Cristina Cabrita, with a focus on accessible, inclusive art. Shows exhibitions by contemporary artists, sells original works and limited editions, and runs traditional azulejo (tile) painting workshops and custom group sessions.',
+    imageUrl: 'https://galeria1758.pt/wp-content/uploads/2025/05/IMG_7104-copiar-scaled-e1753722927884.jpg',
+    address: 'Travessa da Memória 47A, 1300-402 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7027294, // street-level (Nominatim had no house number)
+    lng: -9.2008251,
+    websiteUrl: 'https://galeria1758.pt/',
+    instagramUrl: 'https://www.instagram.com/galeria_1758/',
+  },
+  {
+    id: 'kitulu',
+    slug: 'kitulu',
+    name: 'Kitulu',
+    aliases: ['kitulu.pt', 'Kitulu Casa & Jardim'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Contemporary floral art studio in Lisbon: flowers and plants for weddings and events, a weekly flower subscription ("Flor à Porta"), crafts and mini gardens.',
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/kitulu-7Eq3EGIt9zMRIFp47LpVsvzyRZsRA0.jpg',
+    address: 'Travessa da Boa Hora à Ajuda 31B, 1300-102 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7033739, // Nominatim: next door (31A)
+    lng: -9.1965145,
+    instagramUrl: 'https://www.instagram.com/kitulu.pt/',
+    openingHours: {
+      mon: '10:00-18:00', tue: '10:00-18:00', wed: '10:00-18:00',
+      thu: '10:00-18:00', fri: '10:00-18:00', sat: '10:00-16:00',
+      note: 'Orders via WhatsApp or Instagram.',
+    },
+  },
 ];
