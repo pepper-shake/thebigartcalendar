@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getAllEvents, getAllPlaces } from '@/db/queries';
 import { toArtEvent } from '@/lib/transform';
 import { ArtEvent, EventType } from '@/types';
@@ -22,12 +23,12 @@ export function isCurrent(e: ArtEvent, ref: string = todayISO()): boolean {
 }
 
 /** All published events, curation merged, linked to their places, ordered by
- *  start date (asc). */
-export async function getPublishedEvents(): Promise<ArtEvent[]> {
+ *  start date (asc). Memoized per request (layout, page and footer all read it). */
+export const getPublishedEvents = cache(async (): Promise<ArtEvent[]> => {
   const [rows, places] = await Promise.all([getAllEvents(), getAllPlaces()]);
   const matcher = buildPlaceMatcher(places);
   return rows.map((r) => linkPlaces(toArtEvent(r), r.sourceName, matcher));
-}
+});
 
 /** Published events that are ongoing or upcoming — the indexable surface. */
 export async function getCurrentEvents(): Promise<ArtEvent[]> {
@@ -73,4 +74,11 @@ export async function listCities(): Promise<CitySummary[]> {
     else map.set(slug, { name: e.city, slug, count: 1 });
   }
   return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Event types that currently have ongoing/upcoming events. Type hubs, the
+ *  header menu, footer and sitemap only show these — an empty type's page
+ *  404s until events of that type exist again. */
+export async function listActiveTypes(): Promise<EventType[]> {
+  return [...new Set((await getCurrentEvents()).map((e) => e.type))];
 }

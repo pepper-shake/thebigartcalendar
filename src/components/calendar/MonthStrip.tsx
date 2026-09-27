@@ -7,11 +7,16 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 interface Props {
   month: number; // 0-indexed
+  months?: number[]; // 0-indexed months to show (those with events); default all 12
   onChange: (m: number) => void;
   scrollable?: boolean;
 }
 
-export default function MonthStrip({ month, onChange, scrollable = false }: Props) {
+export default function MonthStrip({ month, months, onChange, scrollable = false }: Props) {
+  const visible = months ?? MONTHS.map((_, i) => i);
+  // With all 12 months the desktop strip spreads edge to edge; fewer months
+  // are centred instead of being pushed to the far edges.
+  const spread = visible.length === 12;
   const stripRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
@@ -30,10 +35,15 @@ export default function MonthStrip({ month, onChange, scrollable = false }: Prop
     <div
       ref={stripRef}
       className={`flex-none flex items-center border-t border-b border-[#b1b1b1] h-[84px] ${
-        scrollable ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6' : 'justify-between px-[120px]'
+        scrollable
+          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6'
+          : spread
+            ? 'justify-between px-[120px]'
+            : 'justify-center gap-[72px] px-6'
       }`}
     >
-      {MONTHS.map((name, i) => {
+      {visible.map((i) => {
+        const name = MONTHS[i];
         const isActive = i === month;
         return (
           <button

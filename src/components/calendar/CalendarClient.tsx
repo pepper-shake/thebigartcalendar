@@ -4,6 +4,7 @@ import { useState, useMemo, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { ArtEvent, CalendarFilters } from '@/types';
 import { toDateString } from '@/lib/calendarUtils';
+import { computeFacets, monthForYear, monthsInYear, resolveMonth } from '@/lib/calendarFacets';
 import AppHeader from '@/components/layout/AppHeader';
 import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
@@ -12,17 +13,36 @@ import MobileAgenda from '@/components/mobile/MobileAgenda';
 
 interface Props {
   events: ArtEvent[];
-  cities: string[];
 }
 
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
-export default function CalendarClient({ events, cities }: Props) {
+export default function CalendarClient({ events }: Props) {
   const today = useMemo(() => new Date(), []);
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth());
+  // The year/month the user asked for; what's shown is resolved against the
+  // months that actually have events (below).
+  const [requestedYear, setYear] = useState(today.getFullYear());
+  const [requestedMonth, setMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filters, setFilters] = useState<CalendarFilters>(DEFAULT_FILTERS);
+
+  // Only offer years, months, types and cities that lead to events, each
+  // reacting to the other filters (see src/lib/calendarFacets.ts).
+  const facets = useMemo(() => computeFacets(events, filters), [events, filters]);
+
+  // Show the requested month if it has events; otherwise the next month that
+  // does (e.g. on first load, or after a filter empties the current month).
+  const { year, month } = useMemo(
+    () => resolveMonth(facets.monthKeys, requestedYear, requestedMonth),
+    [facets.monthKeys, requestedYear, requestedMonth],
+  );
+  const months = useMemo(() => monthsInYear(facets.monthKeys, year), [facets.monthKeys, year]);
+
+  const handleYearChange = (y: number) => {
+    setYear(y);
+    setMonth(monthForYear(facets.monthKeys, y, month));
+    setSelectedDate(null);
+  };
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -96,6 +116,7 @@ export default function CalendarClient({ events, cities }: Props) {
   }, [monthEvents, effectiveSelectedDate]);
 
   const handleMonthChange = (m: number) => {
+    setYear(year);
     setMonth(m);
     setSelectedDate(null);
   };
@@ -109,10 +130,12 @@ export default function CalendarClient({ events, cities }: Props) {
         <div className="flex-none relative">
           <AppHeader
             year={year}
-            onYearChange={setYear}
+            years={facets.years}
+            onYearChange={handleYearChange}
             filters={filters}
             onFiltersChange={setFilters}
-            cities={cities}
+            cities={facets.cities}
+            types={facets.types}
           />
           <div
             className="absolute bottom-0 left-0 right-0 h-px bg-[#b1b1b1] transition-opacity duration-300"
@@ -126,7 +149,7 @@ export default function CalendarClient({ events, cities }: Props) {
           className="flex-1 min-h-0 overflow-y-auto"
           onScroll={handleScroll}
         >
-          <MonthStrip month={month} onChange={handleMonthChange} />
+          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
           <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
 
           <main className="px-6 py-4">
@@ -163,8 +186,10 @@ export default function CalendarClient({ events, cities }: Props) {
       <div className="flex md:hidden flex-col h-full overflow-hidden">
         <MobileAgenda
           year={year}
-          onYearChange={setYear}
+          years={facets.years}
+          onYearChange={handleYearChange}
           month={month}
+          months={months}
           onMonthChange={handleMonthChange}
           selectedDate={effectiveSelectedDate}
           onSelectedDateChange={setSelectedDate}
@@ -172,7 +197,8 @@ export default function CalendarClient({ events, cities }: Props) {
           selectedEvents={selectedEvents}
           filters={filters}
           onFiltersChange={setFilters}
-          cities={cities}
+          cities={facets.cities}
+          types={facets.types}
         />
       </div>
     </>

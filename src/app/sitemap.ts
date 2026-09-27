@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { getCurrentEvents, listCities } from '@/lib/events';
+import { getCurrentEvents, listActiveTypes, listCities } from '@/lib/events';
 import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
 import { absoluteUrl } from '@/lib/site';
@@ -9,7 +9,12 @@ import { listPlaces } from '@/lib/places';
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [events, cities, places] = await Promise.all([getCurrentEvents(), listCities(), listPlaces()]);
+  const [events, cities, places, activeTypes] = await Promise.all([
+    getCurrentEvents(),
+    listCities(),
+    listPlaces(),
+    listActiveTypes(),
+  ]);
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -21,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl('/contact'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  const typePages: MetadataRoute.Sitemap = EVENT_TYPES.map((t) => ({
+  const typePages: MetadataRoute.Sitemap = EVENT_TYPES.filter((t) => activeTypes.includes(t.type)).map((t) => ({
     url: absoluteUrl(`/${t.slug}`),
     lastModified: now,
     changeFrequency: 'daily',

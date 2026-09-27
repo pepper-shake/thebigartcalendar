@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { REGION_ADJECTIVE } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Blog — The Big Art Calendar',
-  description: 'Writing about art events, the European art scene, and how to get the most out of The Big Art Calendar.',
+  description: `Writing about art events, the ${REGION_ADJECTIVE} art scene, and how to get the most out of The Big Art Calendar.`,
 };
 
 export default function BlogPage() {

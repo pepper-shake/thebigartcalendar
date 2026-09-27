@@ -1,4 +1,5 @@
 import { EventType } from '@/types';
+import { REGION } from '@/lib/site';
 
 // Maps the raw scraper `type` to SEO-friendly, searchable labels and URL slugs.
 // The DB stores `gallery`; users search for "exhibitions" — so the public
@@ -18,35 +19,35 @@ export const EVENT_TYPES: EventTypeMeta[] = [
     slug: 'exhibitions',
     label: 'Exhibition',
     plural: 'Exhibitions',
-    blurb: 'Gallery and museum exhibitions across Europe.',
+    blurb: `Gallery and museum exhibitions across ${REGION}.`,
   },
   {
     type: 'fair',
     slug: 'art-fairs',
     label: 'Art Fair',
     plural: 'Art Fairs',
-    blurb: 'Art fairs and large-scale showcases across Europe.',
+    blurb: `Art fairs and large-scale showcases across ${REGION}.`,
   },
   {
     type: 'workshop',
     slug: 'workshops',
     label: 'Workshop',
     plural: 'Workshops',
-    blurb: 'Hands-on art workshops, classes, and short courses across Europe.',
+    blurb: `Hands-on art workshops, classes, and short courses across ${REGION}.`,
   },
   {
     type: 'performance',
     slug: 'performances',
     label: 'Performance',
     plural: 'Performances',
-    blurb: 'Live art performances and performative events across Europe.',
+    blurb: `Live art performances and performative events across ${REGION}.`,
   },
   {
     type: 'auction',
     slug: 'auctions',
     label: 'Auction',
     plural: 'Auctions',
-    blurb: 'Art auctions and sales across Europe.',
+    blurb: `Art auctions and sales across ${REGION}.`,
   },
 ];
 
