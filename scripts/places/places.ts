@@ -229,6 +229,30 @@ export const PLACES: NewPlace[] = [
     },
   },
 
+  {
+    id: 'dobarro',
+    slug: 'dobarro',
+    name: 'DoBarro',
+    aliases: ['Do Barro', 'dobarro.art'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Ceramics and visual-arts studio and shop in Porto, founded by artists and designers Marisa Grilo, Felipe Rocio and Samuel Sanção. Runs weekly workshops and courses in hand-building, nerikomi and tile painting, plus drawing, painting, printmaking (tetrapak, LEGO, cyanotype) and pinhole photography; also rents studio space and offers kiln firings.',
+    imageUrl:
+      'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1200,fit=crop/YBgeXyjjz9H06Bbb/whatsapp-image-2024-10-22-at-15.52.14-2-AMql0n3LE1Hon0Qv.jpeg',
+    address: 'Rua da Alegria 246, Porto',
+    city: 'Porto',
+    country: 'Portugal',
+    // No lat/lng: Nominatim has no house numbers on this long street; the map
+    // link falls back to an address search, which is exact.
+    websiteUrl: 'https://dobarro.art/',
+    instagramUrl: 'https://www.instagram.com/dobarro.art',
+    openingHours: {
+      mon: '11:00-18:00', tue: '11:00-18:00', wed: '11:00-18:00',
+      thu: '11:00-18:00', fri: '11:00-18:00', sat: '11:00-18:00',
+    },
+  },
+
   // --- Scraped sources with no current events ---
   {
     id: 'bryon-studios',
