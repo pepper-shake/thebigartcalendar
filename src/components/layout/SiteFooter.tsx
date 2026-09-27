@@ -35,6 +35,7 @@ export default function SiteFooter() {
             </FooterLink>
           ))}
           <FooterLink href="/cities">By city</FooterLink>
+          <FooterLink href="/places">Places</FooterLink>
         </FooterCol>
 
         <FooterCol title="Calendar">

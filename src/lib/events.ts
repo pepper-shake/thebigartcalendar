@@ -1,14 +1,15 @@
-import { getAllEvents } from '@/db/queries';
+import { getAllEvents, getAllPlaces } from '@/db/queries';
 import { toArtEvent } from '@/lib/transform';
 import { ArtEvent, EventType } from '@/types';
 import { eventSlug, citySlug } from '@/lib/slug';
+import { buildPlaceMatcher, linkPlaces } from '@/lib/place-match';
 
 // Read-side selectors for SEO routes. Everything funnels through getAllEvents()
 // → toArtEvent() (the curation-safe chokepoint in ARCHITECTURE.md), so hidden
 // events never leak and human overrides always win.
 
 /** Today as YYYY-MM-DD (lexicographically comparable to ArtEvent.date). */
-function todayISO(): string {
+export function todayISO(): string {
   const d = new Date();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
@@ -20,10 +21,12 @@ export function isCurrent(e: ArtEvent, ref: string = todayISO()): boolean {
   return (e.endDate ?? e.date) >= ref;
 }
 
-/** All published events, curation merged, ordered by start date (asc). */
+/** All published events, curation merged, linked to their places, ordered by
+ *  start date (asc). */
 export async function getPublishedEvents(): Promise<ArtEvent[]> {
-  const rows = await getAllEvents();
-  return rows.map(toArtEvent);
+  const [rows, places] = await Promise.all([getAllEvents(), getAllPlaces()]);
+  const matcher = buildPlaceMatcher(places);
+  return rows.map((r) => linkPlaces(toArtEvent(r), r.sourceName, matcher));
 }
 
 /** Published events that are ongoing or upcoming — the indexable surface. */

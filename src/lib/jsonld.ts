@@ -1,4 +1,5 @@
 import { ArtEvent } from '@/types';
+import { type Place } from '@/db/schema';
 import { absoluteUrl, SITE_NAME, SITE_URL } from '@/lib/site';
 import { eventSlug } from '@/lib/slug';
 
@@ -134,4 +135,54 @@ export function organizationJsonLd(): Record<string, unknown> {
     name: SITE_NAME,
     url: SITE_URL,
   };
+}
+
+// schema.org type per place category; organiser-only places are Organizations.
+const PLACE_SCHEMA_TYPE: Record<string, string> = {
+  gallery: 'ArtGallery',
+  museum: 'Museum',
+  shop: 'Store',
+};
+
+const DAY_NAMES: Record<string, string> = {
+  mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday',
+  fri: 'Friday', sat: 'Saturday', sun: 'Sunday',
+};
+
+export function placeJsonLd(place: Place, events: ArtEvent[]): Record<string, unknown> {
+  const url = absoluteUrl(`/places/${place.slug}`);
+  const isOrgOnly = place.kind === 'organiser';
+  const data: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': isOrgOnly ? 'Organization' : (PLACE_SCHEMA_TYPE[place.category ?? ''] ?? 'LocalBusiness'),
+    name: place.name,
+    url,
+  };
+  if (place.description) data.description = place.description;
+  if (place.imageUrl) data.image = [place.imageUrl];
+  const sameAs = [place.websiteUrl, place.instagramUrl].filter(Boolean);
+  if (sameAs.length) data.sameAs = sameAs;
+
+  if (place.address || place.city) {
+    data.address = {
+      '@type': 'PostalAddress',
+      streetAddress: place.address || undefined,
+      addressLocality: place.city || undefined,
+      addressCountry: place.country || undefined,
+    };
+  }
+  if (!isOrgOnly && place.lat != null && place.lng != null) {
+    data.geo = { '@type': 'GeoCoordinates', latitude: place.lat, longitude: place.lng };
+  }
+  if (!isOrgOnly && place.openingHours) {
+    const specs = Object.entries(place.openingHours)
+      .filter(([d, v]) => DAY_NAMES[d] && typeof v === 'string' && /^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(v))
+      .map(([d, v]) => {
+        const [opens, closes] = (v as string).split('-');
+        return { '@type': 'OpeningHoursSpecification', dayOfWeek: DAY_NAMES[d], opens, closes };
+      });
+    if (specs.length) data.openingHoursSpecification = specs;
+  }
+  if (events.length) data.event = events.map((e) => eventJsonLd(e));
+  return data;
 }

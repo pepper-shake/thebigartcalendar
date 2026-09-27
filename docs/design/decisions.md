@@ -4,6 +4,7 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 
 | # | Decision | Status | Date |
 |---|---|---|---|
+| 0008 | Places directory: curated `places` table, events linked at read time by name/alias match | Accepted | 2026-09-27 |
 | 0007 | Normalized event data model: occurrences + wall-time/zone, Type≠Tags, materialize recurrence | Proposed | 2026-08-18 |
 | 0006 | SEO routing: per-event/city/type pages + sitemap/robots/JSON-LD, slugs derived in code | Accepted | 2026-06-10 |
 | 0005 | Apply schema changes with `db:push` (no migration files) | Accepted | 2026-06-07 |
@@ -13,6 +14,13 @@ Accepted decisions and their rationale (ADR log). Newest first. When a decision 
 | 0001 | Edit scraped events with Retool (not Strapi) | Accepted | 2026-06-07 |
 
 ---
+
+## 0008 — Places directory with read-time event linking
+**Status:** Accepted (2026-09-27).
+**Context:** Some art places can't be scraped, but users should still find them; places that do have events should show them. #0007 proposes full `venue`/`organiser` entities with FKs from occurrences — a large migration of the flat `events` table.
+**Decision:** Add a standalone, hand-curated `places` table (kind venue/organiser/both, category, address, coords, links, opening hours, `aliases`). Link events **at read time** by normalized name/alias + city match; no column on `events`. Places are added via reviewable data in `scripts/places/places.ts` + `npm run places:sync`; the scraper never creates places.
+**Why:** Zero risk to the scraper/curation guard, works retroactively (a new place links its history immediately), and a bad match is fixed by editing aliases. Cheap now; compatible with #0007 later (backfill `venue_id` from the same matcher).
+**Consequences:** Every event read loads the (small) places table and matches in memory. Name collisions across cities are resolved by city; organisers may match across cities only when unambiguous. Detail: [product/places.md](../product/places.md).
 
 ## 0007 — Normalized event data model (occurrences + wall-time/zone)
 **Status:** Proposed (design captured, not yet implemented).

@@ -3,17 +3,19 @@ import { getCurrentEvents, listCities } from '@/lib/events';
 import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
 import { absoluteUrl } from '@/lib/site';
+import { listPlaces } from '@/lib/places';
 
 // Regenerated per request so new scraped events appear without a redeploy.
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [events, cities] = await Promise.all([getCurrentEvents(), listCities()]);
+  const [events, cities, places] = await Promise.all([getCurrentEvents(), listCities(), listPlaces()]);
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: absoluteUrl('/'), lastModified: now, changeFrequency: 'daily', priority: 1 },
     { url: absoluteUrl('/cities'), lastModified: now, changeFrequency: 'daily', priority: 0.6 },
+    { url: absoluteUrl('/places'), lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
     { url: absoluteUrl('/about'), lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: absoluteUrl('/blog'), lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: absoluteUrl('/contact'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
@@ -41,5 +43,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     images: e.image ? [e.image] : undefined,
   }));
 
-  return [...staticPages, ...typePages, ...cityPages, ...eventPages];
+  const placePages: MetadataRoute.Sitemap = places.map(({ place }) => ({
+    url: absoluteUrl(`/places/${place.slug}`),
+    lastModified: place.updatedAt,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+    images: place.imageUrl ? [place.imageUrl] : undefined,
+  }));
+
+  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...eventPages];
 }

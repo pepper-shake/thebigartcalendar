@@ -29,6 +29,13 @@ export interface ArtEvent {
   participants?: string[];
   agenda?: AgendaItem[];
   tags?: string[];
+  venuePlace?: PlaceRef;     // linked /places entry for the venue (matched at read time)
+  organiserPlace?: PlaceRef; // linked /places entry for the organiser
+}
+
+export interface PlaceRef {
+  slug: string;
+  name: string;
 }
 
 export interface CalendarFilters {

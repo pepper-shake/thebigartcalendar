@@ -27,4 +27,22 @@
 | **`description_override`** | text | |
 | **`curated_at`** | timestamptz | last manual edit |
 
+## `places`
+Hand-curated directory — see [product/places.md](../product/places.md). Events link at read time (no FK).
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | text PK | = slug at creation, never changes |
+| `slug` | text NOT NULL UNIQUE | `/places/<slug>` |
+| `name` | text NOT NULL | |
+| `aliases` | text[] | other names events use (matched after slug-normalization) |
+| `kind` | text NOT NULL | venue · organiser · both |
+| `category` | text | gallery · museum · studio · workshop-space · shop · artist-run · collective · other |
+| `description` / `image_url` / `address` / `city` / `country` | text | |
+| `lat` / `lng` | double precision | |
+| `website_url` / `instagram_url` | text | |
+| `opening_hours` | jsonb | `{ mon..sun: "HH:MM-HH:MM", note? }`; missing day = closed; null = unknown |
+| `status` | text NOT NULL, default `'published'` | published · hidden |
+| `created_at` / `updated_at` | timestamptz NOT NULL, default `now()` | |
+
 **Blog `posts` table:** not yet created — planned in [exec-plans/active/admin-and-content-platform.md](../exec-plans/active/admin-and-content-platform.md).

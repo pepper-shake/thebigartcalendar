@@ -1,6 +1,6 @@
 import { asc, eq } from 'drizzle-orm';
 import { db } from './index';
-import { events, organiserDefaults, type Event } from './schema';
+import { events, organiserDefaults, places, type Event, type Place } from './schema';
 
 /** An event row plus its organiser's default image (null if none set). */
 export type EventWithDefault = Event & { organiserDefaultImage: string | null };
@@ -14,4 +14,9 @@ export async function getAllEvents(): Promise<EventWithDefault[]> {
     .orderBy(asc(events.startDate));
 
   return rows.map((r) => ({ ...r.event, organiserDefaultImage: r.organiserDefaultImage }));
+}
+
+/** Published places, name ascending. */
+export async function getAllPlaces(): Promise<Place[]> {
+  return db.select().from(places).where(eq(places.status, 'published')).orderBy(asc(places.name));
 }

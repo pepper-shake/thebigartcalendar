@@ -95,9 +95,22 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
     </div>
   );
 
-  const entityPill = (name: string, url?: string) =>
-    url ? (
+  // Organiser / venue pills. A linked place (/places/<slug>) wins over the
+  // external website; when organiser and venue are the same place (or name),
+  // show a single pill.
+  const entityPill = (key: string, name: string, place?: { slug: string }, url?: string) =>
+    place ? (
+      <Link
+        key={key}
+        href={`/places/${place.slug}`}
+        style={pillStyle}
+        className="inline-flex items-center hover:opacity-80 transition-opacity"
+      >
+        {name}
+      </Link>
+    ) : url ? (
       <a
+        key={key}
         href={url}
         target="_blank"
         rel="noopener noreferrer"
@@ -107,16 +120,29 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
         {name}
       </a>
     ) : (
-      <span style={pillStyle} className="inline-flex items-center">
+      <span key={key} style={pillStyle} className="inline-flex items-center">
         {name}
       </span>
     );
 
+  // The organiser can also come from a place matched on the source name (e.g.
+  // an Instagram-sourced event with no organiser field).
+  const organiserName = event.organiserName ?? event.organiserPlace?.name;
+  const sameEntity =
+    !!organiserName &&
+    !!event.venue &&
+    (event.organiserPlace && event.venuePlace
+      ? event.organiserPlace.slug === event.venuePlace.slug
+      : organiserName.trim().toLowerCase() === event.venue.trim().toLowerCase());
+
   const entityPills =
-    event.organiserName || event.venue ? (
+    organiserName || event.venue ? (
       <div className="flex flex-wrap items-start" style={{ gap: 16 }}>
-        {event.organiserName && entityPill(event.organiserName, event.organiserUrl)}
-        {event.venue && entityPill(event.venue, event.venueUrl)}
+        {organiserName &&
+          entityPill('organiser', organiserName, event.organiserPlace, event.organiserUrl)}
+        {event.venue &&
+          !sameEntity &&
+          entityPill('venue', event.venue, event.venuePlace, event.venueUrl)}
       </div>
     ) : null;
 
@@ -189,7 +215,7 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
   return (
     <div
-      className="w-full -mx-6 rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
+      className="-mx-6 w-[calc(100%+3rem)] lg:w-full rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
       style={{
         backgroundColor: '#FBFAF6',
         backgroundImage: `linear-gradient(0deg, ${hexToRgba(cardColor, 0.2)}, ${hexToRgba(cardColor, 0.2)})`,
