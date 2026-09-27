@@ -5,6 +5,7 @@ import { eventSlug, citySlug } from '../src/lib/slug';
 import { typeMeta } from '../src/lib/eventTypes';
 import { PORTUGAL_ONLY_MODE, VISIBLE_COUNTRIES } from '../src/config/feature-flags';
 import type { ArtEvent, EventType } from '../src/types';
+import { run as fableLisbon } from './parsers/fable-lisbon';
 import { run as bryonStudios } from './parsers/bryon-studios';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
@@ -40,6 +41,7 @@ try {
 }
 
 const parsers = [
+  { name: 'Fable', fn: fableLisbon },
   { name: 'Bryon Studios', fn: bryonStudios },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },
