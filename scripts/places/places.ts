@@ -250,8 +250,11 @@ export const PLACES: NewPlace[] = [
     category: 'studio',
     description:
       'Contemporary floral art studio in Lisbon: flowers and plants for weddings and events, a weekly flower subscription ("Flor à Porta"), crafts and mini gardens.',
+    address: 'Travessa da Boa Hora à Ajuda 31B, 1300-102 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
+    lat: 38.7033739, // Nominatim: next door (31A)
+    lng: -9.1965145,
     instagramUrl: 'https://www.instagram.com/kitulu.pt/',
     openingHours: {
       mon: '10:00-18:00', tue: '10:00-18:00', wed: '10:00-18:00',
