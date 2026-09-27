@@ -1,4 +1,10 @@
 import { readFileSync } from 'fs';
+import { neon } from '@neondatabase/serverless';
+import { submitToIndexNow } from './lib/indexnow';
+import { eventSlug, citySlug } from '../src/lib/slug';
+import { typeMeta } from '../src/lib/eventTypes';
+import { PORTUGAL_ONLY_MODE, VISIBLE_COUNTRIES } from '../src/config/feature-flags';
+import type { ArtEvent, EventType } from '../src/types';
 import { run as bryonStudios } from './parsers/bryon-studios';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
@@ -44,8 +50,35 @@ const parsers = [
   { name: 'Ajuda Lab', fn: ajudaLab },
 ];
 
+interface NewRow {
+  id: string;
+  title: string;
+  city: string | null;
+  country: string | null;
+  type: string;
+}
+
+// Public pages that became live because of rows added in this run: the new
+// events, plus the hubs that list them (home, their city, their type).
+function pagesFor(rows: NewRow[]): string[] {
+  const visible = VISIBLE_COUNTRIES.map((c) => c.toLowerCase());
+  const shown = rows.filter((r) => !PORTUGAL_ONLY_MODE || visible.includes((r.country ?? '').toLowerCase()));
+  if (shown.length === 0) return [];
+  const paths = new Set<string>(['/']);
+  for (const r of shown) {
+    paths.add(`/events/${eventSlug({ id: r.id, title: r.title, city: r.city ?? '' } as ArtEvent)}`);
+    if (r.city) paths.add(`/cities/${citySlug(r.city)}`);
+    paths.add(`/${typeMeta(r.type as EventType).slug}`);
+  }
+  return [...paths];
+}
+
 async function main() {
   console.log(`Scrape started at ${new Date().toISOString()}`);
+
+  // Snapshot existing ids so new events can be announced to IndexNow afterwards.
+  const sql = neon(process.env.DATABASE_URL!);
+  const before = new Set((await sql`select id from events`).map((r) => r.id as string));
 
   for (const { name, fn } of parsers) {
     console.log(`\n--- ${name} ---`);
@@ -56,6 +89,13 @@ async function main() {
       console.error(`[${name}] Error:`, err instanceof Error ? err.message : err);
     }
   }
+
+  const added = (await sql`
+    select id, title, city, country, type from events
+    where status = 'published' and coalesce(end_date, start_date) >= current_date
+  `).filter((r) => !before.has(r.id as string)) as NewRow[];
+  console.log(`\n${added.length} new upcoming event(s) this run`);
+  await submitToIndexNow(pagesFor(added));
 
   console.log(`\nScrape finished at ${new Date().toISOString()}`);
 }
