@@ -250,6 +250,7 @@ export const PLACES: NewPlace[] = [
     category: 'studio',
     description:
       'Contemporary floral art studio in Lisbon: flowers and plants for weddings and events, a weekly flower subscription ("Flor à Porta"), crafts and mini gardens.',
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/kitulu-7Eq3EGIt9zMRIFp47LpVsvzyRZsRA0.jpg',
     address: 'Travessa da Boa Hora à Ajuda 31B, 1300-102 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
