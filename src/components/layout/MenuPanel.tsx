@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { label: 'Performances', href: '/performances' },
   { label: 'Auctions',     href: '/auctions' },
   { label: 'Cities',       href: '/cities' },
+  { label: 'Places',       href: '/places' },
   { label: 'About',        href: '/about' },
   { label: 'Blog',         href: '/blog' },
   { label: 'Contact',      href: '/contact' },

@@ -1,4 +1,4 @@
-import { pgTable, text, date, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, text, date, timestamp, doublePrecision, jsonb } from 'drizzle-orm/pg-core';
 
 export const events = pgTable('events', {
   id: text('id').primaryKey(), // hash(sourceUrl + title + startDate)
@@ -51,3 +51,38 @@ export const organiserDefaults = pgTable('organiser_defaults', {
 });
 
 export type OrganiserDefault = typeof organiserDefaults.$inferSelect;
+
+// Places directory: art venues and organisers, with or without events. Curated
+// by hand (never written by the scraper). Events link to a place at READ time by
+// matching their venue / organiser name against `name` + `aliases` in the same
+// city (see src/lib/places.ts) — no FK on `events`, so adding a place instantly
+// links its past and future events. See docs/product/places.md.
+export const places = pgTable('places', {
+  id: text('id').primaryKey(),                 // = slug at creation; never changes
+  slug: text('slug').notNull().unique(),       // URL: /places/<slug>
+  name: text('name').notNull(),
+  aliases: text('aliases').array(),            // other names events use for this place
+  kind: text('kind').notNull(),                // 'venue' | 'organiser' | 'both'
+  category: text('category'),                  // gallery | museum | studio | workshop-space | shop | artist-run | collective | other
+  description: text('description'),
+  imageUrl: text('image_url'),
+  address: text('address'),
+  city: text('city'),
+  country: text('country'),
+  lat: doublePrecision('lat'),
+  lng: doublePrecision('lng'),
+  websiteUrl: text('website_url'),
+  instagramUrl: text('instagram_url'),
+  openingHours: jsonb('opening_hours').$type<OpeningHours>(), // null = unknown / by appointment
+  status: text('status').notNull().default('published'),    // 'published' | 'hidden'
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Weekly hours keyed mon..sun, e.g. { tue: '10:00-18:00' }; a missing day = closed. */
+export type OpeningHours = Partial<Record<'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun', string>> & {
+  note?: string; // free text, e.g. "By appointment" or "Closed in August"
+};
+
+export type Place = typeof places.$inferSelect;
+export type NewPlace = typeof places.$inferInsert;

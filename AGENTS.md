@@ -11,6 +11,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 - `npm run build` / `npm run start` — production build / serve
 - `npm run lint` — ESLint · `npx tsc --noEmit` — typecheck (no dedicated script)
 - `npm run scrape` — run the daily scraper (needs `DATABASE_URL` + `ANTHROPIC_API_KEY`)
+- `npm run places:sync` — upsert `scripts/places/places.ts` into the `places` table
 - `npm run db:push` — apply schema to Neon · `npm run db:studio` — browse data
 
 ## What counts as done
@@ -35,6 +36,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Decisions & rationale | [docs/design/decisions.md](docs/design/decisions.md) |
 | Roadmap & in-flight work | [docs/exec-plans/](docs/exec-plans/) |
 | Event editing / curation | [docs/product/event-curation.md](docs/product/event-curation.md) |
+| Places directory (add/edit places) | [docs/product/places.md](docs/product/places.md) |
 | Integrations (Vercel Blob, Retool) | [docs/references/](docs/references/) |
 | DB schema snapshot | [docs/generated/db-schema.md](docs/generated/db-schema.md) |
 | Security | [docs/SECURITY.md](docs/SECURITY.md) |
