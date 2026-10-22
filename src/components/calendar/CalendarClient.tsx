@@ -148,7 +148,10 @@ export default function CalendarClient({ events }: Props) {
           className="flex-1 min-h-0 overflow-y-auto"
           onScroll={handleScroll}
         >
-          <main className="px-6 py-4">
+          {/* At least one header-collapse range (120px, see RootHeader) taller
+              than the viewport, so the wordmark can always shrink fully with
+              the scroll — even on a day with a single row of cards. */}
+          <main className="px-6 py-4 min-h-[calc(100%+120px)]">
             {selectedEvents.length === 0 ? (
               <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}

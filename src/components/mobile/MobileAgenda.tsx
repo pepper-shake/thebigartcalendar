@@ -63,51 +63,55 @@ export default function MobileAgenda({
         className="flex-1 min-h-0 overflow-y-auto"
         onScroll={handleScroll}
       >
-        <div className="flex items-center justify-between px-4 pt-[14px] pb-4">
-          <FilterSelect
-            size="sm"
-            value={filters.city}
-            onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
-            options={[{ value: 'all', label: 'All Cities' }, ...cities.map((c) => ({ value: c, label: c }))]}
-          />
-          <FilterSelect
-            size="sm"
-            value={filters.type}
-            onChange={(v) => onFiltersChange({ ...filters, type: (v ?? 'all') as EventType | 'all' })}
-            options={typeOptions(types)}
-          />
-          <FilterSelect
-            size="sm"
-            value={String(year)}
-            onChange={(v) => onYearChange(Number(v ?? year))}
-            options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
-          />
-        </div>
+        {/* At least one header-collapse range (72px, see RootHeader) taller than
+            the viewport, so the wordmark can always shrink fully with the scroll. */}
+        <div className="min-h-[calc(100%+72px)]">
+          <div className="flex items-center justify-between px-4 pt-[14px] pb-4">
+            <FilterSelect
+              size="sm"
+              value={filters.city}
+              onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
+              options={[{ value: 'all', label: 'All Portugal' }, ...cities.map((c) => ({ value: c, label: c }))]}
+            />
+            <FilterSelect
+              size="sm"
+              value={filters.type}
+              onChange={(v) => onFiltersChange({ ...filters, type: (v ?? 'all') as EventType | 'all' })}
+              options={typeOptions(types)}
+            />
+            <FilterSelect
+              size="sm"
+              value={String(year)}
+              onChange={(v) => onYearChange(Number(v ?? year))}
+              options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
+            />
+          </div>
 
-        <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
-        <DateStrip
-          eventDates={eventDates}
-          selectedDate={selectedDate}
-          onChange={onSelectedDateChange}
-          scrollable
-        />
+          <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
+          <DateStrip
+            eventDates={eventDates}
+            selectedDate={selectedDate}
+            onChange={onSelectedDateChange}
+            scrollable
+          />
 
-        {/* Event cards */}
-        <div className="p-6">
-          {selectedEvents.length === 0 ? (
-            <div
-              className="flex items-center justify-center h-48 text-ink/60 italic"
-              style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
-            >
-              {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-6">
-              {selectedEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          )}
+          {/* Event cards */}
+          <div className="p-6">
+            {selectedEvents.length === 0 ? (
+              <div
+                className="flex items-center justify-center h-48 text-ink/60 italic"
+                style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
+              >
+                {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-6">
+                {selectedEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

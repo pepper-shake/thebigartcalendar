@@ -31,37 +31,34 @@
   }
 }
 
-/* Site header wordmark (RootHeader). Two states from Figma: at rest a large
-   two-line wordmark (283:2065); once the visitor scrolls, the same two lines
-   at a smaller size (288:5052, kept on two lines). Size, top offset and header
-   height all derive from two registered custom properties, so one transition
-   animates them in lockstep — the wordmark shrinks toward the top centre and
-   the pinned filters and strips glide up with it. */
-@property --logo-size {
-  syntax: '<length>';
+/* Site header wordmark (RootHeader). Two Figma states — desktop 283:2065 →
+   288:5052, mobile 296:5212 → 296:5353 — joined by a scroll-linked
+   interpolation: RootHeader writes --collapse (0 at the top, 1 once scrolled
+   past its range) straight from the scroll position every frame, and the
+   wordmark size, its top offset, the header height and the mobile hairline are
+   all computed from it. Scrolling halfway shrinks it halfway; scrolling back
+   grows it in step. The wordmark stays on two lines throughout. */
+@property --collapse {
+  syntax: '<number>';
   inherits: true;
-  initial-value: 82px;
-}
-@property --logo-top {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 16px;
+  initial-value: 0;
 }
 .site-header {
-  --logo-size: clamp(36px, min(11.5vw, 6.5vh), 82px);
-  --logo-top: 2vh;
-  --logo-ease: cubic-bezier(0.22, 1, 0.36, 1); /* ease-out-quint */
-  --logo-dur: 520ms;
+  /* rest → scrolled endpoints */
+  --logo-lg: clamp(36px, min(11.5vw, 6.5vh), 82px);
+  --logo-sm: clamp(24px, 7vw, 32px);
+  --top-lg: 2vh;
+  --top-sm: 14px;
+  --logo-size: calc(var(--logo-lg) + (var(--logo-sm) - var(--logo-lg)) * var(--collapse));
+  --logo-top: calc(var(--top-lg) + (var(--top-sm) - var(--top-lg)) * var(--collapse));
   position: relative;
   flex: none;
   height: calc(var(--logo-top) * 1.5 + var(--logo-size) * 1.86);
-  transition:
-    --logo-size var(--logo-dur) var(--logo-ease),
-    --logo-top var(--logo-dur) var(--logo-ease);
 }
-.site-header[data-compact] {
-  --logo-size: clamp(24px, 7vw, 32px);
-  --logo-top: 14px;
+/* Only when nothing can scroll (all cards fit), a wheel/swipe snaps the header
+   between its two states with a short ease instead. */
+.site-header[data-snapping] {
+  transition: --collapse 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .site-logo {
   position: absolute;
@@ -74,29 +71,21 @@
   text-align: center;
   white-space: nowrap;
 }
-/* Mobile (Figma "Mob" 296:5212 → "Scroll" 296:5353): 24px padding, a "Menu"
-   row, then the wordmark on two lines. At rest it is 48px in a 161px header;
-   once the content scrolls it shrinks to ~29px (158×54 in Figma) in a 125px
-   header, a hairline appears below it, and the filters and strips scroll away
-   underneath. */
+/* Mobile: 24px padding, a "Menu" row, then the wordmark — 48px in a 161px
+   header at rest, ~29px in a 125px header scrolled (158×54 in Figma), with a
+   hairline fading in below it. Filters and strips scroll away underneath. */
 @media (max-width: 767px) {
   .site-header {
-    --logo-size: 48px;
-    --logo-top: 47px;
+    --logo-lg: 48px;
+    --logo-sm: 29px;
+    --top-lg: 47px;
+    --top-sm: 47px;
     height: calc(var(--logo-top) + var(--logo-size) * 1.86 + 24px);
-    border-bottom: 1px solid transparent;
-    transition:
-      --logo-size var(--logo-dur) var(--logo-ease),
-      border-color 200ms ease-out;
-  }
-  .site-header[data-compact] {
-    --logo-size: 29px;
-    --logo-top: 47px;
-    border-bottom-color: var(--rule);
+    border-bottom: 1px solid color-mix(in srgb, var(--rule) calc(var(--collapse) * 100%), transparent);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-header {
+  .site-header[data-snapping] {
     transition: none;
   }
 }

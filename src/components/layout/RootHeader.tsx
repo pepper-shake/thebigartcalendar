@@ -1,17 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import MenuPanel from './MenuPanel';
 
-// Collapse once the content has scrolled this far.
-const COLLAPSE_AT = 8;
-// After collapsing, ignore "back at the top" for the length of the animation:
-// shrinking the header gives the content more room, which can clamp its
-// scrollTop to 0 and would otherwise re-expand the header straight away.
-const LOCK_MS = 400;
+// Scroll distance over which the header goes from rest (0) to collapsed (1).
+// Roughly what the header gives back, so the wordmark shrinks about 1:1 with
+// the content moving under it.
+const RANGE_DESKTOP = 120;
+const RANGE_MOBILE = 72;
 
 /** The element whose vertical scroll an event inside `node` would move. */
 function scrollerFor(node: EventTarget | null): Element {
@@ -23,84 +22,90 @@ function scrollerFor(node: EventTarget | null): Element {
 }
 
 /**
- * True once the visitor scrolls the page content down; false again when they
- * come back to the top. Follows both real scrolling (any vertical scroll
- * container, or the window on SEO pages) and the scroll gesture itself
- * (wheel / swipe), so it also works when everything fits on screen and there
- * is nothing to scroll — e.g. a day with a single row of cards.
+ * Drives the header's `--collapse` (0–1) from the page's scroll position —
+ * any vertical scroll container (the calendar's card list) or the window (SEO
+ * pages). Written straight to the element's style each animation frame, so the
+ * wordmark resizes continuously with the scroll and React doesn't re-render.
+ * When nothing can scroll (every card fits on screen), a wheel/swipe snaps it
+ * fully open or closed instead, with a short CSS ease (`data-snapping`).
  */
-function useContentScrolled(): boolean {
-  const [scrolled, setScrolled] = useState(false);
+function useScrollCollapse(ref: React.RefObject<HTMLDivElement | null>) {
   const pathname = usePathname();
 
-  // A new page starts at the top, so start expanded. (Adjusting state during
-  // render on a prop change, instead of in an effect.)
-  const [prevPath, setPrevPath] = useState(pathname);
-  if (pathname !== prevPath) {
-    setPrevPath(pathname);
-    setScrolled(false);
-  }
-
   useEffect(() => {
-    let lockUntil = 0;
+    const header = ref.current;
+    if (!header) return;
+    let frame = 0;
+    let pending: number | null = null;
     let touchY: number | null = null;
-    const collapse = () => {
-      lockUntil = performance.now() + LOCK_MS;
-      setScrolled(true);
+
+    const write = (p: number, snap: boolean) => {
+      if (snap) header.setAttribute('data-snapping', '');
+      else header.removeAttribute('data-snapping');
+      header.style.setProperty('--collapse', String(p));
     };
-    const expandIfAtTop = (target: EventTarget | null) => {
-      if (performance.now() >= lockUntil && scrollerFor(target).scrollTop <= 0) setScrolled(false);
+    const range = () => (window.innerWidth < 768 ? RANGE_MOBILE : RANGE_DESKTOP);
+    const fromScroll = (el: Element) => {
+      pending = Math.min(1, Math.max(0, el.scrollTop / range()));
+      if (!frame) {
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          if (pending !== null) write(pending, false);
+        });
+      }
     };
+    const canScroll = (el: Element) => el.scrollHeight > el.clientHeight + 1;
 
     const onScroll = (e: Event) => {
       const el = e.target === document ? document.scrollingElement : (e.target as Element | null);
       // Horizontal-only scrollers (month/day strips) don't count.
-      if (!el || el.scrollHeight <= el.clientHeight) return;
-      if (el.scrollTop > COLLAPSE_AT) collapse();
-      else if (el.scrollTop <= 0) expandIfAtTop(el);
+      if (!el || !canScroll(el)) return;
+      fromScroll(el);
+    };
+    const snapIfStatic = (target: EventTarget | null, down: boolean) => {
+      const el = scrollerFor(target);
+      if (canScroll(el)) return; // real scrolling drives it
+      write(down ? 1 : 0, true);
     };
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // sideways strip scroll
-      if (e.deltaY > 0) collapse();
-      else expandIfAtTop(e.target);
+      snapIfStatic(e.target, e.deltaY > 0);
     };
     const onTouchStart = (e: TouchEvent) => {
       touchY = e.touches[0]?.clientY ?? null;
     };
     const onTouchMove = (e: TouchEvent) => {
       const y = e.touches[0]?.clientY;
-      if (touchY === null || y === undefined) return;
-      const dy = touchY - y; // > 0: finger moves up = content scrolls down
-      if (dy > 12) collapse();
-      else if (dy < -12) expandIfAtTop(e.target);
+      if (touchY === null || y === undefined || Math.abs(touchY - y) < 12) return;
+      snapIfStatic(e.target, touchY > y);
     };
 
+    write(0, false); // a new page starts at the top
     const opts = { capture: true, passive: true } as const;
     document.addEventListener('scroll', onScroll, opts);
     document.addEventListener('wheel', onWheel, opts);
     document.addEventListener('touchstart', onTouchStart, opts);
     document.addEventListener('touchmove', onTouchMove, opts);
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('scroll', onScroll, opts);
       document.removeEventListener('wheel', onWheel, opts);
       document.removeEventListener('touchstart', onTouchStart, opts);
       document.removeEventListener('touchmove', onTouchMove, opts);
     };
-  }, []);
-
-  return scrolled;
+  }, [ref, pathname]);
 }
 
 export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const compact = useContentScrolled();
+  const headerRef = useRef<HTMLDivElement>(null);
+  useScrollCollapse(headerRef);
 
   return (
     <>
-      {/* Desktop: the wordmark shrinks between its two Figma states, staying
-          on two lines. Mobile: fixed size, hairline once scrolled. See
-          .site-header in globals.css. */}
-      <div className="site-header" data-compact={compact || undefined}>
+      {/* The wordmark shrinks continuously with the scroll, staying on two
+          lines (desktop and mobile) — see .site-header in globals.css. */}
+      <div ref={headerRef} className="site-header">
         <Link href="/" className="site-logo text-ink lowercase">
           the big
           <br />
