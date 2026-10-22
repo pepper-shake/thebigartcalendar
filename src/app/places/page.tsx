@@ -30,10 +30,10 @@ function Chip({ href, active, children }: { href: string; active: boolean; child
   return (
     <Link
       href={href}
-      className={`rounded-full px-4 py-2 transition-colors ${
-        active ? 'bg-black text-white' : 'bg-black/5 text-black hover:bg-black/10'
+      className={`px-4 py-2 transition-colors ${
+        active ? 'bg-ink text-page italic' : 'bg-ink/5 text-ink hover:bg-ink/10'
       }`}
-      style={{ fontFamily: 'var(--font-oxygen)', fontSize: 15 }}
+      style={{ fontFamily: 'var(--font-serif)', fontSize: 15 }}
     >
       {children}
     </Link>
@@ -101,8 +101,8 @@ export default async function PlacesPage({ searchParams }: Props) {
 
       {shown.length === 0 ? (
         <p
-          className="text-black/40"
-          style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18 }}
+          className="text-ink/40"
+          style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18 }}
         >
           No places here yet — check back soon.
         </p>

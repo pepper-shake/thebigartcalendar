@@ -72,11 +72,13 @@ export async function run(): Promise<void> {
     const endTime = `${String(s.startHour + 1).padStart(2, '0')}:30`;
 
     const sourceUrl = `${BASE}/products/${s.handle}`;
+    // The id keeps hashing the original title so existing rows keep their ids
+    // (renaming the display title must not create duplicates on re-scrape).
     const id = makeId(sourceUrl, 'Ceramic Workshop at Disco Wheel', `${s.startDate} ${startTime}`);
 
     events.push({
       id,
-      title: 'Ceramic Workshop at Disco Wheel',
+      title: 'Ceramic Workshop',
       type: 'workshop',
       startDate: s.startDate,
       endDate: null,

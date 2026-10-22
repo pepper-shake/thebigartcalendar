@@ -15,8 +15,8 @@ export default function Breadcrumbs({ items }: { items: Crumb[] }) {
     <>
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol
-          className="flex flex-wrap items-center gap-2 text-[#909090]"
-          style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 400, fontSize: 18, lineHeight: '24px' }}
+          className="flex flex-wrap items-center gap-2 text-ink/60"
+          style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18, lineHeight: '24px' }}
         >
           {items.map((c, i) => {
             const last = i === items.length - 1;
@@ -24,11 +24,11 @@ export default function Breadcrumbs({ items }: { items: Crumb[] }) {
               <li key={c.href} className="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 {last ? (
-                  <span className="text-black" aria-current="page">
+                  <span className="text-ink" aria-current="page">
                     {c.name}
                   </span>
                 ) : (
-                  <Link href={c.href} className="hover:text-black hover:underline">
+                  <Link href={c.href} className="hover:text-ink hover:underline">
                     {c.name}
                   </Link>
                 )}

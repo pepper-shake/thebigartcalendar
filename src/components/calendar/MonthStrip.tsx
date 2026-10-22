@@ -34,7 +34,7 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
   return (
     <div
       ref={stripRef}
-      className={`flex-none flex items-center border-t border-b border-[#b1b1b1] h-[84px] ${
+      className={`flex-none flex items-center border-t border-b border-rule h-[84px] ${
         scrollable
           ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6'
           : spread
@@ -51,14 +51,15 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
             ref={isActive ? activeRef : null}
             onClick={() => onChange(i)}
             aria-current={isActive ? 'true' : undefined}
-            className="flex-none transition-all"
+            className="flex-none text-ink transition-opacity hover:opacity-60"
+            // Figma (283:2067): Newsreader Light 24px; the active month is
+            // marked by italic semibold instead of an underline.
             style={{
-              fontFamily: 'var(--font-oxygen)',
-              fontWeight: isActive ? 700 : 300,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: isActive ? 600 : 300,
+              fontStyle: isActive ? 'italic' : 'normal',
               fontSize: 24,
-              color: '#000000',
-              paddingBottom: 2,
-              borderBottom: `2px solid ${isActive ? '#000000' : 'transparent'}`,
+              lineHeight: '24px',
             }}
           >
             {name}

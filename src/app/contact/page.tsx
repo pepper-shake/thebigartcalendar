@@ -8,14 +8,14 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-full flex flex-col" style={{ backgroundColor: '#FBFAF6' }}>
+    <div className="min-h-full flex flex-col" style={{ backgroundColor: 'var(--page)' }}>
       <main className="flex-1 px-6 py-16 max-w-2xl mx-auto w-full">
 
         <h1
-          className="text-black lowercase mb-12"
+          className="text-ink lowercase mb-12"
           style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 800,
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
             fontSize: 'clamp(56px, 8vw, 82px)',
             lineHeight: 0.95,
             letterSpacing: '-2px',

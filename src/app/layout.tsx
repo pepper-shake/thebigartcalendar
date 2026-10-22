@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Host_Grotesk, Oxygen } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import RootHeader from "@/components/layout/RootHeader";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import JsonLd from "@/components/seo/JsonLd";
@@ -30,16 +30,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const hostGrotesk = Host_Grotesk({
-  weight: ["400", "500", "600", "800"],
+// The one content face: a light, high-contrast serif (Style Reference 1 —
+// Newsreader stands in for the commercial Times Now). Geist is kept for small
+// meta lines and chips, as in the Figma cards.
+const newsreader = Newsreader({
+  weight: ["300", "600"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
-  variable: "--font-host-grotesk",
-});
-
-const oxygen = Oxygen({
-  weight: ["300", "700"],
-  subsets: ["latin"],
-  variable: "--font-oxygen",
+  variable: "--font-serif",
 });
 
 export const metadata: Metadata = {
@@ -73,9 +71,9 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${hostGrotesk.variable} ${oxygen.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
-      <body className="h-full flex flex-col text-zinc-900" style={{ backgroundColor: '#FBFAF6' }}>
+      <body className="h-full flex flex-col text-ink" style={{ backgroundColor: 'var(--page)' }}>
         <RootHeader hiddenHrefs={hiddenHrefs} />
         <div className="flex-1 min-h-0">{children}</div>
         <JsonLd data={websiteJsonLd()} />

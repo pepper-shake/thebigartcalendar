@@ -26,8 +26,8 @@ const NAV_LINKS = [
 ];
 
 const linkStyle = {
-  fontFamily: 'var(--font-host-grotesk)',
-  fontWeight: 800,
+  fontFamily: 'var(--font-serif)',
+  fontWeight: 300,
   fontSize: 32,
   lineHeight: '32px',
   letterSpacing: '-0.64px',
@@ -63,21 +63,22 @@ export default function MenuPanel({ isOpen, onClose, hiddenHrefs = [] }: Props) 
       aria-label="Site navigation"
       aria-hidden={!isOpen}
       className={[
-        'fixed top-0 right-0 h-screen bg-white z-50',
+        'fixed top-0 right-0 h-screen bg-page z-50',
         'w-full md:w-[348px]',
         'flex flex-col items-end',
         'pl-8 pr-4 py-4',
         'transition-transform duration-300 ease-in-out',
-        isOpen ? 'translate-x-0' : 'translate-x-full',
+        // Drawers are the one surface that gets a shadow (Style Reference 1 §8).
+        isOpen ? 'translate-x-0 shadow-[0_4px_20px_rgb(56_52_48/0.15)]' : 'translate-x-full',
       ].join(' ')}
     >
       {/* Close button */}
       <button
         onClick={onClose}
         aria-label="Close menu"
-        className="flex items-center justify-center size-[54px] text-black hover:opacity-60 transition-opacity shrink-0"
+        className="flex items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity shrink-0"
       >
-        <Minus className="size-7" strokeWidth={2} />
+        <Minus className="size-8" strokeWidth={1.25} />
       </button>
 
       {/* Nav links */}
@@ -91,7 +92,7 @@ export default function MenuPanel({ isOpen, onClose, hiddenHrefs = [] }: Props) 
             href={href}
             onClick={onClose}
             tabIndex={isOpen ? undefined : -1}
-            className="text-black hover:opacity-50 transition-opacity"
+            className="text-ink hover:opacity-50 transition-opacity"
             style={linkStyle}
           >
             {label}
