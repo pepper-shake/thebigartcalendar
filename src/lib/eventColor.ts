@@ -15,23 +15,22 @@ import type { ArtEvent } from '@/types';
 const LIGHT_CHIP = 'rgba(255, 255, 255, 0.5)';
 const DARK_CHIP = 'rgba(0, 0, 0, 0.2)';
 
-const WINE: CardScheme = { bg: '#5A1F2E', fg: '#ED87AF', chip: DARK_CHIP }; // wine / pink
-
+/** Schemes events are hashed into. */
 export const CARD_SCHEMES: CardScheme[] = [
   { bg: '#E4B6D1', fg: '#5A1F2D', chip: LIGHT_CHIP }, // blush / oxblood
   { bg: '#263322', fg: '#B0E2A0', chip: DARK_CHIP }, // forest / lime
   { bg: '#92B8DA', fg: '#5A1F2D', chip: LIGHT_CHIP }, // sky / oxblood
-  WINE,
   { bg: '#FEEA8A', fg: '#427BB7', chip: LIGHT_CHIP }, // butter / cornflower
   { bg: '#AAA462', fg: '#FFE4AD', chip: DARK_CHIP }, // olive / cream
 ];
 
 /**
- * Places whose events always use one scheme instead of the hashed one, keyed
- * by /places slug (matched on the event's venue or organiser).
+ * Places whose events always use one scheme, keyed by /places slug (matched on
+ * the event's venue or organiser). These schemes are reserved: they are not in
+ * CARD_SCHEMES, so no other event can land on them.
  */
 const PLACE_SCHEMES: Record<string, CardScheme> = {
-  'disco-wheel': WINE,
+  'disco-wheel': { bg: '#5A1F2E', fg: '#ED87AF', chip: DARK_CHIP }, // wine / pink
 };
 
 /**

@@ -19,16 +19,15 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--font-meta` | Geist | Card and event meta, chips |
 
 ## Card schemes (`src/lib/eventColor.ts`)
-`getCardScheme(event)` picks one of six schemes deterministically from the event id. The same scheme colours the card, the event-page panel and its action buttons.
+`getCardScheme(event)` picks one of five schemes deterministically from the event id. The same scheme colours the card, the event-page panel and its action buttons.
 
-**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` in `src/lib/eventColor.ts` is keyed by `/places` slug and matched on the event's venue or organiser place; for example, Disco Wheel is always wine/pink. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
+**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` in `src/lib/eventColor.ts` is keyed by `/places` slug and matched on the event's venue or organiser place; Disco Wheel uses wine `#5A1F2E` with pink `#ED87AF` text. Pinned schemes are reserved: they're left out of the rotation, so no other event gets them. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
 
 | bg | fg | chip |
 |---|---|---|
 | blush `#E4B6D1` | oxblood `#5A1F2D` | white 50% |
 | forest `#263322` | lime `#B0E2A0` | black 20% |
 | sky `#92B8DA` | oxblood `#5A1F2D` | white 50% |
-| wine `#5A1F2E` | pink `#ED87AF` | black 20% |
 | butter `#FEEA8A` | cornflower `#427BB7` | white 50% |
 | olive `#AAA462` | cream `#FFE4AD` | black 20% |
 
