@@ -74,20 +74,24 @@
   text-align: center;
   white-space: nowrap;
 }
-/* Mobile (Figma "Mob" 296:5212 / "Scroll" 296:5353): the header is a fixed
-   161px block — 24px padding, a "Menu" row, then the wordmark at 48px on two
-   lines. It does not shrink; instead the filters and strips scroll away under
-   it, and a hairline appears below the header once the content has scrolled. */
+/* Mobile (Figma "Mob" 296:5212 → "Scroll" 296:5353): 24px padding, a "Menu"
+   row, then the wordmark on two lines. At rest it is 48px in a 161px header;
+   once the content scrolls it shrinks to ~29px (158×54 in Figma) in a 125px
+   header, a hairline appears below it, and the filters and strips scroll away
+   underneath. */
 @media (max-width: 767px) {
-  .site-header,
-  .site-header[data-compact] {
+  .site-header {
     --logo-size: 48px;
     --logo-top: 47px;
-    height: 161px;
+    height: calc(var(--logo-top) + var(--logo-size) * 1.86 + 24px);
     border-bottom: 1px solid transparent;
-    transition: border-color 200ms ease-out;
+    transition:
+      --logo-size var(--logo-dur) var(--logo-ease),
+      border-color 200ms ease-out;
   }
   .site-header[data-compact] {
+    --logo-size: 29px;
+    --logo-top: 47px;
     border-bottom-color: var(--rule);
   }
 }
