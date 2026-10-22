@@ -43,7 +43,10 @@ export default function EventCard({ event }: Props) {
   // foreground for everything inside it. 552px tall; the image takes the rest.
   const card = (
       <div
-        className="w-full flex flex-col items-start"
+        // Hover: the whole card zooms 1.5% (Style Reference "subtle zoom"). A
+        // transform, so the grid never reflows — it grows ~3px per side into
+        // the 16px gap. Past cards aren't links, so they have no group hover.
+        className="w-full flex flex-col items-start transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
         style={{
           backgroundColor: scheme.bg,
           color: scheme.fg,
@@ -98,13 +101,13 @@ export default function EventCard({ event }: Props) {
           )}
         </div>
 
-        {/* Image — square-cornered, grows to fill remaining space; subtle zoom on hover */}
+        {/* Image — square-cornered, grows to fill remaining space */}
         <div className="flex-1 min-h-0 w-full overflow-hidden">
           {event.image ? (
             <img
               src={event.image}
               alt={event.title}
-              className="w-full h-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
+              className="w-full h-full object-cover"
               style={isPast ? { filter: 'grayscale(1)' } : undefined}
             />
           ) : (

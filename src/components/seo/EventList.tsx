@@ -30,7 +30,7 @@ export default function EventList({ events }: { events: ArtEvent[] }) {
           <li key={e.id}>
             <Link href={`/events/${eventSlug(e)}`} className="group block h-full">
               <article
-                className="flex h-full flex-col"
+                className="flex h-full flex-col transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
                 style={{ backgroundColor: scheme.bg, color: scheme.fg, padding: 24, gap: 12 }}
               >
                 <div
@@ -59,7 +59,7 @@ export default function EventList({ events }: { events: ArtEvent[] }) {
                     candidates={e.imageCandidates ?? []}
                     alt={e.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
+                    className="w-full h-full object-cover"
                   />
                 </div>
 
