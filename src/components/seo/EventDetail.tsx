@@ -40,7 +40,7 @@ const pillBase: React.CSSProperties = {
 };
 
 export default function EventDetail({ event }: { event: ArtEvent }) {
-  const scheme = getCardScheme(event.id);
+  const scheme = getCardScheme(event);
   const pillStyle: React.CSSProperties = { ...pillBase, backgroundColor: scheme.chip };
   const eventUrl = absoluteUrl(`/events/${eventSlug(event)}`);
   const typeLabel = typeMeta(event.type).label;

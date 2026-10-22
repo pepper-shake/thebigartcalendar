@@ -32,7 +32,7 @@ function todayISO(): string {
 }
 
 export default function EventCard({ event }: Props) {
-  const scheme = getCardScheme(event.id);
+  const scheme = getCardScheme(event);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
   // Past events stay visible (e.g. on earlier calendar months) but are shown

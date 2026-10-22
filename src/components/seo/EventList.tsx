@@ -25,7 +25,7 @@ export default function EventList({ events }: { events: ArtEvent[] }) {
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {events.map((e) => {
         const meta = typeMeta(e.type);
-        const scheme = getCardScheme(e.id);
+        const scheme = getCardScheme(e);
         return (
           <li key={e.id}>
             <Link href={`/events/${eventSlug(e)}`} className="group block h-full">

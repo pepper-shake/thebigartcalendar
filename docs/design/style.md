@@ -19,7 +19,9 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--font-meta` | Geist | Card and event meta, chips |
 
 ## Card schemes (`src/lib/eventColor.ts`)
-`getCardScheme(id)` picks one of six schemes deterministically from the event id. The same scheme colours the card, the event-page panel and its action buttons.
+`getCardScheme(event)` picks one of six schemes deterministically from the event id. The same scheme colours the card, the event-page panel and its action buttons.
+
+**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` in `src/lib/eventColor.ts` is keyed by `/places` slug and matched on the event's venue or organiser place; for example, Disco Wheel is always wine/pink. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
 
 | bg | fg | chip |
 |---|---|---|

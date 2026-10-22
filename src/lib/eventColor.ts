@@ -10,23 +10,43 @@ export interface CardScheme {
   chip: string;
 }
 
+import type { ArtEvent } from '@/types';
+
 const LIGHT_CHIP = 'rgba(255, 255, 255, 0.5)';
 const DARK_CHIP = 'rgba(0, 0, 0, 0.2)';
+
+const WINE: CardScheme = { bg: '#5A1F2E', fg: '#ED87AF', chip: DARK_CHIP }; // wine / pink
 
 export const CARD_SCHEMES: CardScheme[] = [
   { bg: '#E4B6D1', fg: '#5A1F2D', chip: LIGHT_CHIP }, // blush / oxblood
   { bg: '#263322', fg: '#B0E2A0', chip: DARK_CHIP }, // forest / lime
   { bg: '#92B8DA', fg: '#5A1F2D', chip: LIGHT_CHIP }, // sky / oxblood
-  { bg: '#5A1F2E', fg: '#ED87AF', chip: DARK_CHIP }, // wine / pink
+  WINE,
   { bg: '#FEEA8A', fg: '#427BB7', chip: LIGHT_CHIP }, // butter / cornflower
   { bg: '#AAA462', fg: '#FFE4AD', chip: DARK_CHIP }, // olive / cream
 ];
 
-/** Deterministic card scheme for an event, hashed from its id. */
-export function getCardScheme(id: string): CardScheme {
+/**
+ * Places whose events always use one scheme instead of the hashed one, keyed
+ * by /places slug (matched on the event's venue or organiser).
+ */
+const PLACE_SCHEMES: Record<string, CardScheme> = {
+  'disco-wheel': WINE,
+};
+
+/**
+ * Card scheme for an event: a place's pinned scheme if it has one, otherwise
+ * picked deterministically by hashing the event id.
+ */
+export function getCardScheme(
+  event: Pick<ArtEvent, 'id' | 'venuePlace' | 'organiserPlace'>,
+): CardScheme {
+  const pinned =
+    PLACE_SCHEMES[event.venuePlace?.slug ?? ''] ?? PLACE_SCHEMES[event.organiserPlace?.slug ?? ''];
+  if (pinned) return pinned;
   let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 31 + id.charCodeAt(i)) & 0xffffffff;
+  for (let i = 0; i < event.id.length; i++) {
+    hash = (hash * 31 + event.id.charCodeAt(i)) & 0xffffffff;
   }
   return CARD_SCHEMES[Math.abs(hash) % CARD_SCHEMES.length];
 }
