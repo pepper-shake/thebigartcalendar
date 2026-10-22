@@ -338,7 +338,8 @@ export const PLACES: NewPlace[] = [
     category: 'shop',
     description:
       'English-language independent bookshop in Santos, Lisbon, that runs creative writing courses and workshops (fiction, memoir, essay, poetry), zine and journal-making workshops, book clubs and reading parties.',
-    imageUrl: null,
+    // Photo supplied by the operator 2026-10-22 (credit: Hung Nguyen).
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/salted-books-mf7zgyCJwFxaSsAFEBmqaurqYar0Bm.webp',
     address: 'Calçada do Marquês de Abrantes 96, 1200-720 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
