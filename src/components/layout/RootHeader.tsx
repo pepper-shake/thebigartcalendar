@@ -97,8 +97,9 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
 
   return (
     <>
-      {/* Wordmark shrinks between its two Figma states, staying on two
-          lines — see .site-header in globals.css. */}
+      {/* Desktop: the wordmark shrinks between its two Figma states, staying
+          on two lines. Mobile: fixed size, hairline once scrolled. See
+          .site-header in globals.css. */}
       <div className="site-header" data-compact={compact || undefined}>
         <Link href="/" className="site-logo text-ink lowercase">
           the big
@@ -106,12 +107,20 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
           art calendar.
         </Link>
 
+        {/* Desktop: "+" icon. Mobile (Figma 296:5212): a plain "Menu" label. */}
         <button
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
-          className="absolute right-4 top-3 flex items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity"
+          className="absolute right-4 top-3 hidden md:flex items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity"
         >
           <Plus className="size-8" strokeWidth={1.25} />
+        </button>
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute right-6 top-6 md:hidden text-ink hover:opacity-60 transition-opacity"
+          style={{ fontFamily: 'var(--font-meta)', fontWeight: 300, fontSize: 18, lineHeight: '23px' }}
+        >
+          Menu
         </button>
       </div>
 

@@ -56,9 +56,14 @@ export default function MobileAgenda({
   return (
     <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: 'var(--page)' }}>
 
-      {/* ── Pinned navigation: filters + month strip + date strip ── */}
-      <div className="flex-none">
-        <div className="flex items-center justify-between px-2 pt-[20px] pb-3">
+      {/* ── Scrollable area: filters, strips and cards all scroll together
+          under the fixed header (Figma 296:5212 → 296:5353). ── */}
+      <div
+        ref={scrollRef}
+        className="flex-1 min-h-0 overflow-y-auto"
+        onScroll={handleScroll}
+      >
+        <div className="flex items-center justify-between px-4 pt-[14px] pb-4">
           <FilterSelect
             size="sm"
             value={filters.city}
@@ -86,16 +91,9 @@ export default function MobileAgenda({
           onChange={onSelectedDateChange}
           scrollable
         />
-      </div>
 
-      {/* ── Scrollable area: cards only ── */}
-      <div
-        ref={scrollRef}
-        className="flex-1 min-h-0 overflow-y-auto"
-        onScroll={handleScroll}
-      >
         {/* Event cards */}
-        <div className="px-6 py-6">
+        <div className="p-6">
           {selectedEvents.length === 0 ? (
             <div
               className="flex items-center justify-center h-48 text-ink/60 italic"
@@ -104,7 +102,7 @@ export default function MobileAgenda({
               {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               {selectedEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
@@ -116,7 +114,7 @@ export default function MobileAgenda({
       {/* ── Scroll-to-top FAB ── */}
       <button
         onClick={scrollToTop}
-        className="absolute bottom-9 right-6 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
+        className="absolute bottom-[42px] right-3 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
         style={{
           opacity: isScrolled ? 1 : 0,
           pointerEvents: isScrolled ? 'auto' : 'none',

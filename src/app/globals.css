@@ -74,6 +74,23 @@
   text-align: center;
   white-space: nowrap;
 }
+/* Mobile (Figma "Mob" 296:5212 / "Scroll" 296:5353): the header is a fixed
+   161px block — 24px padding, a "Menu" row, then the wordmark at 48px on two
+   lines. It does not shrink; instead the filters and strips scroll away under
+   it, and a hairline appears below the header once the content has scrolled. */
+@media (max-width: 767px) {
+  .site-header,
+  .site-header[data-compact] {
+    --logo-size: 48px;
+    --logo-top: 47px;
+    height: 161px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms ease-out;
+  }
+  .site-header[data-compact] {
+    border-bottom-color: var(--rule);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .site-header {
     transition: none;
