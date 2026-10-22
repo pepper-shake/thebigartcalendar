@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { type Place, type OpeningHours } from '@/db/schema';
 import { EventImage } from '@/components/events/EventImage';
-import { getCardColor, hexToRgba } from '@/lib/eventColor';
-import { categoryLabel } from '@/lib/places';
+import { categoryLabel, PLACE_COLOR } from '@/lib/places';
 import { citySlug } from '@/lib/slug';
 import { SITE_DEFAULT_IMAGE } from '@/lib/organiser-images';
 
 // Server-rendered place page body, in the same visual language as EventDetail:
-// tinted panel, big title, meta lines + link pills + description on the left,
+// PLACE_COLOR panel, big title, meta lines + link pills + description on the left,
 // image + opening hours on the right (stacked on mobile).
 
 const metaStyle: React.CSSProperties = {
@@ -68,7 +67,6 @@ function Hours({ hours }: { hours: OpeningHours }) {
 }
 
 export default function PlaceDetail({ place }: { place: Place }) {
-  const cardColor = getCardColor(place.id);
   const map = mapUrl(place);
 
   const title = (
@@ -155,10 +153,7 @@ export default function PlaceDetail({ place }: { place: Place }) {
   return (
     <div
       className="-mx-6 w-[calc(100%+3rem)] lg:w-full rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
-      style={{
-        backgroundColor: '#FBFAF6',
-        backgroundImage: `linear-gradient(0deg, ${hexToRgba(cardColor, 0.2)}, ${hexToRgba(cardColor, 0.2)})`,
-      }}
+      style={{ backgroundColor: PLACE_COLOR }}
     >
       <div className="flex flex-col gap-7 lg:flex-row lg:items-start lg:gap-8">
         {/* On mobile the image leads; on desktop it's the fixed right column. */}
