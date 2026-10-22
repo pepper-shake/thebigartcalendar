@@ -264,6 +264,8 @@ export const PLACES: NewPlace[] = [
     category: 'shop',
     description:
       'Stationery and art-supplies shop and studio in Santos, Lisbon, with Japanese stationery, cards and drawing tools, and occasional craft classes such as spoon carving.',
+    // Photo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/bryon-studios-opwANXawjOmTQRqYu7dGpHPdXqbsD4.jpg',
     address: 'Largo Vitorino Damásio 3C, Pavilhão 3, Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
