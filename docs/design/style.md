@@ -19,17 +19,29 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--font-meta` | Geist | Card and event meta, chips |
 
 ## Card schemes (`src/lib/eventColor.ts`)
-`getCardScheme(event)` picks one of five schemes deterministically from the event id. The same scheme colours the card, the event-page panel and its action buttons.
+**Rule:** no two different events on the same page share a colour, but every date of one recurring event (a *series*) keeps the same colour.
 
-**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` in `src/lib/eventColor.ts` is keyed by `/places` slug and matched on the event's venue or organiser place; Disco Wheel uses wine `#5A1F2E` with pink `#ED87AF` text. Pinned schemes are reserved: they're left out of the rotation, so no other event gets them. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
+- **Series** = same title + venue + city (normalised), e.g. every Disco Wheel "Ceramic Workshop".
+- `assignCardSchemes()` runs once over all published events (inside `getPublishedEvents()`, so the calendar, event pages and hubs agree). Two series *conflict* if they're on at least one common day (multi-day exhibitions count every day they're open). Series are coloured greedily in order of their first date. Each takes its preferred colour (hashed from the series key) unless a conflicting series already has it, otherwise the next free one. Date order keeps colours stable as new events are scraped.
+- Result on current data: 0 of 149 days repeat a colour, and all 26 recurring series keep a single colour. With more series on a day than colours, a repeat would be unavoidable; the least-used colour is taken then.
+- `getCardScheme(event)` returns, in order: a pinned place scheme, then the assigned `schemeIndex`, then a hash of the id (fallback for events not run through `assignCardSchemes`).
 
-| bg | fg | chip |
-|---|---|---|
-| blush `#E4B6D1` | oxblood `#5A1F2D` | white 50% |
-| forest `#263322` | lime `#B0E2A0` | black 20% |
-| sky `#92B8DA` | oxblood `#5A1F2D` | white 50% |
-| butter `#FEEA8A` | cornflower `#427BB7` | white 50% |
-| olive `#AAA462` | cream `#FFE4AD` | black 20% |
+| bg | fg | chip | source |
+|---|---|---|---|
+| blush `#E4B6D1` | oxblood `#5A1F2D` | white 50% | Figma |
+| forest `#263322` | lime `#B0E2A0` | black 20% | Figma |
+| sky `#92B8DA` | oxblood `#5A1F2D` | white 50% | Figma |
+| butter `#FEEA8A` | cornflower `#427BB7` | white 50% | Figma |
+| olive `#AAA462` | cream `#FFE4AD` | black 20% | Figma |
+| cobalt `#155797` | sage `#C3D7C5` | black 20% | Style Reference |
+| tomato `#EB4937` | sage `#C4D5C3` | black 20% | Style Reference |
+| cocoa `#6D453E` | butter `#F4E8A9` | black 20% | Style Reference |
+| tan `#C7A086` | oxblood `#5A1F2D` | white 50% | Style Reference |
+| navy `#000E58` | sky `#92B8DA` | black 20% | Style Reference |
+
+Ten pairs are needed because the busiest days carry about 8 different events and greedy colouring needs some headroom. With the 5 Figma pairs alone, 15 of 149 days repeated a colour.
+
+**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` is keyed by `/places` slug and matched on the event's venue or organiser place. Disco Wheel uses wine `#5A1F2E` with pink `#ED87AF` text. Pinned schemes are reserved: they're not in the rotation, so no other event gets them. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
 
 ## Layout (desktop, from Figma)
 - **Navigation is pinned.** The logo, filters, month strip and day strip never scroll, on desktop or mobile. Only the cards below them scroll (`CalendarClient` / `MobileAgenda`).
