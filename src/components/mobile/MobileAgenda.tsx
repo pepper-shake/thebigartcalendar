@@ -54,15 +54,10 @@ export default function MobileAgenda({
   };
 
   return (
-    <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: '#fbfaf6' }}>
+    <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: 'var(--page)' }}>
 
-      {/* ── Scrollable area: controls + cards ── */}
-      <div
-        ref={scrollRef}
-        className="flex-1 min-h-0 overflow-y-auto"
-        onScroll={handleScroll}
-      >
-        {/* Controls scroll away naturally — no layout reflow */}
+      {/* ── Pinned navigation: filters + month strip + date strip ── */}
+      <div className="flex-none">
         <div className="flex items-center justify-between px-2 pt-[20px] pb-3">
           <FilterSelect
             size="sm"
@@ -89,20 +84,27 @@ export default function MobileAgenda({
           eventDates={eventDates}
           selectedDate={selectedDate}
           onChange={onSelectedDateChange}
-          fullDayNames
+          scrollable
         />
+      </div>
 
+      {/* ── Scrollable area: cards only ── */}
+      <div
+        ref={scrollRef}
+        className="flex-1 min-h-0 overflow-y-auto"
+        onScroll={handleScroll}
+      >
         {/* Event cards */}
         <div className="px-6 py-6">
           {selectedEvents.length === 0 ? (
             <div
-              className="flex items-center justify-center h-48 text-black/40"
-              style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 16 }}
+              className="flex items-center justify-center h-48 text-ink/60 italic"
+              style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
             >
               {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
             </div>
           ) : (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               {selectedEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
@@ -114,7 +116,7 @@ export default function MobileAgenda({
       {/* ── Scroll-to-top FAB ── */}
       <button
         onClick={scrollToTop}
-        className="absolute bottom-9 right-6 bg-black rounded-full p-3 flex items-center justify-center transition-all duration-300"
+        className="absolute bottom-9 right-6 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
         style={{
           opacity: isScrolled ? 1 : 0,
           pointerEvents: isScrolled ? 'auto' : 'none',
@@ -122,7 +124,7 @@ export default function MobileAgenda({
         }}
         aria-label="Scroll to top"
       >
-        <ArrowUp className="size-6 text-white" strokeWidth={2} />
+        <ArrowUp className="size-6 text-page" strokeWidth={1.5} />
       </button>
     </div>
   );

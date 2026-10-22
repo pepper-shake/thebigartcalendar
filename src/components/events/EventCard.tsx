@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
-import { getCardColor } from '@/lib/eventColor';
+import { getCardScheme } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
 import ViewerLocalTime from '@/components/events/ViewerLocalTime';
@@ -14,8 +13,9 @@ function placeLabel(event: ArtEvent): string {
   return parts.length ? parts.join(', ') : 'Virtual';
 }
 
+// Meta lines and the type chip are set in Geist (Figma card 285:4018).
 const metaStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-host-grotesk)',
+  fontFamily: 'var(--font-meta)',
   fontWeight: 400,
   fontSize: 16,
   lineHeight: '18px',
@@ -32,42 +32,37 @@ function todayISO(): string {
 }
 
 export default function EventCard({ event }: Props) {
-  const bgColor = getCardColor(event.id);
-  const [hovered, setHovered] = useState(false);
+  const scheme = getCardScheme(event.id);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
   // Past events stay visible (e.g. on earlier calendar months) but are shown
   // in grayscale and are NOT linked — we don't suggest navigating to them.
   const isPast = (event.endDate ?? event.date) < todayISO();
-  const active = hovered && !isPast;
 
+  // Figma card (285:4018): a flat, square duotone block — one background, one
+  // foreground for everything inside it. 552px tall; the image takes the rest.
   const card = (
       <div
         className="w-full flex flex-col items-start"
         style={{
-          backgroundColor: active ? '#FFFFFF' : bgColor,
-          border: `1px ${active ? 'dashed' : 'solid'} ${active ? bgColor : 'transparent'}`,
-          borderRadius: 24,
+          backgroundColor: scheme.bg,
+          color: scheme.fg,
           padding: 24,
           gap: 16,
-          height: 460,
-          maxHeight: 460,
-          transition: 'background-color 150ms ease, border-color 150ms ease',
+          height: 552,
         }}
       >
-        {/* Event type pill */}
+        {/* Event type chip */}
         <div className="flex-none">
           <span
             className="inline-block"
             style={{
-              backgroundColor: 'rgba(251,250,246,0.7)',
-              color: '#000',
-              fontFamily: 'var(--font-host-grotesk)',
+              backgroundColor: scheme.chip,
+              fontFamily: 'var(--font-meta)',
               fontWeight: 400,
               fontSize: 14,
               lineHeight: '14px',
               padding: '8px 16px',
-              borderRadius: 42,
               whiteSpace: 'nowrap',
             }}
           >
@@ -75,12 +70,12 @@ export default function EventCard({ event }: Props) {
           </span>
         </div>
 
-        {/* Title — max 2 lines, ellipsis beyond */}
+        {/* Title — light serif, max 2 lines, ellipsis beyond */}
         <h3
-          className="text-black line-clamp-2 flex-none w-full"
+          className="line-clamp-2 flex-none w-full"
           style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 600,
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
             fontSize: 32,
             lineHeight: '36px',
             letterSpacing: '-0.02em',
@@ -91,11 +86,11 @@ export default function EventCard({ event }: Props) {
 
         {/* Place · date, then time (event-local + viewer-local) */}
         <div className="flex-none flex flex-col w-full" style={{ gap: 8 }}>
-          <p className="text-black w-full" style={metaStyle}>
+          <p className="w-full" style={metaStyle}>
             {placeLabel(event)} · {formatDateShort(event.date)}
           </p>
           {event.startTime && (
-            <p className="text-black w-full" style={metaStyle}>
+            <p className="w-full" style={metaStyle}>
               {event.startTime}
               {event.city ? ` ${event.city}` : ''}
               <ViewerLocalTime event={event} />
@@ -103,17 +98,17 @@ export default function EventCard({ event }: Props) {
           )}
         </div>
 
-        {/* Image — grows to fill remaining space (taller when title is one line) */}
-        <div className="flex-1 min-h-0 w-full overflow-hidden" style={{ borderRadius: 17 }}>
+        {/* Image — square-cornered, grows to fill remaining space; subtle zoom on hover */}
+        <div className="flex-1 min-h-0 w-full overflow-hidden">
           {event.image ? (
             <img
               src={event.image}
               alt={event.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
               style={isPast ? { filter: 'grayscale(1)' } : undefined}
             />
           ) : (
-            <div className="w-full h-full" style={{ backgroundColor: '#FBFAF6' }} />
+            <div className="w-full h-full" style={{ backgroundColor: 'var(--page)' }} />
           )}
         </div>
       </div>
@@ -129,11 +124,7 @@ export default function EventCard({ event }: Props) {
     <Link
       href={`/events/${eventSlug(event)}`}
       prefetch={false}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-      className="block w-full text-left focus:outline-none"
+      className="group block w-full text-left focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-ink"
     >
       {card}
     </Link>

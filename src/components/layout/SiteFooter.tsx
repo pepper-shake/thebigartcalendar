@@ -8,17 +8,17 @@ export default async function SiteFooter() {
   const active = await listActiveTypes();
   return (
     <footer
-      className="border-t border-black/10 px-6 py-12 mt-16"
-      style={{ backgroundColor: '#FBFAF6' }}
+      className="border-t border-ink/10 px-6 py-12 mt-16"
+      style={{ backgroundColor: 'var(--page)' }}
     >
       <div className="max-w-6xl mx-auto grid grid-cols-2 gap-8 sm:grid-cols-4">
         <div className="col-span-2 sm:col-span-1">
           <Link
             href="/"
-            className="text-black lowercase"
+            className="text-ink lowercase"
             style={{
-              fontFamily: 'var(--font-host-grotesk)',
-              fontWeight: 800,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 300,
               fontSize: 22,
               lineHeight: 1,
               letterSpacing: '-1px',
@@ -58,8 +58,8 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
   return (
     <div>
       <h2
-        className="text-black/40 uppercase tracking-widest mb-3"
-        style={{ fontFamily: 'var(--font-host-grotesk)', fontWeight: 600, fontSize: 12 }}
+        className="text-ink/60 italic mb-3"
+        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
       >
         {title}
       </h2>
@@ -73,8 +73,8 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
     <li>
       <Link
         href={href}
-        className="text-black/70 hover:text-black hover:underline underline-offset-2"
-        style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 15 }}
+        className="text-ink/70 hover:text-ink hover:underline underline-offset-2"
+        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
       >
         {children}
       </Link>

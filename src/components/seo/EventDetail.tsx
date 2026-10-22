@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { EventImage } from '@/components/events/EventImage';
 import EventActions from '@/components/events/EventActions';
-import { getCardColor, hexToRgba } from '@/lib/eventColor';
+import { getCardScheme } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { typeMeta } from '@/lib/eventTypes';
 import { citySlug, eventSlug } from '@/lib/slug';
@@ -20,28 +20,28 @@ import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 // Semantic <h1> and internal links keep it indexable (this is the content
 // behind the JSON-LD).
 
-// Host Grotesk regular meta lines (22px) — matches the Figma spec.
+// The panel is the event's card scheme at full strength (Figma 287:4572): one
+// background, one foreground for every word, pill and icon in it. Meta lines
+// and pills use Geist like the cards; title and description the light serif.
 const metaStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-host-grotesk)',
+  fontFamily: 'var(--font-meta)',
   fontWeight: 400,
   fontSize: 22,
-  lineHeight: '22px',
+  lineHeight: '26px',
 };
 
-const pillStyle: React.CSSProperties = {
-  backgroundColor: 'rgba(251,250,246,0.7)',
-  color: '#000',
-  fontFamily: 'var(--font-host-grotesk)',
+const pillBase: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
   fontWeight: 400,
   fontSize: 22,
   lineHeight: '18px',
   height: 44,
   padding: '0 16px',
-  borderRadius: 8,
 };
 
 export default function EventDetail({ event }: { event: ArtEvent }) {
-  const cardColor = getCardColor(event.id);
+  const scheme = getCardScheme(event.id);
+  const pillStyle: React.CSSProperties = { ...pillBase, backgroundColor: scheme.chip };
   const eventUrl = absoluteUrl(`/events/${eventSlug(event)}`);
   const typeLabel = typeMeta(event.type).label;
 
@@ -53,10 +53,9 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
   const titleEl = (
     <h1
-      className="text-black"
       style={{
-        fontFamily: 'var(--font-host-grotesk)',
-        fontWeight: 600,
+        fontFamily: 'var(--font-serif)',
+        fontWeight: 300,
         fontSize: 42,
         lineHeight: '46px',
         letterSpacing: '-0.02em',
@@ -66,13 +65,13 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
     </h1>
   );
 
-  const actionsEl = <EventActions eventUrl={eventUrl} sourceUrl={event.sourceUrl} />;
+  const actionsEl = <EventActions eventUrl={eventUrl} sourceUrl={event.sourceUrl} scheme={scheme} />;
 
   const attendance = event.city || event.venue ? 'Offline' : 'Online';
 
   const metaLines = (
     <div className="flex flex-col" style={{ gap: 18 }}>
-      <p className="text-black" style={metaStyle}>
+      <p style={metaStyle}>
         {event.city ? (
           <Link href={`/cities/${citySlug(event.city)}`} className="hover:underline underline-offset-2">
             {event.city}
@@ -82,13 +81,13 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
         {` · ${formatDateShort(event.date)}`}
       </p>
       {event.startTime && (
-        <p className="text-black" style={metaStyle}>
+        <p style={metaStyle}>
           {event.startTime}
           {event.city ? ` ${event.city}` : ''}
           <ViewerLocalTime event={event} />
         </p>
       )}
-      <p className="text-black" style={metaStyle}>
+      <p style={metaStyle}>
         {attendance}
         {event.price ? ` · Price ${event.price}` : ''}
       </p>
@@ -148,12 +147,12 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
   const description = event.description ? (
     <p
-      className="text-black whitespace-pre-line"
+      className="whitespace-pre-line"
       style={{
-        fontFamily: 'var(--font-oxygen)',
+        fontFamily: 'var(--font-serif)',
         fontWeight: 300,
         fontSize: 22,
-        lineHeight: '38px',
+        lineHeight: '34px',
       }}
     >
       {event.description}
@@ -167,14 +166,12 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           <span
             key={t}
             style={{
-              backgroundColor: 'rgba(251,250,246,0.7)',
-              color: '#000',
-              fontFamily: 'var(--font-host-grotesk)',
+              backgroundColor: scheme.chip,
+              fontFamily: 'var(--font-meta)',
               fontWeight: 400,
               fontSize: 14,
               lineHeight: '22px',
               padding: '8px 16px',
-              borderRadius: 8,
             }}
           >
             #{t}
@@ -186,7 +183,7 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
   // `withTypePill` overlays the event type in the bottom-left of the image
   // (mobile only, per Figma node 207:2856).
   const renderImage = (withTypePill = false) => (
-    <div className="relative w-full overflow-hidden rounded-[17px]" style={{ aspectRatio: '568 / 438' }}>
+    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '568 / 438' }}>
       <EventImage
         candidates={event.imageCandidates ?? []}
         alt={event.title}
@@ -197,14 +194,13 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
         <span
           className="absolute left-[14px] bottom-[14px]"
           style={{
-            backgroundColor: cardColor,
-            color: '#000',
-            fontFamily: 'var(--font-host-grotesk)',
+            backgroundColor: scheme.bg,
+            color: scheme.fg,
+            fontFamily: 'var(--font-meta)',
             fontWeight: 400,
             fontSize: 18,
             lineHeight: '22px',
             padding: '8px 16px',
-            borderRadius: 42,
           }}
         >
           {typeLabel} event
@@ -215,11 +211,8 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
   return (
     <div
-      className="-mx-6 w-[calc(100%+3rem)] lg:w-full rounded-none px-6 py-8 lg:mx-0 lg:rounded-[24px] lg:px-[42px] lg:py-[62px]"
-      style={{
-        backgroundColor: '#FBFAF6',
-        backgroundImage: `linear-gradient(0deg, ${hexToRgba(cardColor, 0.2)}, ${hexToRgba(cardColor, 0.2)})`,
-      }}
+      className="-mx-6 w-[calc(100%+3rem)] lg:w-full px-6 py-8 lg:mx-0 lg:px-[42px] lg:py-[62px]"
+      style={{ backgroundColor: scheme.bg, color: scheme.fg }}
     >
       {/* Desktop: title + actions on top, then meta/pills/description | image + tags.
           Figma: left column flexes, image column is a fixed 568px (so the left

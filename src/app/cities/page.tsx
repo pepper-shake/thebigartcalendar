@@ -29,8 +29,8 @@ export default async function CitiesPage() {
 
       {cities.length === 0 ? (
         <p
-          className="text-black/40"
-          style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18 }}
+          className="text-ink/40"
+          style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18 }}
         >
           No cities with upcoming events yet — check back soon.
         </p>
@@ -40,17 +40,17 @@ export default async function CitiesPage() {
             <li key={c.slug}>
               <Link
                 href={`/cities/${c.slug}`}
-                className="flex items-baseline justify-between gap-2 rounded-xl bg-black/5 px-4 py-3 hover:bg-black/10 transition-colors"
+                className="flex items-baseline justify-between gap-2 bg-ink/5 px-4 py-3 hover:bg-ink/10 transition-colors"
               >
                 <span
-                  className="text-black"
-                  style={{ fontFamily: 'var(--font-host-grotesk)', fontWeight: 600, fontSize: 18 }}
+                  className="text-ink"
+                  style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18 }}
                 >
                   {c.name}
                 </span>
                 <span
-                  className="text-black/40"
-                  style={{ fontFamily: 'var(--font-oxygen)', fontSize: 14 }}
+                  className="text-ink/40"
+                  style={{ fontFamily: 'var(--font-serif)', fontSize: 14 }}
                 >
                   {c.count}
                 </span>

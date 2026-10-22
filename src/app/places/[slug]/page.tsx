@@ -48,10 +48,10 @@ function EventSection({ title, events }: { title: string; events: ArtEvent[] }) 
   return (
     <section className="mt-12">
       <h2
-        className="text-black"
+        className="text-ink"
         style={{
-          fontFamily: 'var(--font-host-grotesk)',
-          fontWeight: 600,
+          fontFamily: 'var(--font-serif)',
+          fontWeight: 300,
           fontSize: 28,
           lineHeight: '32px',
           letterSpacing: '-0.02em',

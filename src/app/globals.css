@@ -11,26 +11,72 @@
   display: none;
 }
 
-/* Event-card grid: fixed-width cards, left-aligned — up to 2 per row on
-   tablet, 4 on web (mobile uses the agenda list instead). Cards cap at 330px
-   (per the Figma layout) and the row packs to the left, so extra width shows
-   as empty space on the right rather than stretching the cards. Columns can
-   shrink below 330px on narrow web widths so four still fit without overflow.
+/* Event-card grid: square duotone cards that fill the row — 1 per row on
+   mobile (the agenda list), 2 on tablet, 3 on web (Figma "Home page",
+   node 283:2065: 3 × 453px cards with a 16px gap inside 24px page gutters).
    Plain CSS so the responsive columns can't be dropped by Tailwind's scanner. */
 .event-grid {
   display: grid;
-  gap: 32px 24px; /* row-gap 32, column-gap 24 */
-  justify-content: start;
-  grid-template-columns: minmax(0, 330px);
+  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (min-width: 768px) {
   .event-grid {
-    grid-template-columns: repeat(2, minmax(0, 330px));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 1024px) {
   .event-grid {
-    grid-template-columns: repeat(4, minmax(0, 330px));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Site header wordmark (RootHeader). Two states from Figma: at rest a large
+   two-line wordmark (283:2065); once the visitor scrolls, the same two lines
+   at a smaller size (288:5052, kept on two lines). Size, top offset and header
+   height all derive from two registered custom properties, so one transition
+   animates them in lockstep — the wordmark shrinks toward the top centre and
+   the pinned filters and strips glide up with it. */
+@property --logo-size {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 82px;
+}
+@property --logo-top {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 16px;
+}
+.site-header {
+  --logo-size: clamp(36px, min(11.5vw, 6.5vh), 82px);
+  --logo-top: 2vh;
+  --logo-ease: cubic-bezier(0.22, 1, 0.36, 1); /* ease-out-quint */
+  --logo-dur: 520ms;
+  position: relative;
+  flex: none;
+  height: calc(var(--logo-top) * 1.5 + var(--logo-size) * 1.86);
+  transition:
+    --logo-size var(--logo-dur) var(--logo-ease),
+    --logo-top var(--logo-dur) var(--logo-ease);
+}
+.site-header[data-compact] {
+  --logo-size: clamp(24px, 7vw, 32px);
+  --logo-top: 14px;
+}
+.site-logo {
+  position: absolute;
+  top: var(--logo-top);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--logo-size);
+  line-height: 0.93;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
+    transition: none;
   }
 }
 
@@ -39,9 +85,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-serif);
+  --font-serif: var(--font-serif);
+  --font-meta: var(--font-meta);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-serif);
+  /* Site palette — see docs/design/style.md */
+  --color-page: var(--page);
+  --color-ink: var(--ink);
+  --color-rule: var(--rule);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -81,8 +133,16 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Style Reference 1 + Figma "Calendar" (node 283:1928). One light serif,
+     flat square surfaces, duotone cards (schemes in src/lib/eventColor.ts). */
+  --page: #F2EFE4;  /* page background */
+  --ink: #383430;   /* default text / icons on the page */
+  --rule: #B1B1B1;  /* hairline dividers between strips */
+  /* Small sans for card meta lines and chips (Figma uses Geist there). */
+  --font-meta: var(--font-geist-sans), system-ui, sans-serif;
+
+  --background: var(--page);
+  --foreground: var(--ink);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -104,7 +164,7 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 0rem; /* square corners everywhere */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -158,5 +218,10 @@
   }
   html {
     @apply font-sans;
+    font-weight: 300;
+  }
+  /* One weight: hierarchy comes from size and italics, never bold. */
+  h1, h2, h3, h4, h5, h6, b, strong, th, button {
+    font-weight: 300;
   }
 }

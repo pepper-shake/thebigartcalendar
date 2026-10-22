@@ -15,7 +15,7 @@ export default function PageShell({
   const maxWidth =
     resolved === 'full' ? 'max-w-[1440px]' : resolved === 'wide' ? 'max-w-6xl' : 'max-w-2xl';
   return (
-    <div className="min-h-full flex flex-col" style={{ backgroundColor: '#FBFAF6' }}>
+    <div className="min-h-full flex flex-col" style={{ backgroundColor: 'var(--page)' }}>
       <main className={`flex-1 px-6 py-12 w-full mx-auto ${maxWidth}`}>
         {children}
       </main>

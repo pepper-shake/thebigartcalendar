@@ -68,10 +68,10 @@ export default async function EventPage({ params }: Params) {
       {related.length > 0 && (
         <section className="mt-12">
           <h2
-            className="text-black"
+            className="text-ink"
             style={{
-              fontFamily: 'var(--font-host-grotesk)',
-              fontWeight: 600,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 300,
               fontSize: 28,
               lineHeight: '32px',
               letterSpacing: '-0.02em',
@@ -80,8 +80,8 @@ export default async function EventPage({ params }: Params) {
             More events in {event.city}
           </h2>
           {/* Mobile: horizontal scroll strip (cards peek the next one).
-              Desktop: 4-up grid, matching the Figma "More events" row. */}
-          <div className="mt-8 flex gap-6 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-4 lg:gap-x-6 lg:gap-y-8 lg:overflow-visible lg:pb-0">
+              Desktop: 3-up grid, matching the Figma "More events" row (287:4614). */}
+          <div className="mt-8 flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-visible lg:pb-0">
             {related.map((e) => (
               <div key={e.id} className="w-[300px] shrink-0 lg:w-auto">
                 <EventCard event={e} />
