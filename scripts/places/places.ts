@@ -329,4 +329,26 @@ export const PLACES: NewPlace[] = [
       note: 'Orders via WhatsApp or Instagram.',
     },
   },
+  {
+    id: 'salted-books',
+    slug: 'salted-books',
+    name: 'Salted Books',
+    aliases: ['Salted Books Lisbon'],
+    kind: 'both',
+    category: 'shop',
+    description:
+      'English-language independent bookshop in Santos, Lisbon, that runs creative writing courses and workshops (fiction, memoir, essay, poetry), zine and journal-making workshops, book clubs and reading parties.',
+    imageUrl: null,
+    address: 'Calçada do Marquês de Abrantes 96, 1200-720 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7078466, // Nominatim: Salted Books (shop node)
+    lng: -9.1550847,
+    websiteUrl: 'https://saltedbookslisbon.com/',
+    instagramUrl: 'https://www.instagram.com/saltedbooks.lisbon/',
+    openingHours: {
+      tue: '10:00-18:30', wed: '10:00-18:30', thu: '10:00-18:30',
+      fri: '10:00-18:30', sat: '10:00-18:30', sun: '10:00-17:30',
+    },
+  },
 ];
