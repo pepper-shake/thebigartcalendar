@@ -126,6 +126,8 @@ export const PLACES: NewPlace[] = [
     kind: 'organiser',
     category: 'other',
     description: 'Lisbon art organiser announcing its events on Instagram.',
+    // Logo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/art-home-lisbon-BtgU1ofSkugHU6poxW0wiEx2q0WgUO.jpg',
     city: 'Lisbon',
     country: 'Portugal',
     instagramUrl: 'https://www.instagram.com/arthome.lisbon',
@@ -196,6 +198,8 @@ export const PLACES: NewPlace[] = [
     category: 'other',
     description:
       'English bookshop with specialty coffee and natural wine in Lisbon, "for the curious and creative". Hosts creative events and workshops: embroidery and storytelling workshops, a weekly writing night (The Writer\'s Hour) and open mic nights with music, poetry, spoken word and comedy.',
+    // Photo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/fable-lisbon-jTuhCTg9Bh1ICGFVME0xiXAfTpWN2M.jpg',
     address: 'Rua dos Prazeres 10A, 1200-820 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
@@ -262,6 +266,8 @@ export const PLACES: NewPlace[] = [
     category: 'shop',
     description:
       'Stationery and art-supplies shop and studio in Santos, Lisbon, with Japanese stationery, cards and drawing tools, and occasional craft classes such as spoon carving.',
+    // Photo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/bryon-studios-opwANXawjOmTQRqYu7dGpHPdXqbsD4.jpg',
     address: 'Largo Vitorino Damásio 3C, Pavilhão 3, Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
@@ -338,7 +344,8 @@ export const PLACES: NewPlace[] = [
     category: 'shop',
     description:
       'English-language independent bookshop in Santos, Lisbon, that runs creative writing courses and workshops (fiction, memoir, essay, poetry), zine and journal-making workshops, book clubs and reading parties.',
-    imageUrl: null,
+    // Photo supplied by the operator 2026-10-22 (credit: Hung Nguyen).
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/salted-books-mf7zgyCJwFxaSsAFEBmqaurqYar0Bm.webp',
     address: 'Calçada do Marquês de Abrantes 96, 1200-720 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
