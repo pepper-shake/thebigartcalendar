@@ -126,6 +126,8 @@ export const PLACES: NewPlace[] = [
     kind: 'organiser',
     category: 'other',
     description: 'Lisbon art organiser announcing its events on Instagram.',
+    // Logo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/art-home-lisbon-BtgU1ofSkugHU6poxW0wiEx2q0WgUO.jpg',
     city: 'Lisbon',
     country: 'Portugal',
     instagramUrl: 'https://www.instagram.com/arthome.lisbon',
