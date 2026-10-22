@@ -19,7 +19,7 @@ One row in the `places` table ([schema](../../src/db/schema.ts), [snapshot](../g
 Consequences: no FK on `events`, the scraper and the curation guard are untouched, and adding a place instantly links its past and future events. **Fix a wrong/missing link by editing the place's `aliases`** (or its city). See [decision #0008](../design/decisions.md).
 
 ## On the site
-- `/places` — cards filterable by city + category (`?city=lisbon&category=studio`; filtered views are `noindex`, canonical `/places`).
+- `/places` — cards (all one neutral colour, `#EDEBE1` — unlike event cards, no per-id colours) filterable by city + category (`?city=lisbon&category=studio`; filtered views are `noindex`, canonical `/places`).
 - `/places/[slug]` — details, map link, website/Instagram, opening hours, upcoming events + recent past events (grayscale, unlinked). JSON-LD: `ArtGallery`/`Museum`/`Store`/`LocalBusiness` (or `Organization` for organiser-only), with `event`s.
 - Event pages: organiser/venue pills link to the place page when linked (one pill when organiser = venue).
 - Listed in the sitemap, header menu and footer.

@@ -1,18 +1,21 @@
 import Link from 'next/link';
 import { type Place } from '@/db/schema';
 import { EventImage } from '@/components/events/EventImage';
-import { getCardColor } from '@/lib/eventColor';
 import { categoryLabel } from '@/lib/places';
 import { SITE_DEFAULT_IMAGE } from '@/lib/organiser-images';
 
 // Server-rendered card linking to a place page — the crawlable path from
-// /places to each /places/<slug>. Visual language mirrors the event cards.
+// /places to each /places/<slug>. Layout mirrors the event cards, but every
+// place card uses one neutral colour (the event cards' per-id colours read as
+// noise in the directory grid).
+const CARD_COLOR = '#EDEBE1';
+
 export default function PlaceCard({ place, upcomingCount }: { place: Place; upcomingCount: number }) {
   return (
     <Link href={`/places/${place.slug}`} className="group block h-full">
       <article
         className="flex h-full flex-col"
-        style={{ backgroundColor: getCardColor(place.id), borderRadius: 24, padding: 20, gap: 12 }}
+        style={{ backgroundColor: CARD_COLOR, borderRadius: 24, padding: 20, gap: 12 }}
       >
         <div
           className="flex items-center justify-between text-black/60"
