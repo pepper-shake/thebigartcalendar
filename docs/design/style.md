@@ -24,7 +24,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 - **Series** = same title + venue + city (normalised), e.g. every Disco Wheel "Ceramic Workshop".
 - `assignCardSchemes()` runs once over all published events (inside `getPublishedEvents()`, so the calendar, event pages and hubs agree). Two series *conflict* if they're on at least one common day (multi-day exhibitions count every day they're open). Series are coloured greedily in order of their first date. Each takes its preferred colour (hashed from the series key) unless a conflicting series already has it, otherwise the next free one. Date order keeps colours stable as new events are scraped.
 - Result on current data: 0 of 149 days repeat a colour, and all 26 recurring series keep a single colour. With more series on a day than colours, a repeat would be unavoidable; the least-used colour is taken then.
-- `getCardScheme(event)` returns, in order: a pinned place scheme, then the assigned `schemeIndex`, then a hash of the id (fallback for events not run through `assignCardSchemes`).
+- `getCardScheme(event)` returns, in order: the **past scheme** for any finished event (beige `#E3DECC`, text `#72696C`, white 50% chip; Figma "Past event" `292:5169`, which also applies to pinned places), a pinned place scheme, then the assigned `schemeIndex`, then a hash of the id (fallback for events not run through `assignCardSchemes`).
 
 | bg | fg | chip | source |
 |---|---|---|---|

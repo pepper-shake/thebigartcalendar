@@ -133,14 +133,25 @@ export function assignCardSchemes(events: ArtEvent[]): ArtEvent[] {
   });
 }
 
+/** Every finished event, whatever its usual colour (Figma "Past event", 292:5169). */
+export const PAST_SCHEME: CardScheme = { bg: '#E3DECC', fg: '#72696C', chip: LIGHT_CHIP };
+
+/** Today as YYYY-MM-DD (local time), for lexicographic comparison with event dates. */
+function todayISO(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 /**
- * Card scheme for an event: a place's pinned scheme if it has one, else the
+ * Card scheme for an event: the past scheme once it has finished; otherwise a
+ * place's pinned scheme if it has one, else the
  * scheme assignCardSchemes chose, else (event not run through it) a hash of
  * the id.
  */
 export function getCardScheme(
-  event: Pick<ArtEvent, 'id' | 'venuePlace' | 'organiserPlace' | 'schemeIndex'>,
+  event: Pick<ArtEvent, 'id' | 'date' | 'endDate' | 'venuePlace' | 'organiserPlace' | 'schemeIndex'>,
 ): CardScheme {
+  if ((event.endDate ?? event.date) < todayISO()) return PAST_SCHEME;
   return (
     pinnedScheme(event) ??
     CARD_SCHEMES[event.schemeIndex ?? hash(event.id) % CARD_SCHEMES.length]
