@@ -198,6 +198,8 @@ export const PLACES: NewPlace[] = [
     category: 'other',
     description:
       'English bookshop with specialty coffee and natural wine in Lisbon, "for the curious and creative". Hosts creative events and workshops: embroidery and storytelling workshops, a weekly writing night (The Writer\'s Hour) and open mic nights with music, poetry, spoken word and comedy.',
+    // Photo supplied by the operator 2026-10-22.
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/fable-lisbon-jTuhCTg9Bh1ICGFVME0xiXAfTpWN2M.jpg',
     address: 'Rua dos Prazeres 10A, 1200-820 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
