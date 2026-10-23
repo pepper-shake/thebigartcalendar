@@ -358,4 +358,24 @@ export const PLACES: NewPlace[] = [
       fri: '10:00-18:30', sat: '10:00-18:30', sun: '10:00-17:30',
     },
   },
+  {
+    id: 'hall-atelier',
+    slug: 'hall-atelier',
+    name: 'hALL',
+    aliases: ['hALL atelier', 'Hall Atelier', 'hallatelier.com'],
+    kind: 'both',
+    category: 'workshop-space',
+    description:
+      'Bright ~100 m² creative workspace in central Lisbon with mezzanines and a ceramic kiln. Runs ceramic-painting workshops (mugs, plates, vases and more) and private workshops for birthdays, groups and team-building; the space can also be rented for co-working, shoots, showrooms and events.',
+    imageUrl:
+      'https://static1.squarespace.com/static/602d342212b33a4973f1f966/t/621ba6b894eb8b659e5ad25d/1613589115086/nomabrand.jpeg?format=1500w',
+    address: 'Rua Ferreira Chaves 5A, 1070-177 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7286388, // street-level (Nominatim had no house number)
+    lng: -9.1656587,
+    websiteUrl: 'https://hallatelier.com/',
+    instagramUrl: 'https://www.instagram.com/hall.atelier/',
+    openingHours: { note: 'By appointment only — contact before visiting.' },
+  },
 ];
