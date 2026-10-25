@@ -7,6 +7,7 @@ import { PORTUGAL_ONLY_MODE, VISIBLE_COUNTRIES } from '../src/config/feature-fla
 import type { ArtEvent, EventType } from '../src/types';
 import { run as fableLisbon } from './parsers/fable-lisbon';
 import { run as oficinaMescla } from './parsers/oficina-mescla';
+import { run as peanutBlu } from './parsers/peanut-blu';
 import { run as dobarro } from './parsers/dobarro';
 import { run as macs } from './parsers/macs';
 import { run as bryonStudios } from './parsers/bryon-studios';
@@ -48,6 +49,7 @@ try {
 const parsers = [
   { name: 'Fable', fn: fableLisbon },
   { name: 'Oficina Mescla', fn: oficinaMescla },
+  { name: 'Peanut Blu', fn: peanutBlu },
   { name: 'DoBarro', fn: dobarro },
   { name: 'MACS', fn: macs },
   { name: 'Bryon Studios', fn: bryonStudios },
