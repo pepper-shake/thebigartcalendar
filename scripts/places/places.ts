@@ -359,6 +359,29 @@ export const PLACES: NewPlace[] = [
     },
   },
   {
+    id: 'peanut-blu',
+    slug: 'peanut-blu',
+    name: 'Peanut Blu',
+    aliases: ['Peanut Blu Arts & Crafts Studio', 'peanut.blu'],
+    kind: 'both',
+    category: 'workshop-space',
+    description:
+      'Arts and crafts studio in Lisbon, made mainly for adults who want to try something without committing to a course. Walk in and pick a materials pack (painting plant pots, watercolours, magnets, keyrings) for a 90-minute session, or book one of the weekly workshops (mosaic, resin, embroidery, beading, "& Sip" evenings). Also hosts private parties and team-building for 8+ people.',
+    imageUrl: 'https://peanut-blu.carrd.co/assets/images/card.jpg',
+    address: 'Rua Marcos Portugal 18A, 1200-258 Lisboa (enter through Wel Well Cafe)',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.71626, // Nominatim: Wel Well, 18A
+    lng: -9.1522307,
+    websiteUrl: 'https://peanut-blu.carrd.co/',
+    instagramUrl: 'https://www.instagram.com/peanut.blu/',
+    openingHours: {
+      wed: '14:00-20:30', thu: '14:00-20:30', fri: '14:00-20:30',
+      sat: '11:30-16:00', sun: '14:00-20:30',
+      note: 'Hours from the October 2026 calendar; workshops and walk-ins inside these hours.',
+    },
+  },
+  {
     id: 'hall-atelier',
     slug: 'hall-atelier',
     name: 'hALL',
