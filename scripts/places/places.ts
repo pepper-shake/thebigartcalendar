@@ -274,6 +274,26 @@ export const PLACES: NewPlace[] = [
   },
 
   {
+    id: 'muda-ceramica',
+    slug: 'muda-ceramica',
+    name: 'Muda Cerâmica',
+    aliases: ['Muda Ceramica', 'Muda', 'mudaceramica'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Ceramics studio and shop in Linda-a-Velha (Oeiras), just west of Lisbon, offering pottery-wheel intensives, single classes, ceramic and tile painting, family and kids’ holiday workshops, team building and private group parties.',
+    imageUrl: null,
+    address: 'Av. Dom Pedro V 53B, Linda-a-Velha, Oeiras',
+    city: 'Lisbon', // Lisbon metro (Oeiras municipality) — listed under Lisbon for the city filter
+    country: 'Portugal',
+    lat: 38.7106441, // street-level (Nominatim had no house number)
+    lng: -9.2457207,
+    websiteUrl: 'https://mudaceramica.com/',
+    instagramUrl: 'https://www.instagram.com/mudaceramica',
+    openingHours: { note: 'Workshops by booking — reserve online or call +351 933 532 861.' },
+  },
+
+  {
     id: 'dobarro',
     slug: 'dobarro',
     name: 'DoBarro',
