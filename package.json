@@ -14,6 +14,7 @@
     "db:seed": "tsx scripts/seed.ts",
     "scrape": "tsx scripts/run-all.ts",
     "places:sync": "tsx scripts/places/sync.ts",
+    "events:manual": "tsx scripts/manual/sync.ts",
     "db:local": "pglite-server --db=.local-db --port=5432 --max-connections=10"
   },
   "dependencies": {
