@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { EVENT_TYPES } from '@/lib/eventTypes';
 import { listActiveTypes } from '@/lib/events';
+import { ConsentSettingsLink } from '@/components/analytics/Consent';
 
 // Server-rendered footer. Its real <a> links give crawlers a path from every
 // content page to the type + city hubs (which in turn link to event pages).
@@ -48,6 +49,12 @@ export default async function SiteFooter() {
           <FooterLink href="/about">About</FooterLink>
           <FooterLink href="/blog">Blog</FooterLink>
           <FooterLink href="/contact">Contact</FooterLink>
+          <li>
+            <ConsentSettingsLink
+              className="text-ink/70 hover:text-ink hover:underline underline-offset-2 text-left"
+              style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
+            />
+          </li>
         </FooterCol>
       </div>
     </footer>

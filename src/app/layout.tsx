@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import RootHeader from "@/components/layout/RootHeader";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import Consent from "@/components/analytics/Consent";
 import JsonLd from "@/components/seo/JsonLd";
 import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
@@ -79,6 +80,7 @@ export default async function RootLayout({
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />
         <GoogleAnalytics />
+        <Consent />
       </body>
     </html>
   );
