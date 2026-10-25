@@ -29,7 +29,7 @@ const rows: NewEvent[] = MANUAL_EVENTS.map((e) => {
     address: v.address,
     organiserName: v.venue,
     organiserUrl: v.url,
-    description: [e.description, v.bookingNote].filter(Boolean).join(' '),
+    description: [e.description, e.ticketsUrl ? null : v.bookingNote].filter(Boolean).join(' '),
     imageUrl: e.imageUrl ?? v.imageUrl,
     ticketsUrl: e.ticketsUrl ?? v.url,
     price: e.price ?? null,

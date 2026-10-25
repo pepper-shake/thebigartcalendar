@@ -83,4 +83,18 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['ceramics', 'painting'],
     source: 'operator',
   },
+  {
+    venue: 'svet-space',
+    title: 'Soap Making',
+    type: 'workshop',
+    startDate: '2026-11-15',
+    startTime: '15:00',
+    endTime: '17:00',
+    price: '€40',
+    description:
+      'Make autumn/Christmas-themed cold-process soap from scratch with oils, butters and essential oils, playing with colours and decorating along the way. Take home two soaps you made. In English, ages 14+. Sign up via Instagram @solidshampoobars.',
+    ticketsUrl: 'https://www.instagram.com/solidshampoobars/',
+    tags: ['soap-making', 'crafts'],
+    source: 'Instagram post + poster (2026-10-25)',
+  },
 ];
