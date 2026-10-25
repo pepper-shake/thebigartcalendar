@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import type { InstagramPost } from '@/lib/place-instagram-posts';
 
 // Horizontal row of official Instagram embeds on a place page.
@@ -30,39 +30,36 @@ function subscribe(onChange: () => void) {
   };
 }
 
+// Photo-only crop: the iframe is cross-origin, so we can't style inside it.
+// Instead it sits in a clipping window that hides Instagram's header (account
+// row) and footer (likes, comments), leaving just the media. Tuned for 4:5
+// posts/reels (Instagram's default ratio); square posts show a sliver of footer.
+// If Instagram changes its embed layout, retune these two numbers.
 const EMBED_WIDTH = 326; // Instagram's minimum embed width
-const DEFAULT_HEIGHT = 560;
+const HEADER_HEIGHT = 58; // account row + audio line, plus a little margin
+const MEDIA_HEIGHT = 400; // 4:5 media is 326 × 408; trimmed so no footer shows
 
 function Embed({ post, index }: { post: InstagramPost; index: number }) {
-  const ref = useRef<HTMLIFrameElement>(null);
-  const [height, setHeight] = useState(DEFAULT_HEIGHT);
-
-  // The embed reports its content height via postMessage ({type: 'MEASURE'}).
-  useEffect(() => {
-    function onMessage(e: MessageEvent) {
-      if (e.origin !== 'https://www.instagram.com' || e.source !== ref.current?.contentWindow) return;
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        const h = data?.type === 'MEASURE' ? Number(data.details?.height) : NaN;
-        if (h > 0) setHeight(h);
-      } catch {
-        // Not a message we understand.
-      }
-    }
-    window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
-  }, []);
-
   return (
-    <iframe
-      ref={ref}
-      src={post.embedUrl}
-      title={`Instagram post ${index + 1}`}
-      width={EMBED_WIDTH}
-      height={height}
-      scrolling="no"
-      className="shrink-0 snap-start border-0 bg-white"
-    />
+    <a
+      href={post.permalink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative block shrink-0 snap-start overflow-hidden bg-white"
+      style={{ width: EMBED_WIDTH, height: MEDIA_HEIGHT }}
+      aria-label={`Instagram post ${index + 1} (opens Instagram)`}
+    >
+      <iframe
+        src={post.embedUrl}
+        title={`Instagram post ${index + 1}`}
+        width={EMBED_WIDTH}
+        height={HEADER_HEIGHT + MEDIA_HEIGHT + 300}
+        scrolling="no"
+        tabIndex={-1}
+        className="pointer-events-none absolute left-0 border-0"
+        style={{ top: -HEADER_HEIGHT }}
+      />
+    </a>
   );
 }
 
