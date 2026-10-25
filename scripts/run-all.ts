@@ -11,6 +11,7 @@ import { run as oficinaMescla } from './parsers/oficina-mescla';
 import { run as peanutBlu } from './parsers/peanut-blu';
 import { run as dobarro } from './parsers/dobarro';
 import { run as macs } from './parsers/macs';
+import { run as lisbonDrawingClub } from './parsers/lisbon-drawing-club';
 import { run as bryonStudios } from './parsers/bryon-studios';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
@@ -54,6 +55,7 @@ const parsers = [
   { name: 'Peanut Blu', fn: peanutBlu },
   { name: 'DoBarro', fn: dobarro },
   { name: 'MACS', fn: macs },
+  { name: 'Lisbon Drawing Club', fn: lisbonDrawingClub },
   { name: 'Bryon Studios', fn: bryonStudios },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },

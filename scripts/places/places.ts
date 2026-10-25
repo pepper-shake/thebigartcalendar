@@ -254,6 +254,26 @@ export const PLACES: NewPlace[] = [
   },
 
   {
+    id: 'lisbon-drawing-club',
+    slug: 'lisbon-drawing-club',
+    name: 'Lisbon Drawing Club',
+    aliases: ['LDC', 'lisbondrawingclub'],
+    kind: 'organiser',
+    category: 'collective',
+    description:
+      'Life-drawing collective: a community of drawing lovers who meet regularly to draw a live model, each session at a different Lisbon venue (cafés, theatres, studios) with a theme, for a suggested €6 donation that pays the model. Also runs masterclasses and private sessions, and is part of a network of drawing clubs in Porto, Barreiro, Cascais, Sintra and Portimão.',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/lisbon-drawing-club-Qyv1pSdmp5T6jVtEyBDfNgWEAy671a.jpg',
+    address: null, // moves between venues
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: null,
+    lng: null,
+    websiteUrl: 'https://linktr.ee/lisbondrawingclub',
+    instagramUrl: 'https://www.instagram.com/lisbondrawingclub/',
+  },
+
+  {
     id: 'svet-space',
     slug: 'svet-space',
     name: 'Svet Space',
