@@ -401,4 +401,23 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/hall.atelier/',
     openingHours: { note: 'By appointment only — contact before visiting.' },
   },
+  {
+    id: 'macs',
+    slug: 'macs',
+    name: 'MACS',
+    aliases: ['MACS Porto', 'MACSPLUS', 'macs_pt'],
+    kind: 'both',
+    category: 'artist-run',
+    description:
+      'Artist-run space and cultural association in Porto. Hosts guest-artist workshops (e.g. ceramic hand-building), PechaKucha-style presentation nights for the local art community, and a ceramics coworking studio with Tuesday-evening and Saturday-morning sessions. Events are announced on Instagram and booked via Linktree.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/190c1bd3-8230-4888-a1a6-126d8b69a473_306797102-5446674295380420-7441361907296559315-n.jpeg',
+    address: 'Rua da Boavista 84, 4050-112 Porto',
+    city: 'Porto',
+    country: 'Portugal',
+    lat: 41.1561808, // street-level (Nominatim had no house number)
+    lng: -8.6186392,
+    websiteUrl: 'https://linktr.ee/macs_pt',
+    instagramUrl: 'https://www.instagram.com/macs_pt/',
+  },
 ];
