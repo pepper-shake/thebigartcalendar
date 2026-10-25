@@ -256,18 +256,19 @@ export const PLACES: NewPlace[] = [
   {
     id: 'svet-space',
     slug: 'svet-space',
-    name: 'SVET•LIGHT•LUZ',
-    aliases: ['SVET', 'Svet Space', 'SVET LIGHT LUZ', 'svet__space'],
+    name: 'Svet Space',
+    aliases: ['SVET•LIGHT•LUZ', 'SVET', 'SVET LIGHT LUZ', 'svet__space'],
     kind: 'both',
     category: 'studio',
     description:
-      'Art coworking space and ceramic studio in Porto (Paranhos), hosting workshops, events and Sunday sketching sessions. Events are announced on Instagram.',
-    imageUrl: null, // Instagram-only; its CDN image URLs expire
-    address: 'Rua do Visconde de Setúbal 157, 4200-499 Porto',
+      'Art coworking space and ceramic studio in Porto (Carvalhido). Runs ceramic coworking and classes, plus a monthly programme of workshops and social events: collage jams, human figure sketching, Yoga & Clay, Wine & Clay, a book club, a Portuguese speaking club and guest workshops (soap making, mask making). Events are in English, Portuguese or Russian and are announced on Instagram.',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/svet-space-UX2oKCIU9mJfRHeATtFaXqSQwRXsVr.jpg',
+    address: 'Praça do Exército Libertador 6, 4250-205 Porto',
     city: 'Porto',
     country: 'Portugal',
-    lat: 41.1636953, // street-level (Nominatim had no house number)
-    lng: -8.6053118,
+    lat: 41.1657972, // Nominatim: "SVET space", no. 6
+    lng: -8.625141,
     websiteUrl: null,
     instagramUrl: 'https://www.instagram.com/svet__space/',
   },
