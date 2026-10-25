@@ -96,14 +96,19 @@ export default function CalendarClient({ events }: Props) {
   }, [monthEvents, firstOfMonth, lastOfMonth]);
 
   // The date to show: keep the user's explicit selection while it's still a
-  // valid event date this month, otherwise fall back to the current day-of-month
-  // (when it has events) or the first event date. Derived during render rather
-  // than pushed into state from an effect, to avoid cascading renders.
+  // valid event date this month. Otherwise, in the current month, open on today
+  // (or the next event day after it); in any other month, open on its first
+  // event day. The strip still lists every event day of the month, so earlier
+  // days stay reachable by scrolling back. Derived during render rather than
+  // pushed into state from an effect, to avoid cascading renders.
   const effectiveSelectedDate = useMemo<string | null>(() => {
     if (eventDates.length === 0) return null;
     if (selectedDate && eventDates.includes(selectedDate)) return selectedDate;
-    const todayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    return eventDates.includes(todayStr) ? todayStr : eventDates[0];
+    if (year === today.getFullYear() && month === today.getMonth()) {
+      const todayStr = toDateString(today);
+      return eventDates.find((d) => d >= todayStr) ?? eventDates[eventDates.length - 1];
+    }
+    return eventDates[0];
   }, [eventDates, selectedDate, year, month, today]);
 
   // Events that cover the selected date (start ≤ date ≤ end).
