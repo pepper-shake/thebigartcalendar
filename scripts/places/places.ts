@@ -254,6 +254,25 @@ export const PLACES: NewPlace[] = [
   },
 
   {
+    id: 'svet-space',
+    slug: 'svet-space',
+    name: 'SVET•LIGHT•LUZ',
+    aliases: ['SVET', 'Svet Space', 'SVET LIGHT LUZ', 'svet__space'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Art coworking space and ceramic studio in Porto (Paranhos), hosting workshops, events and Sunday sketching sessions. Events are announced on Instagram.',
+    imageUrl: null, // Instagram-only; its CDN image URLs expire
+    address: 'Rua do Visconde de Setúbal 157, 4200-499 Porto',
+    city: 'Porto',
+    country: 'Portugal',
+    lat: 41.1636953, // street-level (Nominatim had no house number)
+    lng: -8.6053118,
+    websiteUrl: null,
+    instagramUrl: 'https://www.instagram.com/svet__space/',
+  },
+
+  {
     id: 'dobarro',
     slug: 'dobarro',
     name: 'DoBarro',
