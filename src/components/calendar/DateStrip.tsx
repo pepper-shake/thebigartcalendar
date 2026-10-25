@@ -9,7 +9,9 @@ interface Props {
   eventDates: string[];
   selectedDate: string | null;
   onChange: (date: string) => void;
-  /** Mobile: left-aligned scrolling strip (desktop centres the days). */
+  /** Mobile: left-aligned scrolling strip (desktop centres the days when they
+   *  fit; `justify-center-safe` falls back to start-aligned when they overflow,
+   *  so the 1st of the month stays scrollable-to). */
   scrollable?: boolean;
 }
 
@@ -42,7 +44,7 @@ export default function DateStrip({ eventDates, selectedDate, onChange, scrollab
   return (
     <div
       ref={stripRef}
-      className={`flex-none flex items-center gap-[44px] border-b border-rule px-6 h-[66px] scrollbar-hide overflow-x-auto ${scrollable ? '' : 'justify-center'}`}
+      className={`flex-none flex items-center gap-[44px] border-b border-rule px-6 h-[66px] scrollbar-hide overflow-x-auto ${scrollable ? '' : 'justify-center-safe'}`}
     >
       {eventDates.map((dateStr) => {
         const [y, m, d] = dateStr.split('-').map(Number);
