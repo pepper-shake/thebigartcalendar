@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { REGION } from '@/lib/site';
+import SiteFooter from '@/components/layout/SiteFooter';
 export const metadata: Metadata = {
   title: 'About — The Big Art Calendar',
   description: `The Big Art Calendar is a free portal that aggregates art events across ${REGION} — exhibitions, workshops, fairs, performances, and more — so you never miss what matters.`,
@@ -45,6 +46,7 @@ export default function AboutPage() {
         </div>
 
       </main>
+      <SiteFooter />
     </div>
   );
 }

@@ -24,6 +24,7 @@ interface Props {
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
   types: EventType[];
+  footer?: React.ReactNode;
 }
 
 export default function MobileAgenda({
@@ -41,6 +42,7 @@ export default function MobileAgenda({
   onFiltersChange,
   cities,
   types,
+  footer,
 }: Props) {
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -113,6 +115,7 @@ export default function MobileAgenda({
             )}
           </div>
         </div>
+        {footer}
       </div>
 
       {/* ── Scroll-to-top FAB ── */}
