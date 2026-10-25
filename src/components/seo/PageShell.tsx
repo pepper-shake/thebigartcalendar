@@ -9,14 +9,17 @@ export default function PageShell({
 }: {
   children: React.ReactNode;
   wide?: boolean;
-  size?: 'default' | 'wide' | 'full';
+  size?: 'default' | 'wide' | 'full' | 'bleed';
 }) {
   const resolved = size ?? (wide ? 'wide' : 'default');
   const maxWidth =
     resolved === 'full' ? 'max-w-[1440px]' : resolved === 'wide' ? 'max-w-6xl' : 'max-w-2xl';
+  // 'bleed': no width or padding, for pages with full-width colour bands that
+  // centre their own content (e.g. /places/[slug]).
+  const mainClass = resolved === 'bleed' ? 'flex-1 w-full' : `flex-1 px-6 py-12 w-full mx-auto ${maxWidth}`;
   return (
     <div className="min-h-full flex flex-col" style={{ backgroundColor: 'var(--page)' }}>
-      <main className={`flex-1 px-6 py-12 w-full mx-auto ${maxWidth}`}>
+      <main className={mainClass}>
         {children}
       </main>
       <SiteFooter />

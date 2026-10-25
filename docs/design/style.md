@@ -53,13 +53,15 @@ Ten pairs are needed because the busiest days carry about 8 different events and
 - Cards are 3 per row (2 on tablet, 1 on mobile), filling the row with a 16px gap inside 24px gutters, and are 552px tall. The image fills the space left under the text. On hover the whole card zooms to `1.015` (250ms ease-out); it is a transform, so the grid never reflows and the card grows only ~3px per side into the gap.
 - Month strip: 24px serif, spread across the row (`px-[120px]`). Day strip: 18px serif with full day names and a 44px gap. In both, the active item is *italic semibold* instead of underlined.
 - Event page: the panel is the full-strength card scheme. The title is in the serif, meta lines and pills are in Geist, and "More events in …" is a 3-up grid of cards.
+- Place page (Figma "Place page" `310:1933`): a cream `#FBFAF6` panel with a 568×630 image on the right. The 52px title, italic serif meta lines (address in grey `#909090`, "Category · City, Country" in ink, city linked without underline) and the description, hours and the plain website address (no arrow, no Instagram link — the Instagram band below covers it) in Geist Light are on the left. Below it are full-width bands (`PageShell size="bleed"`) with 36px headings and 70px vertical padding, content at 1440px max with 42px gutters. "Upcoming events" has a sage `#D4D5C7` band and tomato `#EB4A38` heading (all upcoming events; per-place tweaks in `UPCOMING_OVERRIDES`: Disco Wheel shows only the next 6, as text-only cards with no photo via `EventCard hideImage`). "‹Place› on Instagram" has a wine `#5A1F2E` band and pink `#ED87AF` heading. Both band colours are fixed from Figma and the same on every place page.
 
 ## Deviations from Figma (kept to the reference's rules)
 - Figma sets the event-page title in Host Grotesk SemiBold and the description in Oxygen. We use Newsreader 300 for both ("one serif, one weight").
 - Figma rounds the event-page image (17px). We keep it square.
 - Figma marks the active month/day with Newsreader **SemiBold** Italic. We follow Figma here, which is the one place a heavier weight appears.
+- Place page: Figma sets the title and band headings in Newsreader Regular and the website link in Host Grotesk. We use Newsreader 300 and Geist Light. The Instagram heading reads "on Instagram" (Figma: "in Instagram") and links to the profile. Opening hours aren't in the frame but are kept. Past events are not shown. Instagram posts have no cream card frame.
 - Figma's header has no year selector. The year select is kept, because it's needed to reach next year's events.
 
 ## Not yet restyled
-- The places directory cards keep the single `PLACE_COLOR` (`#EDEBE1`), which sits close to the new page background.
+- The places directory cards (`/places`) keep the single `PLACE_COLOR` (`#EDEBE1`), which sits close to the new page background. The place page itself is restyled (see above).
 - Mobile has no Figma frame yet. It reuses the desktop tokens.

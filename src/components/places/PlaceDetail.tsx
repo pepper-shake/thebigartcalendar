@@ -1,36 +1,42 @@
 import Link from 'next/link';
 import { type Place, type OpeningHours } from '@/db/schema';
 import { EventImage } from '@/components/events/EventImage';
-import { categoryLabel, PLACE_COLOR } from '@/lib/places';
+import { categoryLabel } from '@/lib/places';
 import { citySlug } from '@/lib/slug';
 import { SITE_DEFAULT_IMAGE } from '@/lib/organiser-images';
 
-// Server-rendered place page body, in the same visual language as EventDetail:
-// PLACE_COLOR panel, big title, meta lines + link pills + description on the left,
-// image + opening hours on the right (stacked on mobile).
+// Server-rendered place panel (Figma "Place page" 310:1938): a cream panel with
+// title, italic meta lines and description on the left, links pinned to the
+// bottom, and a tall image on the right (image first, stacked, on mobile).
+
+const PANEL_BG = '#fbfaf6';
+const MUTED = '#909090';
 
 const metaStyle: React.CSSProperties = {
   fontFamily: 'var(--font-serif)',
   fontWeight: 300,
+  fontStyle: 'italic',
   fontSize: 22,
-  lineHeight: '28px',
+  lineHeight: '26px',
 };
 
-const pillStyle: React.CSSProperties = {
-  backgroundColor: 'rgba(251,250,246,0.7)',
-  color: 'var(--ink)',
-  fontFamily: 'var(--font-serif)',
+// Description, hours and links: Geist Light, as in Figma (310:1963).
+const bodyStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
   fontWeight: 300,
   fontSize: 20,
-  lineHeight: '18px',
-  height: 44,
-  padding: '0 16px',
+  lineHeight: '34px',
 };
 
 const DAYS: [keyof OpeningHours, string][] = [
   ['mon', 'Mon'], ['tue', 'Tue'], ['wed', 'Wed'], ['thu', 'Thu'],
   ['fri', 'Fri'], ['sat', 'Sat'], ['sun', 'Sun'],
 ];
+
+/** "https://www.discowheel.com/" → "discowheel.com", for display. */
+function displayUrl(url: string): string {
+  return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+}
 
 function mapUrl(place: Place): string | null {
   if (place.lat != null && place.lng != null) {
@@ -43,15 +49,12 @@ function mapUrl(place: Place): string | null {
 function Hours({ hours }: { hours: OpeningHours }) {
   const hasDays = DAYS.some(([d]) => hours[d]);
   return (
-    <div
-      className="p-5"
-      style={{ backgroundColor: 'rgba(251,250,246,0.7)', fontFamily: 'var(--font-serif)', fontSize: 16 }}
-    >
-      <h2 className="mb-3 text-ink" style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 20 }}>
+    <div className="text-ink" style={{ fontFamily: 'var(--font-meta)', fontWeight: 300, fontSize: 16, lineHeight: '24px' }}>
+      <h2 className="mb-2" style={{ ...metaStyle, color: MUTED }}>
         Opening hours
       </h2>
       {hasDays && (
-        <dl className="grid grid-cols-[4rem_1fr] gap-y-1 text-ink">
+        <dl className="grid grid-cols-[4rem_1fr] gap-y-1">
           {DAYS.map(([d, label]) => (
             <div key={d} className="contents">
               <dt className="text-ink/60">{label}</dt>
@@ -68,105 +71,84 @@ function Hours({ hours }: { hours: OpeningHours }) {
 export default function PlaceDetail({ place }: { place: Place }) {
   const map = mapUrl(place);
 
-  const title = (
-    <h1
-      className="text-ink"
-      style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 42, lineHeight: '46px', letterSpacing: '-0.02em' }}
-    >
-      {place.name}
-    </h1>
-  );
-
-  const meta = (
-    <div className="flex flex-col" style={{ gap: 14 }}>
-      <p className="text-ink" style={metaStyle}>
-        {categoryLabel(place.category)}
-        {place.city && (
-          <>
-            {' · '}
-            <Link href={`/cities/${citySlug(place.city)}`} className="hover:underline underline-offset-2">
-              {place.city}
-            </Link>
-          </>
-        )}
-        {place.country ? `, ${place.country}` : ''}
-      </p>
-      {place.address && (
-        <p className="text-ink/80" style={{ ...metaStyle, fontSize: 18 }}>
-          {map ? (
-            <a href={map} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
-              {place.address} ↗
-            </a>
-          ) : (
-            place.address
-          )}
-        </p>
-      )}
-    </div>
-  );
-
   const links = [
-    place.websiteUrl && { label: 'Website', href: place.websiteUrl },
-    place.instagramUrl && { label: 'Instagram', href: place.instagramUrl },
+    place.websiteUrl && { label: displayUrl(place.websiteUrl), href: place.websiteUrl },
     !place.address && map && { label: 'Map', href: map },
   ].filter((l): l is { label: string; href: string } => !!l);
 
-  const pills = links.length ? (
-    <div className="flex flex-wrap" style={{ gap: 16 }}>
-      {links.map((l) => (
-        <a
-          key={l.label}
-          href={l.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={pillStyle}
-          className="inline-flex items-center hover:opacity-80 transition-opacity"
-        >
-          {l.label} ↗
-        </a>
-      ))}
-    </div>
-  ) : null;
-
-  const description = place.description ? (
-    <p
-      className="text-ink whitespace-pre-line"
-      style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 20, lineHeight: '34px' }}
-    >
-      {place.description}
-    </p>
-  ) : null;
-
-  const image = (
-    <div className="w-full overflow-hidden" style={{ aspectRatio: '568 / 438' }}>
-      <EventImage
-        candidates={[place.imageUrl, SITE_DEFAULT_IMAGE].filter((u): u is string => !!u)}
-        alt={place.name}
-        className="w-full h-full object-cover"
-      />
-    </div>
-  );
-
-  const hours = place.openingHours ? <Hours hours={place.openingHours} /> : null;
-
   return (
     <div
-      className="-mx-6 w-[calc(100%+3rem)] lg:w-full px-6 py-8 lg:mx-0 lg:px-[42px] lg:py-[62px]"
-      style={{ backgroundColor: PLACE_COLOR }}
+      className="flex flex-col gap-6 p-4 sm:p-6 lg:flex-row lg:items-stretch lg:gap-8"
+      style={{ backgroundColor: PANEL_BG }}
     >
-      <div className="flex flex-col gap-7 lg:flex-row lg:items-start lg:gap-8">
-        {/* On mobile the image leads; on desktop it's the fixed right column. */}
-        <div className="flex flex-col gap-4 lg:order-2 lg:w-[568px] lg:shrink-0">
-          {image}
-          <div className="hidden lg:block">{hours}</div>
+      {/* On mobile the image leads; on desktop it's the fixed right column. */}
+      <div className="aspect-[568/630] w-full overflow-hidden lg:order-2 lg:aspect-auto lg:h-[630px] lg:w-[568px] lg:shrink-0">
+        <EventImage
+          candidates={[place.imageUrl, SITE_DEFAULT_IMAGE].filter((u): u is string => !!u)}
+          alt={place.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-8 lg:order-1 lg:px-6 lg:py-[42px]">
+        <div className="flex flex-col gap-8">
+          <h1
+            className="text-ink text-[40px] leading-[40px] lg:text-[52px] lg:leading-[48px]"
+            style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, letterSpacing: '-0.02em' }}
+          >
+            {place.name}
+          </h1>
+
+          <div className="flex flex-col" style={{ gap: 12 }}>
+            {place.address && (
+              <p style={{ ...metaStyle, color: MUTED }}>
+                {map ? (
+                  <a href={map} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-2">
+                    {place.address}
+                  </a>
+                ) : (
+                  place.address
+                )}
+              </p>
+            )}
+            <p className="text-ink" style={metaStyle}>
+              {categoryLabel(place.category)}
+              {place.city && (
+                <>
+                  {' · '}
+                  <Link href={`/cities/${citySlug(place.city)}`} className="hover:underline underline-offset-2">
+                    {place.city}
+                  </Link>
+                </>
+              )}
+              {place.country ? `, ${place.country}` : ''}
+            </p>
+          </div>
+
+          {place.description && (
+            <p className="text-ink whitespace-pre-line" style={bodyStyle}>
+              {place.description}
+            </p>
+          )}
+
+          {place.openingHours && <Hours hours={place.openingHours} />}
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-7 lg:order-1 lg:gap-8">
-          {title}
-          {meta}
-          {pills}
-          {description}
-          <div className="lg:hidden">{hours}</div>
-        </div>
+
+        {links.length > 0 && (
+          <div className="flex flex-wrap gap-x-8 gap-y-2 text-ink" style={bodyStyle}>
+            {links.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline underline-offset-2"
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

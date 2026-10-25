@@ -20,11 +20,8 @@ import type { InstagramPost } from '@/lib/place-instagram-posts';
 const EMBED_MIN = 326;
 const EMBED_MAX = 540;
 const HEADER_CROP = 60; // account row + audio line (~56px), plus a little margin
-const FOOTER_TRIM = 8; // shave the bottom so no footer border peeks through
-
-// Card styling from the Figma "Place page" design (node 310:1933): cream card,
-// 24px padding, three across on desktop.
-const CARD_BG = '#fbfaf6';
+const FOOTER_TRIM = 12; // shave the bottom so no footer border peeks through
+const SIDE_CROP = 1; // Instagram's 1px grey border, hidden now there's no card frame
 
 function Embed({ post, index }: { post: InstagramPost; index: number }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -39,8 +36,9 @@ function Embed({ post, index }: { post: InstagramPost; index: number }) {
   }, []);
 
   const render = Math.min(EMBED_MAX, Math.max(EMBED_MIN, width));
-  const scale = width ? width / render : 1;
-  const visible = render * 1.25 - FOOTER_TRIM; // in iframe pixels
+  const inner = render - 2 * SIDE_CROP; // media width inside the border, in iframe pixels
+  const scale = width ? width / inner : 1;
+  const visible = inner * 1.25 - FOOTER_TRIM; // in iframe pixels
 
   return (
     <a
@@ -60,47 +58,35 @@ function Embed({ post, index }: { post: InstagramPost; index: number }) {
           height={HEADER_CROP + visible + 300}
           scrolling="no"
           tabIndex={-1}
-          className="pointer-events-none absolute left-0 origin-top-left border-0"
-          style={{ top: -HEADER_CROP * scale, transform: `scale(${scale})` }}
+          className="pointer-events-none absolute origin-top-left border-0"
+          style={{ top: -HEADER_CROP * scale, left: -SIDE_CROP * scale, transform: `scale(${scale})` }}
         />
       )}
     </a>
   );
 }
 
+// Three across on desktop (Figma "Place page" 310:1933). Figma frames each post
+// in a cream card with 24px padding; dropped (operator's call, 2026-10-25) so
+// the photos sit edge to edge on the band.
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="w-[85%] shrink-0 snap-start p-6 sm:w-[calc((100%-16px)/2)] lg:w-[calc((100%-32px)/3)]"
-      style={{ backgroundColor: CARD_BG }}
-    >
+    <div className="w-[85%] shrink-0 snap-start sm:w-[calc((100%-16px)/2)] lg:w-[calc((100%-32px)/3)]">
       {children}
     </div>
   );
 }
 
-export default function InstagramPosts({ posts, handle }: { posts: InstagramPost[]; handle: string | null }) {
+// Just the row of cards; the page wraps it in the place's colour band with the
+// "… on Instagram" heading.
+export default function InstagramPosts({ posts }: { posts: InstagramPost[] }) {
   return (
-    <section className="mt-12">
-      <h2
-        className="text-ink"
-        style={{
-          fontFamily: 'var(--font-serif)',
-          fontWeight: 300,
-          fontSize: 28,
-          lineHeight: '32px',
-          letterSpacing: '-0.02em',
-        }}
-      >
-        On IG{handle ? ` @${handle}` : ''}
-      </h2>
-      <div className="scrollbar-hide -mx-6 mt-8 flex snap-x gap-4 overflow-x-auto px-6 lg:mx-0 lg:px-0">
-        {posts.map((p, i) => (
-          <Card key={p.permalink}>
-            <Embed post={p} index={i} />
-          </Card>
-        ))}
-      </div>
-    </section>
+    <div className="scrollbar-hide -mx-6 flex snap-x gap-4 overflow-x-auto px-6 lg:mx-0 lg:px-0">
+      {posts.map((p, i) => (
+        <Card key={p.permalink}>
+          <Embed post={p} index={i} />
+        </Card>
+      ))}
+    </div>
   );
 }
