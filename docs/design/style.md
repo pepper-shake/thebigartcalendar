@@ -19,7 +19,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--font-meta` | Geist | Card and event meta, chips |
 
 ## Favicon / app icons
-"b+a+c" in pink Newsreader on a wine circle (`#5A1F2E`, the Disco Wheel pinned scheme). Next.js picks the files up by convention from `src/app/`: `favicon.ico` (16/32/48), `icon.png` (512, transparent corners) and `apple-icon.png` (180, square wine tile, since iOS masks its own corners and shows transparency as black). Regenerate all three from one 800×800 source if it changes.
+Two linked silver paperclips forming an "A" on the page cream (`#F2EFE4`, so the icon sits flush with the site). Next.js picks the files up by convention from `src/app/`: `favicon.ico` (16/32/48, cropped closer to the clips with contrast lifted ×1.6 so the thin wire survives 16px), `icon.png` (512) and `apple-icon.png` (180), both full-frame and opaque (iOS masks its own corners). Regenerate all three from the one 800×800 source if it changes.
 
 ## Card schemes (`src/lib/eventColor.ts`)
 **Rule:** no two different events on the same page share a colour, but every date of one recurring event (a *series*) keeps the same colour.
