@@ -1,35 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { InstagramPost } from '@/lib/place-instagram-posts';
 
 // "On IG" row of official Instagram embeds on a place page, below the place
 // panel (Figma "Place page", node 310:1933).
 //
-// Instagram's embed iframe sets Meta cookies, so nothing loads from Instagram
-// until the visitor clicks "Show posts" (click-to-load, the usual EU pattern).
-// The click is remembered in localStorage, so later place pages load directly.
-// Before that, the server-rendered fallback is empty cards linking to each post.
-
-const KEY = 'bac-instagram-embeds';
-const CHANGE_EVENT = 'bac-instagram-embeds-change';
-
-function readEnabled(): boolean {
-  try {
-    return localStorage.getItem(KEY) === 'on';
-  } catch {
-    return false;
-  }
-}
-
-function subscribe(onChange: () => void) {
-  window.addEventListener(CHANGE_EVENT, onChange);
-  window.addEventListener('storage', onChange);
-  return () => {
-    window.removeEventListener(CHANGE_EVENT, onChange);
-    window.removeEventListener('storage', onChange);
-  };
-}
+// Embeds load straight away (operator's call, 2026-10-25): Instagram's iframe
+// sets Meta cookies without asking first, which is an EU-consent risk we
+// accept for now. Gate it behind the cookie banner if that changes.
 
 // Photo-only crop: the iframe is cross-origin, so we can't style inside it.
 // Instead it sits in a clipping window that hides Instagram's header (account
@@ -101,60 +80,24 @@ function Card({ children }: { children: React.ReactNode }) {
 }
 
 export default function InstagramPosts({ posts, handle }: { posts: InstagramPost[]; handle: string | null }) {
-  const enabled = useSyncExternalStore(subscribe, readEnabled, () => false);
-  const [forced, setForced] = useState(false);
-  const show = enabled || forced;
-
-  function enable() {
-    try {
-      localStorage.setItem(KEY, 'on');
-    } catch {
-      // Storage blocked: `forced` still shows the posts for this page view.
-    }
-    setForced(true);
-    window.dispatchEvent(new Event(CHANGE_EVENT));
-  }
-
   return (
     <section className="mt-12">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
-        <h2
-          className="text-ink"
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 300,
-            fontSize: 28,
-            lineHeight: '32px',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          On IG{handle ? ` @${handle}` : ''}
-        </h2>
-        {!show && (
-          <p className="text-ink/70" style={{ fontFamily: 'var(--font-serif)', fontSize: 16 }}>
-            Loads content and cookies from Instagram.{' '}
-            <button type="button" onClick={enable} className="text-ink underline underline-offset-2 hover:opacity-70">
-              Show posts
-            </button>
-          </p>
-        )}
-      </div>
+      <h2
+        className="text-ink"
+        style={{
+          fontFamily: 'var(--font-serif)',
+          fontWeight: 300,
+          fontSize: 28,
+          lineHeight: '32px',
+          letterSpacing: '-0.02em',
+        }}
+      >
+        On IG{handle ? ` @${handle}` : ''}
+      </h2>
       <div className="scrollbar-hide -mx-6 mt-8 flex snap-x gap-4 overflow-x-auto px-6 lg:mx-0 lg:px-0">
         {posts.map((p, i) => (
           <Card key={p.permalink}>
-            {show ? (
-              <Embed post={p} index={i} />
-            ) : (
-              <a
-                href={p.permalink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center text-ink/50 hover:text-ink"
-                style={{ aspectRatio: '4 / 5', fontFamily: 'var(--font-serif)', fontSize: 18 }}
-              >
-                View post {i + 1} on Instagram ↗
-              </a>
-            )}
+            <Embed post={p} index={i} />
           </Card>
         ))}
       </div>
