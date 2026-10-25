@@ -93,6 +93,7 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     price: '€40',
     description:
       'Make autumn/Christmas-themed cold-process soap from scratch with oils, butters and essential oils, playing with colours and decorating along the way. Take home two soaps you made. In English, ages 14+. Sign up via Instagram @solidshampoobars.',
+    imageUrl: 'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/svet-soap-making-Tw5S93BfwkdoH68GjO5Kgd6M2W10th.jpg',
     ticketsUrl: 'https://www.instagram.com/solidshampoobars/',
     tags: ['soap-making', 'crafts'],
     source: 'Instagram post + poster (2026-10-25)',
