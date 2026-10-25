@@ -13,11 +13,13 @@ import MobileAgenda from '@/components/mobile/MobileAgenda';
 
 interface Props {
   events: ArtEvent[];
+  /** The server-rendered SiteFooter, shown at the end of each scroll pane. */
+  footer?: React.ReactNode;
 }
 
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
-export default function CalendarClient({ events }: Props) {
+export default function CalendarClient({ events, footer }: Props) {
   const today = useMemo(() => new Date(), []);
   // The year/month the user asked for; what's shown is resolved against the
   // months that actually have events (below).
@@ -169,6 +171,7 @@ export default function CalendarClient({ events }: Props) {
               </div>
             )}
           </main>
+          {footer}
         </div>
 
         {/* Scroll-to-top FAB */}
@@ -203,6 +206,7 @@ export default function CalendarClient({ events }: Props) {
           onFiltersChange={setFilters}
           cities={facets.cities}
           types={facets.types}
+          footer={footer}
         />
       </div>
     </>

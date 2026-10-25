@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ContactForm from './ContactForm';
+import SiteFooter from '@/components/layout/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Contact — The Big Art Calendar',
@@ -27,6 +28,7 @@ export default function ContactPage() {
         <ContactForm />
 
       </main>
+      <SiteFooter />
     </div>
   );
 }
