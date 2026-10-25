@@ -6,6 +6,7 @@ import { typeMeta } from '../src/lib/eventTypes';
 import { PORTUGAL_ONLY_MODE, VISIBLE_COUNTRIES } from '../src/config/feature-flags';
 import type { ArtEvent, EventType } from '../src/types';
 import { run as fableLisbon } from './parsers/fable-lisbon';
+import { run as moniqueClara } from './parsers/monique-clara';
 import { run as oficinaMescla } from './parsers/oficina-mescla';
 import { run as peanutBlu } from './parsers/peanut-blu';
 import { run as dobarro } from './parsers/dobarro';
@@ -48,6 +49,7 @@ try {
 
 const parsers = [
   { name: 'Fable', fn: fableLisbon },
+  { name: 'Monique Clara', fn: moniqueClara },
   { name: 'Oficina Mescla', fn: oficinaMescla },
   { name: 'Peanut Blu', fn: peanutBlu },
   { name: 'DoBarro', fn: dobarro },

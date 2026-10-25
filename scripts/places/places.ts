@@ -210,6 +210,26 @@ export const PLACES: NewPlace[] = [
   },
 
   {
+    id: 'monique-clara',
+    slug: 'monique-clara',
+    name: 'Monique Clara Studio',
+    aliases: ['Monique Clara Tufting Studio', 'Monique Clara', 'moniqueclara'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Tufting studio and shop in Amsterdam West run by artist Monique Clara: hand-tufted rugs, mirrors and prints, plus small-group workshops (max 4) in beginner tufting, tufting for two, tufted mirrors, punch needle and embroidered photos. Also hosts private events.',
+    imageUrl: 'https://assets.bigcartel.com/product_images/407292309/IMG_9042.jpeg',
+    address: 'Condensatorweg 36, 1014 AX Amsterdam',
+    city: 'Amsterdam',
+    country: 'Netherlands',
+    lat: 52.3897265, // Nominatim: no. 36
+    lng: 4.851374,
+    websiteUrl: 'https://www.moniqueclara.com/',
+    instagramUrl: 'https://www.instagram.com/_monique.clara_/',
+    openingHours: { note: 'Workshops only — book a session online or email the studio.' },
+  },
+
+  {
     id: 'oficina-mescla',
     slug: 'oficina-mescla',
     name: 'Oficina Mescla',
