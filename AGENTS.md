@@ -41,6 +41,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Portugal-only mode (feature flag) | [docs/product/portugal-only-mode.md](docs/product/portugal-only-mode.md) |
 | Places directory (add/edit places) | [docs/product/places.md](docs/product/places.md) |
 | Integrations (Vercel Blob, Retool) | [docs/references/](docs/references/) |
+| Analytics + consent banner (GA, Clarity) | [docs/references/analytics.md](docs/references/analytics.md) |
 | DB schema snapshot | [docs/generated/db-schema.md](docs/generated/db-schema.md) |
 | Security | [docs/SECURITY.md](docs/SECURITY.md) |
 
