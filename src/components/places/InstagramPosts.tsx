@@ -139,7 +139,7 @@ export default function InstagramPosts({ posts, handle }: { posts: InstagramPost
           </p>
         )}
       </div>
-      <div className="-mx-6 mt-8 flex snap-x gap-4 overflow-x-auto px-6 lg:mx-0 lg:px-0">
+      <div className="scrollbar-hide -mx-6 mt-8 flex snap-x gap-4 overflow-x-auto px-6 lg:mx-0 lg:px-0">
         {posts.map((p, i) => (
           <Card key={p.permalink}>
             {show ? (
