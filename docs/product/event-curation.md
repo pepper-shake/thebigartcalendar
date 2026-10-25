@@ -28,3 +28,6 @@ The scraper's `onConflictDoUpdate` set block in [scripts/lib/upsert.ts](../../sc
 Events publish immediately (`status` defaults to `published`). The operator uses the editor to fix images/titles/descriptions and set `status='hidden'` for junk — "fix & hide", not "approve everything". To switch to opt-in moderation later, default `status` to `pending` (the read query already filters to `published`).
 
 Editing happens in Retool: [references/retool.md](../references/retool.md). Image uploads: [references/vercel-blob.md](../references/vercel-blob.md). Rationale: [decision #0002](../design/decisions.md).
+
+## Known duplicate source: Disco Wheel
+Disco Wheel sometimes republishes a workshop slot as a new Shopify product. The parser's id hashes the product URL, so the slot gets a second row and the old one stays. `npx tsx scripts/dev/hide-disco-wheel-dupes.ts` lists the older copies (dry run; add `--prod` for production and `--apply` to hide them). It only sets `status='hidden'`, which can be reversed. The root fix is a slot-based id in [scripts/parsers/disco-wheel.ts](../../scripts/parsers/disco-wheel.ts), still to do.

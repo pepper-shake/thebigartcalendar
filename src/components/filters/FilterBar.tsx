@@ -31,7 +31,7 @@ export default function FilterBar({ filters, onChange, cities, types }: Props) {
         value={filters.city}
         onChange={(v) => onChange({ ...filters, city: v ?? 'all' })}
         options={[
-          { value: 'all', label: 'All Cities' },
+          { value: 'all', label: 'All Portugal' },
           ...cities.map((c) => ({ value: c, label: c })),
         ]}
       />

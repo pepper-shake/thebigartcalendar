@@ -20,7 +20,7 @@ export function EventTypeBadge({ type, size = 'sm' }: Props) {
   const c = eventTypeColors[type];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full font-medium ${c.bg} ${c.text} ${
+      className={`inline-flex items-center gap-1 rounded-full font-light ${c.bg} ${c.text} ${
         size === 'sm' ? 'text-[10px] px-1.5 py-0.5' : 'text-xs px-2 py-0.5'
       }`}
     >

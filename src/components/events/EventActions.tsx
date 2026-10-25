@@ -2,20 +2,21 @@
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
+import type { CardScheme } from '@/lib/eventColor';
 
 // Two icon buttons shown in the event card header (Figma node 249:1566):
 //  • Copy   — translucent cream square, black icon; copies this event's
 //             canonical calendar URL to the clipboard.
 //  • Source — solid black square, white icon; opens the event's original
 //             source page in a new tab.
-// Both: 44px square (24px icon + 10px padding), 4px corners, 12px gap.
+// Both: 44px square (24px icon + 10px padding), square corners, 12px gap.
+// Colours follow the event's card scheme (Figma 287:4576): copy sits on the
+// scheme's chip wash, source is a solid block of the scheme foreground.
 // The icons are the exact Figma vectors (nodes 249:1570 / 249:1568), inlined at
 // 24×24 with `currentColor` so the button's text color drives the icon color.
 
 const buttonClass =
-  'inline-flex items-center justify-center rounded-[4px] p-[10px] transition-opacity hover:opacity-70 focus:outline-none';
-const copyButtonStyle: React.CSSProperties = { backgroundColor: 'rgba(251,250,246,0.7)' };
-const sourceButtonStyle: React.CSSProperties = { backgroundColor: '#000' };
+  'inline-flex items-center justify-center p-[10px] transition-opacity hover:opacity-70 focus:outline-none';
 
 /** Figma "copy" icon (249:1570) — two overlapping rounded squares. */
 function CopyIcon() {
@@ -71,9 +72,11 @@ function ShareIcon() {
 export default function EventActions({
   eventUrl,
   sourceUrl,
+  scheme,
 }: {
   eventUrl: string;
   sourceUrl?: string;
+  scheme: CardScheme;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -92,8 +95,8 @@ export default function EventActions({
       <button
         type="button"
         onClick={handleCopy}
-        className={`${buttonClass} text-black`}
-        style={copyButtonStyle}
+        className={buttonClass}
+        style={{ backgroundColor: scheme.chip, color: scheme.fg }}
         aria-label={copied ? 'Link copied' : 'Copy link to this event'}
         title={copied ? 'Link copied' : 'Copy link to this event'}
       >
@@ -105,8 +108,8 @@ export default function EventActions({
           href={sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${buttonClass} text-white`}
-          style={sourceButtonStyle}
+          className={buttonClass}
+          style={{ backgroundColor: scheme.fg, color: scheme.bg }}
           aria-label="Open original event source in a new tab"
           title="Open original event source"
         >

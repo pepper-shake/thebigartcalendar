@@ -4,6 +4,10 @@ import { type ArtEvent } from '@/types';
 import { getPublishedEvents, isCurrent, todayISO } from '@/lib/events';
 import { citySlug } from '@/lib/slug';
 
+/** Background of every place card and place page — one neutral colour, unlike
+ * the event cards' per-id palette. */
+export const PLACE_COLOR = '#EDEBE1';
+
 // Read-side selectors for the /places directory. Places are curated by hand;
 // events are linked at read time (src/lib/place-match.ts).
 

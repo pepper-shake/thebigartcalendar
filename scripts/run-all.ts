@@ -8,8 +8,7 @@ import type { ArtEvent, EventType } from '../src/types';
 import { run as fableLisbon } from './parsers/fable-lisbon';
 import { run as oficinaMescla } from './parsers/oficina-mescla';
 import { run as dobarro } from './parsers/dobarro';
-// bryon-studios: disabled 2026-09-27 — its events collection 404s (page removed).
-// Re-add to `parsers` if Bryon Studios publishes events again.
+import { run as bryonStudios } from './parsers/bryon-studios';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
 import { run as pinkDolphin } from './parsers/pink-dolphin';
@@ -18,6 +17,7 @@ import { run as collageClub } from './parsers/collage-club';
 import { run as discoWheel } from './parsers/disco-wheel';
 import { run as ajudaLab } from './parsers/ajuda-lab';
 import { run as galeria1758 } from './parsers/galeria-1758';
+import { run as saltedBooks } from './parsers/salted-books';
 
 // Load .env.local for local development. In CI, env vars are injected via secrets.
 // We parse manually so we can overwrite empty-string vars (process.loadEnvFile skips them).
@@ -48,6 +48,7 @@ const parsers = [
   { name: 'Fable', fn: fableLisbon },
   { name: 'Oficina Mescla', fn: oficinaMescla },
   { name: 'DoBarro', fn: dobarro },
+  { name: 'Bryon Studios', fn: bryonStudios },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },
   { name: 'Pink Dolphin', fn: pinkDolphin },
@@ -56,6 +57,7 @@ const parsers = [
   { name: 'Disco Wheel', fn: discoWheel },
   { name: 'Ajuda Lab', fn: ajudaLab },
   { name: 'Galeria 1758', fn: galeria1758 },
+  { name: 'Salted Books', fn: saltedBooks },
 ];
 
 interface NewRow {

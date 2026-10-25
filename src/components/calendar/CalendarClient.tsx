@@ -124,10 +124,11 @@ export default function CalendarClient({ events }: Props) {
   return (
     <>
       {/* ── Desktop ─────────────────────────────────────── */}
-      <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: '#FBFAF6' }}>
+      <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: 'var(--page)' }}>
 
-        {/* Filters bar with fading bottom border on scroll */}
-        <div className="flex-none relative">
+        {/* Pinned navigation: filters + month strip + date strip stay on screen;
+            only the cards below scroll. */}
+        <div className="flex-none">
           <AppHeader
             year={year}
             years={facets.years}
@@ -137,24 +138,22 @@ export default function CalendarClient({ events }: Props) {
             cities={facets.cities}
             types={facets.types}
           />
-          <div
-            className="absolute bottom-0 left-0 right-0 h-px bg-[#b1b1b1] transition-opacity duration-300"
-            style={{ opacity: isScrolled ? 1 : 0 }}
-          />
+          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
+          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
         </div>
 
-        {/* Scrollable: month strip + date strip + cards */}
+        {/* Scrollable: cards only */}
         <div
           ref={scrollRef}
           className="flex-1 min-h-0 overflow-y-auto"
           onScroll={handleScroll}
         >
-          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
-          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
-
-          <main className="px-6 py-4">
+          {/* At least one header-collapse range (120px, see RootHeader) taller
+              than the viewport, so the wordmark can always shrink fully with
+              the scroll — even on a day with a single row of cards. */}
+          <main className="px-6 py-4 min-h-[calc(100%+120px)]">
             {selectedEvents.length === 0 ? (
-              <div className="flex items-center justify-center h-48 text-zinc-400 text-sm">
+              <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
               </div>
             ) : (
@@ -170,7 +169,7 @@ export default function CalendarClient({ events }: Props) {
         {/* Scroll-to-top FAB */}
         <button
           onClick={scrollToTop}
-          className="absolute bottom-9 right-6 bg-black rounded-full p-3 flex items-center justify-center transition-all duration-300"
+          className="absolute bottom-9 right-6 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
           style={{
             opacity: isScrolled ? 1 : 0,
             pointerEvents: isScrolled ? 'auto' : 'none',
@@ -178,7 +177,7 @@ export default function CalendarClient({ events }: Props) {
           }}
           aria-label="Scroll to top"
         >
-          <ArrowUp className="size-6 text-white" strokeWidth={2} />
+          <ArrowUp className="size-6 text-page" strokeWidth={1.5} />
         </button>
       </div>
 

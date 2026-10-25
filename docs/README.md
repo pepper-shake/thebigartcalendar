@@ -9,6 +9,7 @@ The repository is the source of truth. Anyone working on this project — human 
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | High-level system map: data flow, read path, where code lives |
 | [design/decisions.md](design/decisions.md) | Accepted decisions + rationale (ADR log), with status |
+| [design/style.md](design/style.md) | Visual style: fonts, colour tokens, duotone card schemes, Figma mapping |
 | [exec-plans/active/](exec-plans/active/) | In-flight work, with progress + decision logs |
 | [exec-plans/tech-debt.md](exec-plans/tech-debt.md) | Known debt / deferred work |
 | [product/](product/) | Feature specs — what we're building for users, and why |

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 const inputStyle = {
-  fontFamily: 'var(--font-oxygen)',
+  fontFamily: 'var(--font-serif)',
   fontWeight: 300,
   fontSize: 16,
 } as const;
@@ -20,8 +20,8 @@ export default function ContactForm() {
   if (submitted) {
     return (
       <p
-        className="text-black"
-        style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
+        className="text-ink"
+        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
       >
         Thank you — we&apos;ll be in touch soon.
       </p>
@@ -33,8 +33,8 @@ export default function ContactForm() {
       <div className="flex flex-col gap-2">
         <label
           htmlFor="name"
-          className="text-black"
-          style={{ ...inputStyle, fontSize: 14, letterSpacing: '0.05em', textTransform: 'uppercase' }}
+          className="text-ink"
+          style={{ ...inputStyle, fontSize: 16, fontStyle: 'italic' }}
         >
           Name
         </label>
@@ -44,7 +44,7 @@ export default function ContactForm() {
           type="text"
           required
           autoComplete="name"
-          className="w-full bg-transparent border-b border-black/30 focus:border-black outline-none py-2 text-black transition-colors"
+          className="w-full bg-transparent border-b border-ink/30 focus:border-ink outline-none py-2 text-ink transition-colors"
           style={inputStyle}
         />
       </div>
@@ -52,8 +52,8 @@ export default function ContactForm() {
       <div className="flex flex-col gap-2">
         <label
           htmlFor="email"
-          className="text-black"
-          style={{ ...inputStyle, fontSize: 14, letterSpacing: '0.05em', textTransform: 'uppercase' }}
+          className="text-ink"
+          style={{ ...inputStyle, fontSize: 16, fontStyle: 'italic' }}
         >
           Email
         </label>
@@ -63,7 +63,7 @@ export default function ContactForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full bg-transparent border-b border-black/30 focus:border-black outline-none py-2 text-black transition-colors"
+          className="w-full bg-transparent border-b border-ink/30 focus:border-ink outline-none py-2 text-ink transition-colors"
           style={inputStyle}
         />
       </div>
@@ -71,8 +71,8 @@ export default function ContactForm() {
       <div className="flex flex-col gap-2">
         <label
           htmlFor="message"
-          className="text-black"
-          style={{ ...inputStyle, fontSize: 14, letterSpacing: '0.05em', textTransform: 'uppercase' }}
+          className="text-ink"
+          style={{ ...inputStyle, fontSize: 16, fontStyle: 'italic' }}
         >
           Message
         </label>
@@ -81,7 +81,7 @@ export default function ContactForm() {
           name="message"
           required
           rows={5}
-          className="w-full bg-transparent border-b border-black/30 focus:border-black outline-none py-2 text-black resize-none transition-colors"
+          className="w-full bg-transparent border-b border-ink/30 focus:border-ink outline-none py-2 text-ink resize-none transition-colors"
           style={inputStyle}
         />
       </div>
@@ -89,12 +89,12 @@ export default function ContactForm() {
       <div>
         <button
           type="submit"
-          className="text-black border border-black px-8 py-3 hover:bg-black hover:text-[#FBFAF6] transition-colors"
+          className="bg-ink text-page px-6 py-[18px] hover:bg-ink/10 hover:text-ink transition-colors duration-[250ms] ease-out"
           style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 800,
-            fontSize: 16,
-            letterSpacing: '-0.02em',
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
+            fontSize: 32,
+            lineHeight: 1.1,
           }}
         >
           Send

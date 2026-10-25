@@ -1,22 +1,22 @@
 import Link from 'next/link';
 import { type Place } from '@/db/schema';
 import { EventImage } from '@/components/events/EventImage';
-import { getCardColor } from '@/lib/eventColor';
-import { categoryLabel } from '@/lib/places';
+import { categoryLabel, PLACE_COLOR } from '@/lib/places';
 import { SITE_DEFAULT_IMAGE } from '@/lib/organiser-images';
 
 // Server-rendered card linking to a place page — the crawlable path from
-// /places to each /places/<slug>. Visual language mirrors the event cards.
+// /places to each /places/<slug>. Layout mirrors the event cards, but in one
+// neutral colour (PLACE_COLOR) rather than per-id colours.
 export default function PlaceCard({ place, upcomingCount }: { place: Place; upcomingCount: number }) {
   return (
     <Link href={`/places/${place.slug}`} className="group block h-full">
       <article
         className="flex h-full flex-col"
-        style={{ backgroundColor: getCardColor(place.id), borderRadius: 24, padding: 20, gap: 12 }}
+        style={{ backgroundColor: PLACE_COLOR, padding: 24, gap: 12 }}
       >
         <div
-          className="flex items-center justify-between text-black/60"
-          style={{ fontFamily: 'var(--font-oxygen)', fontSize: 13 }}
+          className="flex items-center justify-between text-ink/60"
+          style={{ fontFamily: 'var(--font-serif)', fontSize: 13 }}
         >
           <span>{categoryLabel(place.category)}</span>
           {upcomingCount > 0 && (
@@ -27,10 +27,10 @@ export default function PlaceCard({ place, upcomingCount }: { place: Place; upco
         </div>
 
         <h2
-          className="text-black line-clamp-2"
+          className="text-ink line-clamp-2"
           style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 600,
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
             fontSize: 24,
             lineHeight: '28px',
             letterSpacing: '-0.02em',
@@ -39,7 +39,7 @@ export default function PlaceCard({ place, upcomingCount }: { place: Place; upco
           {place.name}
         </h2>
 
-        <div className="overflow-hidden" style={{ borderRadius: 12, aspectRatio: '4 / 3' }}>
+        <div className="overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
           <EventImage
             candidates={[place.imageUrl, SITE_DEFAULT_IMAGE].filter((u): u is string => !!u)}
             alt={place.name}
@@ -50,16 +50,16 @@ export default function PlaceCard({ place, upcomingCount }: { place: Place; upco
 
         {(place.city || place.country) && (
           <p
-            className="text-black/70"
-            style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 15 }}
+            className="text-ink/70"
+            style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
           >
             {[place.city, place.country].filter(Boolean).join(', ')}
           </p>
         )}
 
         <span
-          className="mt-auto inline-flex items-center gap-1 text-black group-hover:underline underline-offset-2"
-          style={{ fontFamily: 'var(--font-host-grotesk)', fontWeight: 600, fontSize: 15 }}
+          className="mt-auto inline-flex items-center gap-1 text-ink group-hover:underline underline-offset-2"
+          style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
         >
           View place
         </span>

@@ -22,14 +22,14 @@ export function FilterSelect({
 
   return (
     <SelectPrimitive.Root value={value} onValueChange={onChange}>
-      <SelectPrimitive.Trigger className="flex items-center gap-[5px] px-[8px] py-[6px] rounded-[8px] cursor-pointer outline-none select-none transition-colors hover:bg-[#ecebe4] aria-expanded:bg-[#ecebe4]">
+      <SelectPrimitive.Trigger className="flex items-center gap-[5px] px-[8px] py-[6px] cursor-pointer outline-none select-none transition-colors hover:bg-ink/5 aria-expanded:bg-ink/5">
         <span
-          className="font-extrabold text-black whitespace-nowrap"
-          style={{ fontFamily: 'var(--font-host-grotesk)', ...textStyle }}
+          className="font-light text-ink whitespace-nowrap"
+          style={{ fontFamily: 'var(--font-serif)', ...textStyle }}
         >
           {label}
         </span>
-        <ChevronsUpDown className="size-6 text-black shrink-0" strokeWidth={2} />
+        <ChevronsUpDown className="size-5 text-ink shrink-0" strokeWidth={1.25} />
       </SelectPrimitive.Trigger>
 
       <SelectPrimitive.Portal>
@@ -40,14 +40,14 @@ export function FilterSelect({
           alignItemWithTrigger={false}
           className="isolate z-50"
         >
-          <SelectPrimitive.Popup className="bg-[#ecebe4] rounded-[12px] p-[8px] w-(--anchor-width) outline-none">
+          <SelectPrimitive.Popup className="bg-page p-[8px] min-w-(--anchor-width) outline-none shadow-[0_4px_20px_rgb(56_52_48/0.15)]">
             <SelectPrimitive.List>
               {options.map((opt) => (
                 <SelectPrimitive.Item
                   key={opt.value}
                   value={opt.value}
-                  className="flex items-center px-[8px] rounded-[8px] cursor-pointer outline-none select-none font-medium text-[18px] leading-[18px] tracking-[-0.36px] text-black h-[44px] data-[selected]:bg-[#fbfaf6] data-[highlighted]:bg-black/5"
-                  style={{ fontFamily: 'var(--font-host-grotesk)' }}
+                  className="flex items-center px-[8px] cursor-pointer outline-none select-none font-light text-[20px] leading-[20px] text-ink h-[44px] whitespace-nowrap data-[selected]:italic data-[highlighted]:bg-ink/5"
+                  style={{ fontFamily: 'var(--font-serif)' }}
                 >
                   <SelectPrimitive.ItemText>{opt.label}</SelectPrimitive.ItemText>
                 </SelectPrimitive.Item>

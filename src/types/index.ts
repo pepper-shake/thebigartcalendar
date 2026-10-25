@@ -31,6 +31,7 @@ export interface ArtEvent {
   tags?: string[];
   venuePlace?: PlaceRef;     // linked /places entry for the venue (matched at read time)
   organiserPlace?: PlaceRef; // linked /places entry for the organiser
+  schemeIndex?: number;      // card colour (index into CARD_SCHEMES), set by assignCardSchemes
 }
 
 export interface PlaceRef {

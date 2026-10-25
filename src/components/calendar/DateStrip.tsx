@@ -3,17 +3,17 @@
 import { useRef, useEffect } from 'react';
 import { springScrollTo } from '@/lib/springScroll';
 
-const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 interface Props {
   eventDates: string[];
   selectedDate: string | null;
   onChange: (date: string) => void;
-  fullDayNames?: boolean;
+  /** Mobile: left-aligned scrolling strip (desktop centres the days). */
+  scrollable?: boolean;
 }
 
-export default function DateStrip({ eventDates, selectedDate, onChange, fullDayNames = false }: Props) {
+export default function DateStrip({ eventDates, selectedDate, onChange, scrollable = false }: Props) {
   const stripRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
@@ -31,8 +31,8 @@ export default function DateStrip({ eventDates, selectedDate, onChange, fullDayN
   if (eventDates.length === 0) {
     return (
       <div
-        className="flex-none h-14 flex items-center px-6 border-b border-[#b1b1b1]"
-        style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18, color: '#a1a1aa' }}
+        className="flex-none h-[66px] flex items-center justify-center px-6 border-b border-rule text-ink/60 italic"
+        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18 }}
       >
         No events this month
       </div>
@@ -42,12 +42,12 @@ export default function DateStrip({ eventDates, selectedDate, onChange, fullDayN
   return (
     <div
       ref={stripRef}
-      className={`flex-none flex items-center gap-8 border-b border-[#b1b1b1] px-6 h-14 scrollbar-hide ${fullDayNames ? 'overflow-x-auto' : 'justify-center overflow-x-auto'}`}
+      className={`flex-none flex items-center gap-[44px] border-b border-rule px-6 h-[66px] scrollbar-hide overflow-x-auto ${scrollable ? '' : 'justify-center'}`}
     >
       {eventDates.map((dateStr) => {
         const [y, m, d] = dateStr.split('-').map(Number);
         const date = new Date(y, m - 1, d);
-        const dayShort = fullDayNames ? DAY_FULL[date.getDay()] : DAY_SHORT[date.getDay()];
+        const dayName = DAY_FULL[date.getDay()];
         const isActive = dateStr === selectedDate;
 
         return (
@@ -56,18 +56,19 @@ export default function DateStrip({ eventDates, selectedDate, onChange, fullDayN
             ref={isActive ? activeRef : null}
             onClick={() => onChange(dateStr)}
             aria-current={isActive ? 'date' : undefined}
-            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap transition-all"
+            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap text-ink transition-opacity hover:opacity-60"
+            // Figma (283:2080): Newsreader Light 18px, full day names; the
+            // selected day is italic semibold instead of underlined.
             style={{
-              fontFamily: 'var(--font-oxygen)',
-              fontWeight: isActive ? 700 : 300,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: isActive ? 600 : 300,
+              fontStyle: isActive ? 'italic' : 'normal',
               fontSize: 18,
-              color: '#000000',
-              paddingBottom: 2,
-              borderBottom: `2px solid ${isActive ? '#000000' : 'transparent'}`,
+              lineHeight: '18px',
             }}
           >
             <span>{d}</span>
-            <span>{dayShort}</span>
+            <span>{dayName}</span>
           </button>
         );
       })}

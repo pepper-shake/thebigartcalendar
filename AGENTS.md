@@ -35,6 +35,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Architecture & data flow | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | SEO routing & custom domain | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (§SEO & routing) · [docs/references/domain-setup.md](docs/references/domain-setup.md) |
 | Decisions & rationale | [docs/design/decisions.md](docs/design/decisions.md) |
+| Visual style (fonts, colours, card schemes) | [docs/design/style.md](docs/design/style.md) |
 | Roadmap & in-flight work | [docs/exec-plans/](docs/exec-plans/) |
 | Event editing / curation | [docs/product/event-curation.md](docs/product/event-curation.md) |
 | Portugal-only mode (feature flag) | [docs/product/portugal-only-mode.md](docs/product/portugal-only-mode.md) |

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { getAllEvents } from '@/db/queries';
-import { toArtEvent } from '@/lib/transform';
+import { getPublishedEvents } from '@/lib/events';
 import CalendarClient from '@/components/calendar/CalendarClient';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, absoluteUrl } from '@/lib/site';
 
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const rows = await getAllEvents();
-  const events = rows.map(toArtEvent);
+  // Place-linked (like the SEO routes) so cards can use a place's pinned colour.
+  const events = await getPublishedEvents();
   return <CalendarClient events={events} />;
 }
