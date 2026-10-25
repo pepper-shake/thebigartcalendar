@@ -5,6 +5,8 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
 import EventCard from '@/components/events/EventCard';
 import PlaceDetail from '@/components/places/PlaceDetail';
+import InstagramPosts from '@/components/places/InstagramPosts';
+import { placeInstagramPosts } from '@/lib/place-instagram-posts';
 import { getPlaceBySlug, categoryLabel } from '@/lib/places';
 import { placeJsonLd } from '@/lib/jsonld';
 import { absoluteUrl, SITE_NAME } from '@/lib/site';
@@ -74,6 +76,8 @@ export default async function PlacePage({ params }: Params) {
   const found = await getPlaceBySlug(slug);
   if (!found) notFound();
   const { place, upcoming, past } = found;
+  const igPosts = placeInstagramPosts(place.id);
+  const igHandle = place.instagramUrl?.match(/instagram\.com\/([\w.]+)/)?.[1] ?? null;
 
   return (
     <PageShell size="full">
@@ -86,6 +90,7 @@ export default async function PlacePage({ params }: Params) {
       />
       <PlaceDetail place={place} />
       <EventSection title={`Upcoming at ${place.name}`} events={upcoming} />
+      {igPosts.length > 0 && <InstagramPosts posts={igPosts} handle={igHandle} />}
       <EventSection title="Past events" events={past.slice(0, 8)} />
       <JsonLd data={placeJsonLd(place, upcoming)} />
     </PageShell>

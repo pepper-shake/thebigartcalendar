@@ -4,8 +4,6 @@ import { EventImage } from '@/components/events/EventImage';
 import { categoryLabel, PLACE_COLOR } from '@/lib/places';
 import { citySlug } from '@/lib/slug';
 import { SITE_DEFAULT_IMAGE } from '@/lib/organiser-images';
-import { placeInstagramPosts } from '@/lib/place-instagram-posts';
-import InstagramPosts from './InstagramPosts';
 
 // Server-rendered place page body, in the same visual language as EventDetail:
 // PLACE_COLOR panel, big title, meta lines + link pills + description on the left,
@@ -151,9 +149,6 @@ export default function PlaceDetail({ place }: { place: Place }) {
 
   const hours = place.openingHours ? <Hours hours={place.openingHours} /> : null;
 
-  const igPosts = placeInstagramPosts(place.id);
-  const igHandle = place.instagramUrl?.match(/instagram\.com\/([\w.]+)/)?.[1] ?? null;
-
   return (
     <div
       className="-mx-6 w-[calc(100%+3rem)] lg:w-full px-6 py-8 lg:mx-0 lg:px-[42px] lg:py-[62px]"
@@ -173,7 +168,6 @@ export default function PlaceDetail({ place }: { place: Place }) {
           <div className="lg:hidden">{hours}</div>
         </div>
       </div>
-      {igPosts.length > 0 && <InstagramPosts posts={igPosts} handle={igHandle} />}
     </div>
   );
 }
