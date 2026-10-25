@@ -282,7 +282,8 @@ export const PLACES: NewPlace[] = [
     category: 'studio',
     description:
       'Ceramics studio and shop in Linda-a-Velha (Oeiras), just west of Lisbon, offering pottery-wheel intensives, single classes, ceramic and tile painting, family and kids’ holiday workshops, team building and private group parties.',
-    imageUrl: null,
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/muda-ceramica-El1P8Pnm7uMKg4MLFU9f5gl3G8GeGT.jpg',
     address: 'Av. Dom Pedro V 53B, Linda-a-Velha, Oeiras',
     city: 'Lisbon', // Lisbon metro (Oeiras municipality) — listed under Lisbon for the city filter
     country: 'Portugal',
