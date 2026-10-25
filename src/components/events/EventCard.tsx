@@ -23,6 +23,8 @@ const metaStyle: React.CSSProperties = {
 
 interface Props {
   event: ArtEvent;
+  /** Text-only card: no image, height fits the text (stretches to its row). */
+  hideImage?: boolean;
 }
 
 /** Today as YYYY-MM-DD, for lexicographic comparison against event dates. */
@@ -31,7 +33,7 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export default function EventCard({ event }: Props) {
+export default function EventCard({ event, hideImage = false }: Props) {
   const scheme = getCardScheme(event);
   const typeLabel = eventTypeColors[event.type]?.label ?? event.type;
 
@@ -46,13 +48,13 @@ export default function EventCard({ event }: Props) {
         // Hover: the whole card zooms 1.5% (Style Reference "subtle zoom"). A
         // transform, so the grid never reflows — it grows ~3px per side into
         // the 16px gap. Past cards aren't links, so they have no group hover.
-        className="w-full flex flex-col items-start transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]"
+        className={`${hideImage ? 'h-full ' : ''}w-full flex flex-col items-start transition-transform duration-[250ms] ease-out group-hover:scale-[1.015]`}
         style={{
           backgroundColor: scheme.bg,
           color: scheme.fg,
           padding: 24,
           gap: 16,
-          height: 552,
+          height: hideImage ? undefined : 552,
         }}
       >
         {/* Event type chip */}
@@ -102,32 +104,34 @@ export default function EventCard({ event }: Props) {
         </div>
 
         {/* Image — square-cornered, grows to fill remaining space */}
-        <div className="flex-1 min-h-0 w-full overflow-hidden">
-          {event.image ? (
-            <img
-              src={event.image}
-              alt={event.title}
-              className="w-full h-full object-cover"
-              style={isPast ? { filter: 'grayscale(1)' } : undefined}
-            />
-          ) : (
-            <div className="w-full h-full" style={{ backgroundColor: 'var(--page)' }} />
-          )}
-        </div>
+        {!hideImage && (
+          <div className="flex-1 min-h-0 w-full overflow-hidden">
+            {event.image ? (
+              <img
+                src={event.image}
+                alt={event.title}
+                className="w-full h-full object-cover"
+                style={isPast ? { filter: 'grayscale(1)' } : undefined}
+              />
+            ) : (
+              <div className="w-full h-full" style={{ backgroundColor: 'var(--page)' }} />
+            )}
+          </div>
+        )}
       </div>
   );
 
   // Past events render as a non-interactive card (no link); current events link
   // to their detail page with the hover treatment.
   if (isPast) {
-    return <div className="block w-full text-left">{card}</div>;
+    return <div className={`${hideImage ? 'h-full ' : ''}block w-full text-left`}>{card}</div>;
   }
 
   return (
     <Link
       href={`/events/${eventSlug(event)}`}
       prefetch={false}
-      className="group block w-full text-left focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-ink"
+      className={`${hideImage ? 'h-full ' : ''}group block w-full text-left focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-ink`}
     >
       {card}
     </Link>
