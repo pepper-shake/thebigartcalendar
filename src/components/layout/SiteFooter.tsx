@@ -1,90 +1,118 @@
 import Link from 'next/link';
-import { EVENT_TYPES } from '@/lib/eventTypes';
 import { listActiveTypes } from '@/lib/events';
 import { ConsentSettingsLink } from '@/components/analytics/Consent';
 
-// Server-rendered footer. Its real <a> links give crawlers a path from every
-// content page to the type + city hubs (which in turn link to event pages).
+// Server-rendered footer (Figma "Calendar" node 318:2384). Its real <a> links
+// give crawlers a path from every content page to the calendar, city and type
+// hubs and the places directory.
+const FOOTER_BG = '#999355';
+const FOOTER_TEXT = '#FFFEF9';
+const FOOTER_RULE = 'rgba(242, 239, 228, 0.4)';
+
+const serif: React.CSSProperties = {
+  fontFamily: 'var(--font-serif)',
+  fontWeight: 300,
+  fontSize: 24,
+  lineHeight: '24px',
+  letterSpacing: '-0.48px',
+};
+const meta: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
+  fontWeight: 300,
+  fontSize: 16,
+  lineHeight: '26px',
+};
+
+type FooterLinkItem = { href: string; label: string };
+
 export default async function SiteFooter() {
   const active = await listActiveTypes();
+  // Figma also has "Event of the month" — left out until that page exists.
+  const columns: FooterLinkItem[][] = [
+    [
+      { href: '/', label: 'All events' },
+      { href: '/cities/lisbon', label: 'Art events in Lisbon' },
+      { href: '/cities/porto', label: 'Art events in Porto' },
+      // Type hubs with no upcoming events 404, so the link goes with them.
+      ...(active.includes('workshop') ? [{ href: '/workshops', label: 'Workshops' }] : []),
+    ],
+    [
+      { href: '/places', label: 'Art places' },
+      { href: '/places?category=shop', label: 'Art stores' },
+    ],
+    [
+      { href: '/blog', label: 'Blog' },
+      { href: '/about', label: 'About us' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  ];
+
   return (
     <footer
-      className="border-t border-ink/10 px-6 py-12 mt-16"
-      style={{ backgroundColor: 'var(--page)' }}
+      className="mt-16 px-6 pt-12 md:px-16 md:pt-16"
+      style={{ backgroundColor: FOOTER_BG, color: FOOTER_TEXT }}
     >
-      <div className="max-w-6xl mx-auto grid grid-cols-2 gap-8 sm:grid-cols-4">
-        <div className="col-span-2 sm:col-span-1">
-          <Link
-            href="/"
-            className="text-ink lowercase"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontWeight: 300,
-              fontSize: 22,
-              lineHeight: 1,
-              letterSpacing: '-1px',
-            }}
+      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-10 md:gap-[42px]">
+        <Link
+          href="/"
+          className="text-center lowercase"
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
+            fontSize: 30,
+            lineHeight: 0.93,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          the big
+          <br />
+          art calendar.
+        </Link>
+
+        <div className="flex w-full flex-col gap-12 md:gap-[62px]">
+          <div className="h-px w-full" style={{ backgroundColor: FOOTER_RULE }} />
+
+          <div className="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-16">
+            <div className="flex flex-col gap-3 lg:max-w-[449px]">
+              <h2 style={serif}>About us</h2>
+              <p style={meta}>
+                The Big Art Calendar is a non-commercial project created to make it easier to
+                discover art events and creative things to do. I created it simply for fun and out
+                of a love for art, culture, and creativity. Here you can find exhibitions,
+                workshops, art spaces, and other ways to spend your time with art.
+              </p>
+            </div>
+
+            <nav
+              aria-label="Footer"
+              className="grid grid-cols-1 gap-[14px] sm:grid-cols-3 sm:gap-8 lg:flex lg:gap-12 xl:gap-[82px]"
+            >
+              {columns.map((links, i) => (
+                <ul
+                  key={i}
+                  className="flex flex-col gap-[14px] lg:whitespace-nowrap xl:min-w-[190px] xl:last:min-w-[130px]"
+                >
+                  {links.map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href} className="hover:opacity-70 transition-opacity" style={serif}>
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </nav>
+          </div>
+
+          <div
+            className="flex flex-col-reverse items-start gap-3 pb-6 sm:flex-row sm:items-center sm:justify-between"
+            style={meta}
           >
-            the big
-            <br />
-            art calendar.
-          </Link>
+            <p>© {new Date().getFullYear()} The Big Art Calendar. All rights reserved.</p>
+            <ConsentSettingsLink className="text-left hover:opacity-70 transition-opacity" />
+          </div>
         </div>
-
-        <FooterCol title="Browse">
-          {EVENT_TYPES.filter((t) => active.includes(t.type)).map((t) => (
-            <FooterLink key={t.slug} href={`/${t.slug}`}>
-              {t.plural}
-            </FooterLink>
-          ))}
-          <FooterLink href="/cities">By city</FooterLink>
-          <FooterLink href="/places">Places</FooterLink>
-        </FooterCol>
-
-        <FooterCol title="Calendar">
-          <FooterLink href="/">All events</FooterLink>
-        </FooterCol>
-
-        <FooterCol title="More">
-          <FooterLink href="/about">About</FooterLink>
-          <FooterLink href="/blog">Blog</FooterLink>
-          <FooterLink href="/contact">Contact</FooterLink>
-          <li>
-            <ConsentSettingsLink
-              className="text-ink/70 hover:text-ink hover:underline underline-offset-2 text-left"
-              style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
-            />
-          </li>
-        </FooterCol>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <h2
-        className="text-ink/60 italic mb-3"
-        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
-      >
-        {title}
-      </h2>
-      <ul className="flex flex-col gap-2">{children}</ul>
-    </div>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <Link
-        href={href}
-        className="text-ink/70 hover:text-ink hover:underline underline-offset-2"
-        style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 15 }}
-      >
-        {children}
-      </Link>
-    </li>
   );
 }

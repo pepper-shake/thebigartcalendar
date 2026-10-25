@@ -7,7 +7,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 - **Geist for small meta only.** Card meta lines, type chips, event-page meta lines, pills and tags use `--font-meta` (Geist 400), as in the Figma cards.
 - **Square and flat.** `--radius` is `0`. No card shadows, gradients or rounded images. Only overlays (the filter popup and menu drawer) get a shadow: `0 4px 20px rgb(56 52 48 / .15)`. The one exception to square corners is the round scroll-to-top button (an icon button, which the reference allows).
 - **Duotone cards.** Each event card and its event-page panel use exactly one background and one foreground colour. Everything inside (title, meta, chip text, icons) takes the foreground colour.
-- **No uppercase or letter-spacing on labels.** Use italic instead, e.g. footer column titles and contact form labels. The lowercase brand wordmark and page headings are a deliberate brand choice and stay.
+- **No uppercase or letter-spacing on labels.** Use italic instead, e.g. contact form labels. The lowercase brand wordmark and page headings are a deliberate brand choice and stay.
 
 ## Tokens (`src/app/globals.css`)
 | Token | Value | Use |
@@ -17,6 +17,9 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--rule` / `border-rule` | `#B1B1B1` | Hairlines around the month and day strips |
 | `--font-serif` | Newsreader | Everything |
 | `--font-meta` | Geist | Card and event meta, chips |
+
+## Footer (`src/components/layout/SiteFooter.tsx`)
+Figma "Calendar" node `318:2384`. Olive band `#999355` with off-white text `#FFFEF9`; centred two-line wordmark, a 40%-cream hairline, then the "About us" blurb (Geist Light 16/26) beside three columns of serif links (Newsreader 300, 24/24), and a copyright + "Cookie settings" row. Mobile stacks everything in one column. Links: all events, Lisbon/Porto city hubs, Workshops (hidden when the type has no upcoming events), places, art shops (`/places?category=shop`), blog, about, contact. Figma's "Event of the month" is left out until that page exists; its "Cookie Policy" is the existing consent-reset button, since there is no policy page. The footer renders on `PageShell` pages only (not the calendar).
 
 ## Favicon / app icons
 Two linked silver paperclips forming an "A" on the page cream (`#F2EFE4`, so the icon sits flush with the site). Next.js picks the files up by convention from `src/app/`: `favicon.ico` (16/32/48, cropped closer to the clips with contrast lifted ×1.6 so the thin wire survives 16px), `icon.png` (512) and `apple-icon.png` (180), both full-frame and opaque (iOS masks its own corners). Regenerate all three from the one 800×800 source if it changes. **Save `favicon.ico` frames as RGBA**: Turbopack's ICO decoder rejects RGB PNG frames and fails the production build ("The PNG is not in RGBA format").
