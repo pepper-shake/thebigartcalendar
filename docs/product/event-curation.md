@@ -37,4 +37,6 @@ For places with **no scrapable source** (Instagram-only venues, e.g. Svet Space)
 - Only add what the source says: poster/post details, no invented descriptions. Skip non-art items (language clubs) and studio-time offers (coworking), as with scraped sources.
 
 ## Known duplicate source: Disco Wheel
+Disco Wheel runs a workshop almost every day, so the read path shows **at most 6 of its events per calendar month**, spread evenly across the month (`MONTHLY_CAP_BY_SOURCE` in [src/db/queries.ts](../../src/db/queries.ts)). The other rows stay in the DB untouched; add a source to that map to cap it too.
+
 Disco Wheel sometimes republishes a workshop slot as a new Shopify product. The parser's id hashes the product URL, so the slot gets a second row and the old one stays. `npx tsx scripts/dev/hide-disco-wheel-dupes.ts` lists the older copies (dry run; add `--prod` for production and `--apply` to hide them). It only sets `status='hidden'`, which can be reversed. The root fix is a slot-based id in [scripts/parsers/disco-wheel.ts](../../scripts/parsers/disco-wheel.ts), still to do.
