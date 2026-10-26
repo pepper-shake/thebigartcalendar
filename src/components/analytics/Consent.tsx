@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import Script from 'next/script';
 import { readConsent, subscribeConsent, writeConsent, type Consent } from '@/lib/consent';
 
@@ -17,6 +17,10 @@ const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID ?? 'z388qcjow1';
 type Gtag = (...args: unknown[]) => void;
 type WindowWithTags = Window & { gtag?: Gtag; clarity?: Gtag };
 
+// Fired by the footer's "Cookie settings" link to re-open the banner without
+// forgetting the stored choice.
+const OPEN_EVENT = 'bac-consent-open';
+
 // 'server' while rendering on the server / hydrating: render nothing, so the
 // banner never flashes for visitors who already chose.
 const getServerSnapshot = () => 'server' as const;
@@ -27,6 +31,13 @@ export default function Consent() {
     readConsent,
     getServerSnapshot,
   );
+  const [reopened, setReopened] = useState(false);
+
+  useEffect(() => {
+    const open = () => setReopened(true);
+    window.addEventListener(OPEN_EVENT, open);
+    return () => window.removeEventListener(OPEN_EVENT, open);
+  }, []);
 
   useEffect(() => {
     if (consent === 'server' || consent === null) return;
@@ -53,16 +64,37 @@ export default function Consent() {
           `}
         </Script>
       )}
-      {consent === null && <ConsentBanner />}
+      {(consent === null || reopened) && (
+        <ConsentBanner
+          current={consent}
+          onChoose={(c) => {
+            writeConsent(c);
+            setReopened(false);
+          }}
+          onClose={reopened && consent !== null ? () => setReopened(false) : undefined}
+        />
+      )}
     </>
   );
 }
 
-function ConsentBanner() {
+function ConsentBanner({
+  current,
+  onChoose,
+  onClose,
+}: {
+  current: Consent | null;
+  onChoose: (c: Consent) => void;
+  /** Only when re-opened from the footer with a choice already stored. */
+  onClose?: () => void;
+}) {
+  const btn = 'border border-ink py-2';
+  const filled = `${btn} bg-ink text-[var(--page)] hover:bg-ink/90`;
+  const outline = `${btn} hover:bg-ink/5`;
   return (
     <div
       role="dialog"
-      aria-label="Analytics cookies"
+      aria-labelledby="consent-title"
       className="fixed z-[60] bottom-4 inset-x-4 sm:inset-x-auto sm:left-6 sm:bottom-6 sm:max-w-sm p-5 text-ink"
       style={{
         backgroundColor: 'var(--page)',
@@ -71,22 +103,41 @@ function ConsentBanner() {
         fontWeight: 300,
       }}
     >
-      <p style={{ fontSize: 16, lineHeight: 1.35 }}>
-        We&rsquo;d like to use analytics cookies (Google Analytics, Microsoft Clarity) to see how
-        the calendar is used. Clarity records anonymised visits. No ads, no selling data.
+      <div className="flex items-start justify-between gap-4">
+        <h2 id="consent-title" style={{ fontSize: 20, lineHeight: 1.2 }}>
+          It&rsquo;s that bothersome cookie notice
+        </h2>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="-mt-1 -mr-1 px-1 text-xl leading-none hover:opacity-70"
+          >
+            &times;
+          </button>
+        )}
+      </div>
+      <p className="mt-2" style={{ fontSize: 16, lineHeight: 1.35 }}>
+        Our website uses cookies for analytics, styling, and functional purposes. By accepting
+        cookies, you&rsquo;ll get the best version of our website &ndash; and we&rsquo;ll be able
+        to process some of your data to make that happen.
       </p>
       <div className="mt-4 grid grid-cols-2 gap-2" style={{ fontSize: 16 }}>
+        {/* The stored choice is the filled button; Accept by default. */}
         <button
           type="button"
-          onClick={() => writeConsent('denied')}
-          className="border border-ink py-2 hover:bg-ink/5"
+          onClick={() => onChoose('denied')}
+          aria-pressed={current === null ? undefined : current === 'denied'}
+          className={current === 'denied' ? filled : outline}
         >
           Decline
         </button>
         <button
           type="button"
-          onClick={() => writeConsent('granted')}
-          className="border border-ink bg-ink text-[var(--page)] py-2 hover:bg-ink/90"
+          onClick={() => onChoose('granted')}
+          aria-pressed={current === null ? undefined : current === 'granted'}
+          className={current === 'denied' ? outline : filled}
         >
           Accept
         </button>
@@ -95,10 +146,15 @@ function ConsentBanner() {
   );
 }
 
-/** Footer link that clears the choice so the banner shows again. */
+/** Footer link that re-opens the banner; the stored choice stays until a new one is made. */
 export function ConsentSettingsLink({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <button type="button" onClick={() => writeConsent(null)} className={className} style={style}>
+    <button
+      type="button"
+      onClick={() => window.dispatchEvent(new Event(OPEN_EVENT))}
+      className={className}
+      style={style}
+    >
       Cookie settings
     </button>
   );
