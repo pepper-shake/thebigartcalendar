@@ -73,6 +73,15 @@ const WORKSHOPS: Workshop[] = [
     description: 'A workshop on making scented and decorative candles at Ajuda Lab.',
     tags: ['workshop', 'candles', 'craft', 'lisbon'],
   },
+  {
+    match: /resina|ep[oó]xi/i,
+    title: 'Resina Epóxi',
+    page: null,
+    imageUrl: null,
+    durationHours: 3,
+    description: 'A roughly 3-hour epoxy resin workshop at Ajuda Lab.',
+    tags: ['workshop', 'resin', 'craft', 'lisbon'],
+  },
 ];
 
 // The form also lists non-art sessions (e.g. accounting for freelancers) — out of scope.
@@ -83,8 +92,10 @@ const MONTHS: Record<string, number> = {
   julho: 7, agosto: 8, setembro: 9, outubro: 10, novembro: 11, dezembro: 12,
 };
 
-// "11 Outubro 15H 35€" / "12 de Setembro 10h 35€" / "25 Outubro 11h30 35€"
-const DATE_RE = /(\d{1,2})\s+(?:de\s+)?([a-zç]+)\s+(\d{1,2})\s*h\s*(\d{2})?\s+(\d+)\s*€/i;
+// "11 Outubro 15H 35€" / "12 de Setembro 10h 35€" / "25 Outubro 11h30 35€" /
+// "28 Novembro Horário: 10h00 | Duração: aprox. 3 horas | desde 100€*"
+const DATE_RE =
+  /(\d{1,2})\s+(?:de\s+)?([a-zç]+)[\s|]+(?:hor[aá]rio:?\s*)?(\d{1,2})\s*h\s*(\d{2})?.*?(desde\s+)?(\d+)\s*€/i;
 
 function extractOptions(html: string): string[] {
   const m = html.match(/FB_PUBLIC_LOAD_DATA_ = (\[[\s\S]*?\]);<\/script>/);
@@ -117,7 +128,7 @@ export async function run(): Promise<void> {
   const events: NewEvent[] = [];
 
   for (const option of options) {
-    if (SKIP.test(option)) continue;
+    if (!option.trim() || SKIP.test(option)) continue;
 
     const d = option.match(DATE_RE);
     const workshop = WORKSHOPS.find((w) => w.match.test(option));
@@ -126,7 +137,7 @@ export async function run(): Promise<void> {
       continue;
     }
 
-    const [, dd, monthName, hh, min, price] = d;
+    const [, dd, monthName, hh, min, from, price] = d;
     const month = MONTHS[monthName.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')];
     if (!month) {
       console.warn(`[Ajuda Lab] Unknown month "${monthName}" in: "${option}"`);
@@ -143,8 +154,10 @@ export async function run(): Promise<void> {
       ? `${String(startHour + workshop.durationHours).padStart(2, '0')}:${min ?? '00'}`
       : null;
 
-    // Teacher is the trailing " - Name" segment.
-    const teacher = option.split(/\s+-\s+/).at(-1)?.trim();
+    // Teacher is "... com Name |" or the trailing " - Name" segment.
+    const parts = option.split(/\s+-\s+/);
+    const teacher =
+      option.match(/\bcom\s+([^|]+?)\s*\|/i)?.[1] ?? (parts.length > 1 ? parts.at(-1)?.trim() : undefined);
     const description = teacher ? `${workshop.description} With ${teacher}.` : workshop.description;
 
     const sourceUrl = workshop.page ?? REGISTRATION_URL;
@@ -166,7 +179,7 @@ export async function run(): Promise<void> {
       description,
       imageUrl: workshop.imageUrl,
       ticketsUrl: REGISTRATION_URL,
-      price: `€${price}`,
+      price: from ? `From €${price}` : `€${price}`,
       tags: workshop.tags,
       sourceUrl,
       sourceName: 'Ajuda Lab',
