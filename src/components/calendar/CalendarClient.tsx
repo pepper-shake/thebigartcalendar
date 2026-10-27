@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { ArtEvent, CalendarFilters } from '@/types';
 import { toDateString } from '@/lib/calendarUtils';
@@ -55,6 +55,27 @@ export default function CalendarClient({ events, footer }: Props) {
   const scrollToTop = () => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Desktop: only the card list scrolls, so a vertical wheel over the pinned
+  // site header / filters / month and day strips would do nothing. Forward it
+  // to the card list (the strips keep their sideways wheel scroll).
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      const list = scrollRef.current;
+      if (!list || !list.offsetParent) return; // mobile layout: list hidden
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const target = e.target instanceof Element ? e.target : null;
+      if (!target || list.contains(target) || target.closest('[role="dialog"], [role="listbox"]')) return;
+      for (let el: Element | null = target; el; el = el.parentElement) {
+        const { overflowY } = getComputedStyle(el);
+        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) return;
+      }
+      const lines = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : 1;
+      list.scrollBy({ top: e.deltaY * lines });
+    };
+    document.addEventListener('wheel', onWheel, { passive: true });
+    return () => document.removeEventListener('wheel', onWheel);
+  }, []);
 
   // Month boundaries as zero-padded ISO strings, so lexicographic comparison
   // is chronological — avoids timezone pitfalls of Date parsing/comparison.
