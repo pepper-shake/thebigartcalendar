@@ -1,0 +1,873 @@
+/* "Online Stores for Creative Christmas Gifts" landing (Figma Calendar
+   335:2017). The Figma frames are a 1440×850 storyboard; --u is one Figma
+   pixel at the current screen size (fit to width and height), so desktop
+   matches the frames. Mobile keeps --u for artwork and uses its own type sizes.
+
+   Each scene reads --p (0–1, its scroll progress, from ScrollScene) and
+   derives phase variables from it: clamp((p - start) / span, 0, 1), with the
+   eased ones as smoothstep. */
+
+.guide {
+  --u: min(100vw / 1440, 100svh / 850);
+  --wine: #4a0115;
+  --tomato: #ff4b42;
+  --cream: #f2efe4;
+  --lime: #c8e58a;
+  --blush: #e4b6d1;
+  --moss: #3c4539;
+  --navy: #143367;
+  --serif: var(--font-guide-serif), serif;
+  --sans: var(--font-meta);
+  background: var(--wine);
+  color: var(--cream);
+  font-family: var(--serif);
+  /* opsz follows the font size, as in Figma (the browser default, stated). */
+  font-optical-sizing: auto;
+  /* No sideways scrolling: oversized artwork (velvet, envelope close-up) is
+     cut at the page edge. `clip`, not `hidden`, so the sticky scenes still
+     pin to the viewport. */
+  overflow-x: clip;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+}
+.cover {
+  object-fit: cover;
+}
+
+/* "Scroll ↓" / "Link to product ↗": Geist Light 22/38. */
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(16px, calc(22 * var(--u)), 22px);
+  line-height: 38px;
+  white-space: nowrap;
+}
+.hintArrow {
+  width: 24px;
+  height: 24px;
+}
+
+/* ───────────── Hero (frames 0 → 1) ───────────── */
+.hero {
+  /* title out, pocket in (and velvet → red paper), paper group + polaroid
+     group pulled up */
+  --t: clamp(0, var(--p) / 0.3, 1);
+  --e-lin: clamp(0, (var(--p) - 0.12) / 0.48, 1);
+  --e: calc(var(--e-lin) * var(--e-lin) * (3 - 2 * var(--e-lin)));
+  --f-lin: clamp(0, (var(--p) - 0.45) / 0.4, 1);
+  --f: calc(var(--f-lin) * var(--f-lin) * (3 - 2 * var(--f-lin)));
+  --g-lin: clamp(0, (var(--p) - 0.55) / 0.4, 1);
+  --g: calc(var(--g-lin) * var(--g-lin) * (3 - 2 * var(--g-lin)));
+  background: var(--wine);
+}
+/* Frame 0 background: velvet with gold stars (Figma "Group 6 1", drawn at
+   1999×1070 from -129, -55), at least covering the stage on narrow screens. */
+.heroVelvet {
+  position: absolute;
+  left: calc(-129 * var(--u));
+  top: calc(-55 * var(--u));
+  width: max(calc(1999 * var(--u)), calc(100% + 258 * var(--u)));
+  height: max(calc(1070 * var(--u)), calc(100% + 110 * var(--u)));
+  max-width: none;
+  object-fit: cover;
+  opacity: calc(1 - var(--e));
+}
+/* Frame 1 background: red paper at 30% over the wine. */
+.heroRedPaper {
+  opacity: calc(var(--e) * 0.3);
+}
+.heroLogo {
+  position: absolute;
+  z-index: 2;
+  top: max(24px, calc(42 * var(--u)));
+  left: 50%;
+  width: clamp(120px, calc(163 * var(--u)), 163px);
+  transform: translateX(-50%);
+}
+.heroLogo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* Title (Figma 335:2127): both lines Newsreader Light Italic (300), tomato,
+   centred, 17px apart, line-height normal; the block starts 293px down. */
+.heroTitle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, calc(17 * var(--u)), 17px);
+  padding: 0 24px 6svh;
+  color: var(--tomato);
+  font-style: italic;
+  font-weight: 300;
+  line-height: normal;
+  text-align: center;
+  opacity: calc(1 - var(--t));
+  transform: translateY(calc(var(--t) * -60px));
+}
+@media (min-width: 768px) {
+  /* Frame 1 has no wordmark: it leaves with the title. */
+  .heroLogo {
+    opacity: calc(1 - var(--t));
+  }
+  .heroTitle {
+    inset: calc(293 * var(--u)) 0 auto;
+    justify-content: flex-start;
+    padding: 0;
+  }
+}
+.heroKicker {
+  font-size: clamp(24px, calc(42 * var(--u)), 42px);
+}
+.heroH1 {
+  max-width: calc(1059 * var(--u));
+  font-weight: 300;
+  font-size: clamp(44px, calc(102 * var(--u)), 102px);
+}
+.heroHint {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: max(16px, calc(32 * var(--u)));
+  transform: translateX(-50%);
+  color: var(--cream);
+}
+.heroHint .hintArrow {
+  transform: rotate(90deg);
+}
+
+/* The red pocket (frame 1): bottom-anchored, slides up from below the screen;
+   the grid-paper group and the polaroid group are then pulled up out of it.
+   Positions are the Figma ones relative to the pocket's back panel (62, 250.7
+   in the frame), in --pu (one Figma px). */
+.pocket {
+  --pu: var(--u);
+  position: absolute;
+  left: 50%;
+  top: calc(100svh - 600 * var(--pu));
+  width: calc(1323 * var(--pu));
+  height: calc(1104 * var(--pu));
+  transform: translate(-50%, calc((1 - var(--e)) * (600 * var(--pu) + 40px)));
+}
+.pocket > *,
+.pocketPaperGroup > *,
+.pocketPolaroidGroup > * {
+  position: absolute;
+  display: block;
+}
+.pocketBack {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pocketPaperGroup,
+.pocketPolaroidGroup {
+  inset: 0;
+}
+.pocketPaperGroup {
+  transform-origin: calc(387 * var(--pu)) calc(285 * var(--pu));
+  transform: translateY(calc((1 - var(--f)) * 330 * var(--pu))) rotate(calc((1 - var(--f)) * 3deg));
+}
+.pocketPolaroidGroup {
+  transform-origin: calc(994 * var(--pu)) calc(175 * var(--pu));
+  transform: translateY(calc((1 - var(--g)) * 360 * var(--pu))) rotate(calc((1 - var(--g)) * -4deg));
+}
+.pocketPaper {
+  left: calc(59.4 * var(--pu));
+  top: calc(-146 * var(--pu));
+  width: calc(656 * var(--pu));
+  height: calc(862 * var(--pu));
+}
+/* The hanging mushroom ornament: 624×674, rotated -4.51°. */
+.heroMushroom {
+  left: calc(210.5 * var(--pu));
+  top: calc(-202.2 * var(--pu));
+  width: calc(624 * var(--pu));
+  height: calc(674 * var(--pu));
+  transform: rotate(-4.51deg);
+}
+/* The paper clip: 181.67×272.58, rotated 170.72° and flipped vertically. */
+.heroClip {
+  left: calc(73.98 * var(--pu));
+  top: calc(-160.54 * var(--pu));
+  width: calc(181.67 * var(--pu));
+  height: calc(272.58 * var(--pu));
+  transform: rotate(170.72deg) scaleY(-1);
+}
+.heroMushroom img,
+.heroClip img,
+.heroClownPhoto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* "Winter 2026": Newsreader Regular (400, not italic) 42px, tomato,
+   line-height normal, rotated -8.81°, centred on (260.35, 135.7). */
+.heroWinter {
+  left: calc(260.35 * var(--pu));
+  top: calc(135.7 * var(--pu));
+  color: var(--tomato);
+  font-style: normal;
+  font-weight: 400;
+  font-size: calc(42 * var(--pu));
+  line-height: normal;
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(-8.81deg);
+}
+.heroStar {
+  left: calc(27 * var(--pu));
+  top: calc(139.3 * var(--pu));
+  width: calc(169 * var(--pu));
+  height: calc(194 * var(--pu));
+}
+/* The clown photo inside the polaroid: the photo (449.5×543.3) cropped to
+   the polaroid window (398.6×496). */
+.heroClownPhoto {
+  left: calc(794 * var(--pu));
+  top: calc(-73.7 * var(--pu));
+  width: calc(398.6 * var(--pu));
+  height: calc(496 * var(--pu));
+  overflow: hidden;
+}
+.heroClownPhoto img {
+  position: absolute;
+  left: calc(-19.3 * var(--pu));
+  top: calc(-17.5 * var(--pu));
+  width: calc(449.5 * var(--pu));
+  height: calc(543.3 * var(--pu));
+}
+.pocketPolaroid {
+  left: calc(728 * var(--pu));
+  top: calc(-133.7 * var(--pu));
+  width: calc(532 * var(--pu));
+  height: calc(616 * var(--pu));
+}
+.pocketFront {
+  left: 0;
+  top: calc(240.8 * var(--pu));
+  width: 100%;
+  height: calc(863 * var(--pu));
+}
+/* Mobile: the pocket only fills the bottom of a tall screen, so the title
+   stays and moves up out of its way instead of fading. */
+@media (max-width: 767px) {
+  .pocket {
+    --pu: calc(100vw / 1100);
+  }
+  .heroTitle {
+    opacity: 1;
+    transform: translateY(calc(var(--t) * -14svh));
+  }
+}
+
+/* ───────────── Intro (frames 2 → 3): the photo comes into focus ───────────── */
+.intro {
+  --a-lin: clamp(0, (var(--p) - 0.1) / 0.6, 1);
+  --a: calc(var(--a-lin) * var(--a-lin) * (3 - 2 * var(--a-lin)));
+  background: var(--wine);
+}
+.introText {
+  position: relative;
+  z-index: 1;
+  padding: 96px 24px 48px;
+}
+.introHeading,
+.shopHeading {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+.introHeading {
+  color: var(--lime);
+  font-size: clamp(38px, calc(72 * var(--u)), 72px);
+  line-height: 1.055;
+}
+.introHeading em,
+.shopHeading em {
+  font-style: italic;
+}
+.introColumns {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+  color: var(--blush);
+  font-family: var(--sans);
+  font-size: clamp(16px, calc(20 * var(--u)), 20px);
+  line-height: 1.6;
+}
+.introPhoto {
+  position: relative;
+  height: 75svh;
+  overflow: hidden;
+}
+.introPhoto img {
+  filter: blur(calc((1 - var(--a)) * 17px));
+  transform: scale(calc(1 + (1 - var(--a)) * 0.08));
+}
+.introPhoto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(74 1 21 / 0.6);
+  opacity: calc(1 - var(--a));
+}
+@media (min-width: 768px) {
+  .introText {
+    position: absolute;
+    top: 50%;
+    left: max(24px, calc(66 * var(--u)));
+    width: min(calc(712 * var(--u)), 52vw);
+    padding: 0;
+    transform: translateY(-50%);
+  }
+  .introColumns {
+    grid-template-columns: 1fr 1fr;
+    gap: calc(38 * var(--u));
+    margin-top: calc(38 * var(--u));
+  }
+  .introPhoto {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 59.44%;
+    right: 0;
+    height: auto;
+  }
+}
+
+/* ───────────── Shop zoom (frames 4 → 6, 8 → 9) ─────────────
+   A small framed photo grows to a bigger frame, then to full-bleed. */
+.zoom {
+  --a-lin: clamp(0, var(--p) / 0.35, 1);
+  --a: calc(var(--a-lin) * var(--a-lin) * (3 - 2 * var(--a-lin)));
+  --b-lin: clamp(0, (var(--p) - 0.42) / 0.36, 1);
+  --b: calc(var(--b-lin) * var(--b-lin) * (3 - 2 * var(--b-lin)));
+  --c: clamp(0, (var(--p) - 0.72) / 0.16, 1);
+  --w1: calc(361 * var(--u));
+  --h1: calc(391 * var(--u));
+  --w2: calc(634 * var(--u));
+  --h2: calc(686 * var(--u));
+}
+@media (max-width: 767px) {
+  .zoom {
+    --w1: 52vw;
+    --h1: calc(52vw * 1.083);
+    --w2: calc(100vw - 32px);
+    --h2: calc((100vw - 32px) * 1.083);
+  }
+}
+/* Solid colours under the paper textures, so a covering scene is never
+   see-through while its texture loads. */
+.zoomBlue {
+  background: #1a3263;
+}
+.zoomRed {
+  background: #962424;
+}
+.zoomBox {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--w1) + (var(--w2) - var(--w1)) * var(--a) + (100% - var(--w2)) * var(--b));
+  height: calc(var(--h1) + (var(--h2) - var(--h1)) * var(--a) + (100% - var(--h2)) * var(--b));
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+.zoomPhoto {
+  object-position: 50% 58%;
+}
+/* Figma draws the harlequin paper ~1.5× larger than a plain cover fit. */
+.harlequin {
+  transform: scale(1.5);
+}
+
+/* anna + nina wordmark: the Figma logo is a mask over a cream fill. */
+.wordmark {
+  display: block;
+  aspect-ratio: 1660 / 184;
+  background: var(--cream);
+  mask: url('/blog/online-stores-for-creative-christmas-gifts/anna-nina-wordmark.webp') center / contain no-repeat;
+}
+.zoomWordmark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(calc(830 * var(--u)), calc(100vw - 48px));
+  opacity: var(--c);
+  transform: translate(-50%, calc(-50% + (1 - var(--c)) * 24px));
+}
+/* Choosing Keeping's moon: centred on the stage, 0.86× → 0.80× the frame's
+   height while the frame grows (frame 8: 212×336, frame 9: 345×548), then it
+   keeps that size while the harlequin goes full-bleed and the red paper fades
+   in (frames 10 → 12). */
+.moon {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  height: calc((var(--h1) + (var(--h2) - var(--h1)) * var(--a)) * (0.86 - 0.06 * var(--a)));
+  aspect-ratio: 1296 / 2056;
+  transform: translate(-50.5%, -50%);
+}
+
+/* ───────────── Shop details (frames 7, 10) ───────────── */
+.shop {
+  --in: clamp(0, var(--p) / 0.7, 1);
+  --in-e: calc(1 - (1 - var(--in)) * (1 - var(--in)));
+}
+.shopStage {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 72px 24px 64px;
+}
+.shopCopy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, calc(42 * var(--u)), 42px);
+  opacity: var(--in-e);
+  transform: translateY(calc((1 - var(--in-e)) * 40px));
+}
+.shopBody {
+  font-family: var(--sans);
+  font-size: clamp(16px, calc(20 * var(--u)), 20px);
+  line-height: 1.6;
+}
+.bestFor {
+  font-weight: 500;
+  font-size: clamp(22px, calc(28 * var(--u)), 28px);
+  line-height: 1.5;
+}
+.bestFor a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* The card collage: positions in Figma pixels from the collage's top-left,
+   scaled by --cu (one Figma px; fits the column on mobile). */
+.collage {
+  --cu: calc((100vw - 48px) / var(--cw));
+  position: relative;
+  z-index: 1;
+  width: calc(var(--cw) * var(--cu));
+  height: calc(var(--ch) * var(--cu));
+  margin: 0 auto;
+}
+.collage > * {
+  position: absolute;
+}
+.collage img {
+  display: block;
+}
+.piece {
+  opacity: var(--in-e);
+  transform: translateY(calc((1 - var(--in-e)) * var(--rise, 60px))) rotate(var(--rot, 0deg));
+}
+.whiteCard {
+  background: #fff;
+}
+.productLink {
+  color: #000;
+}
+.productLink .hintArrow {
+  transform: rotate(-30deg);
+}
+.productLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* Tablet: the stacked details are taller than a screen, so they scroll
+   normally instead of pinning (doubled class to beat ScrollScene's rules). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .shop.shop {
+    height: auto;
+  }
+  .shop.shop > .shopStage {
+    position: relative;
+    height: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shopStage {
+    display: block;
+    height: 100svh;
+    min-height: calc(850 * var(--u));
+    padding: 0;
+  }
+  .shopCopy {
+    position: absolute;
+    top: 50%;
+    left: max(24px, calc(66 * var(--u)));
+    width: calc(var(--copy-w) * var(--u));
+    transform: translateY(calc(-50% + (1 - var(--in-e)) * 40px));
+  }
+  .annaNina .bestFor {
+    width: calc(342 * var(--u));
+  }
+  .collage {
+    --cu: var(--u);
+    position: absolute;
+    top: 50%;
+    right: calc(22 * var(--u));
+    margin: 0;
+    transform: translateY(-50%);
+  }
+}
+
+/* anna + nina (frame 7): the blue paperboard at 80% over the full-bleed
+   ornament photo and wordmark. */
+.annaNina {
+  background: var(--navy);
+  color: #f5f5f5;
+}
+.annaNinaTexture {
+  opacity: 0.8;
+}
+@media (min-width: 1024px) {
+  .belowDesktop {
+    display: none;
+  }
+  /* The background is already in (the zoom's veil), so copy and cards start
+     right away. */
+  .annaNina,
+  .choosingKeeping {
+    --in: clamp(0, var(--p) / 0.35, 1);
+  }
+  .annaNina .piece,
+  .choosingKeeping .piece {
+    --k: clamp(0, (var(--p) - 0.3 - var(--d, 0)) / 0.35, 1);
+  }
+}
+/* Linear in the scroll: the first screen of the zoom's hold takes it from 0
+   to full (--h counts hold screens). Only shown where the details scene is
+   pinned over the zoom (desktop). */
+.zoomVeil {
+  display: none;
+  opacity: clamp(0, var(--h, 0), 1);
+}
+@media (min-width: 1024px) {
+  .zoomVeil {
+    display: block;
+  }
+}
+.annaNina .bestFor {
+  color: var(--cream);
+}
+.annaNina {
+  --copy-w: 570;
+}
+.annaNina .collage {
+  --cw: 794;
+  --ch: 772;
+}
+.anNavy {
+  --rot: -6.75deg;
+  left: calc(36.6 * var(--cu));
+  top: calc(332.4 * var(--cu));
+  width: calc(336.3 * var(--cu));
+  height: calc(403.9 * var(--cu));
+  background: var(--navy);
+}
+.anNavy img {
+  position: absolute;
+  left: calc(27.3 * var(--cu));
+  top: calc(27.3 * var(--cu));
+  width: calc(281.7 * var(--cu));
+  height: calc(349.3 * var(--cu));
+  object-fit: cover;
+}
+.anTorn {
+  --rise: 100px;
+  left: calc(228 * var(--cu));
+  top: calc(383 * var(--cu));
+  width: calc(566 * var(--cu));
+  height: calc(389 * var(--cu));
+}
+.anCard {
+  --rise: 140px;
+  left: calc(228 * var(--cu));
+  top: calc(156 * var(--cu));
+  width: calc(440 * var(--cu));
+  height: calc(528 * var(--cu));
+}
+.anCardInner {
+  position: absolute;
+  left: calc(40 * var(--cu));
+  top: calc(40 * var(--cu));
+  width: calc(360 * var(--cu));
+  height: calc(448 * var(--cu));
+  background: #c8d6ee;
+}
+.anCard img {
+  position: absolute;
+  left: calc(17 * var(--cu));
+  top: calc(46 * var(--cu));
+  width: calc(425 * var(--cu));
+  height: calc(459 * var(--cu));
+  object-fit: cover;
+}
+.anLink {
+  --rise: 140px;
+  left: calc(571 * var(--cu));
+  top: calc(604 * var(--cu));
+}
+
+/* Staged details (frames 7, 10). Pinned on desktop, the scene slides in over
+   the zoom with nothing visible (its own background is transparent), then
+   plays three beats over one screen of scroll: the background layer fades in
+   (--bg-in), then the copy (--in), then the cards one by one (--d delays). */
+.staged {
+  --bg-in: clamp(0, var(--p) / 0.25, 1);
+  --in: clamp(0, (var(--p) - 0.2) / 0.3, 1);
+}
+.staged .piece {
+  --k: clamp(0, (var(--p) - 0.45 - var(--d, 0)) / 0.25, 1);
+  --k-e: calc(1 - (1 - var(--k)) * (1 - var(--k)));
+  opacity: var(--k-e);
+  transform: translateY(calc((1 - var(--k-e)) * var(--rise, 60px))) rotate(var(--rot, 0deg));
+}
+.stagedBg {
+  opacity: var(--bg-in);
+}
+@media (min-width: 1024px) {
+  .staged.staged {
+    background: transparent;
+  }
+}
+.anNavy { --d: 0; }
+.anTorn { --d: 0.06; }
+.anCard { --d: 0.12; }
+.anLink { --d: 0.2; }
+.ckClown { --d: 0; --rise: 80px; }
+.ckStar { --d: 0.08; }
+.ckLinkMoon { --d: 0.12; }
+.ckLinkRight { --d: 0.17; }
+
+/* Choosing Keeping (frame 12): cream copy, a green star and two links on the
+   red paper (94%) over the harlequin, beside the moon. On desktop the zoom
+   scene underneath draws the paper, harlequin and moon. */
+.choosingKeeping {
+  --copy-w: 400;
+  background: #962424;
+  color: var(--cream);
+}
+.ckRedLayer {
+  opacity: 0.94;
+}
+/* The Figma logo is a mask over a cream fill. */
+.ckLogo {
+  display: block;
+  width: clamp(180px, calc(232 * var(--u)), 232px);
+  aspect-ratio: 232 / 174.926;
+  margin-bottom: calc(-24 * var(--u));
+  background: var(--cream);
+  mask: url('/blog/online-stores-for-creative-christmas-gifts/choosing-keeping-logo.webp') center / contain no-repeat;
+}
+.ckStar {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  right: 24px;
+  width: 90px;
+  height: auto;
+  aspect-ratio: 169 / 194;
+}
+/* The two products: the moon (drawn by the zoom on desktop) and the clown,
+   a cut-out on the right (frame 12: 251×498 at 1018, 176). */
+.ckProducts {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.ckClown {
+  display: block;
+  width: min(32vw, 170px);
+  height: auto;
+}
+@media (max-width: 1023px) {
+  .ckMoonMobile {
+    display: block;
+    width: min(42vw, 230px);
+    height: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .ckProducts {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .ckClown {
+    position: absolute;
+    left: calc(1018 * var(--u));
+    top: calc(176 * var(--u));
+    width: calc(251 * var(--u));
+  }
+}
+.ckLinks {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.productLinkLight {
+  color: var(--cream);
+}
+@media (min-width: 1024px) {
+  .choosingKeeping .shopCopy {
+    top: calc(83 * var(--u));
+    left: calc(78 * var(--u));
+    transform: translateY(calc((1 - var(--in-e)) * 40px));
+  }
+  .ckStar {
+    top: calc(83 * var(--u));
+    right: auto;
+    left: calc(1238 * var(--u));
+    width: calc(169 * var(--u));
+  }
+  .ckLinks {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .ckLinks > a {
+    position: absolute;
+    top: calc(740 * var(--u));
+    pointer-events: auto;
+  }
+  .ckLinkMoon {
+    left: calc(753 * var(--u));
+  }
+  .ckLinkRight {
+    left: calc(1193 * var(--u));
+  }
+}
+
+/* Small screens: the product link sits under the card at a readable size. */
+@media (max-width: 1023px) {
+  .anLink {
+    left: auto;
+    right: calc(150 * var(--cu));
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+
+/* ───────────── Envelope (closing block, before the footer) ─────────────
+   Figma 355:2864 → 355:2929. --eu is one Figma px for the envelope artwork
+   (the page's --u on desktop; bigger on phones so the note fits the card). */
+.envelope {
+  --eu: var(--u);
+  /* envelope rises: top 329 → 194 (a), then → 85 (b) */
+  --a-lin: clamp(0, var(--p) / 0.45, 1);
+  --a: calc(var(--a-lin) * var(--a-lin) * (3 - 2 * var(--a-lin)));
+  --b-lin: clamp(0, (var(--p) - 0.4) / 0.3, 1);
+  --b: calc(var(--b-lin) * var(--b-lin) * (3 - 2 * var(--b-lin)));
+  /* then the title, then the note */
+  --ti: clamp(0, (var(--p) - 0.6) / 0.2, 1);
+  --ti-e: calc(1 - (1 - var(--ti)) * (1 - var(--ti)));
+  --tx: clamp(0, (var(--p) - 0.72) / 0.22, 1);
+  --tx-e: calc(1 - (1 - var(--tx)) * (1 - var(--tx)));
+  background: var(--wine);
+}
+.envelopeImg {
+  position: absolute;
+  left: calc(274 * var(--eu));
+  top: calc((329 - 135 * var(--a) - 109 * var(--b)) * var(--eu));
+  width: calc(892 * var(--eu));
+  height: auto;
+  max-width: none;
+}
+/* Title on the card: Newsreader Italic (400) 40px, line-height 76,
+   -0.8px, #433D1F, one line, centred on (719.5, 574). */
+.envelopeTitle {
+  position: absolute;
+  left: calc(719.5 * var(--eu));
+  top: calc(574 * var(--eu));
+  color: #433d1f;
+  font-style: italic;
+  font-weight: 400;
+  font-size: calc(40 * var(--eu));
+  line-height: calc(76 * var(--eu));
+  letter-spacing: calc(-0.8 * var(--eu));
+  text-align: center;
+  white-space: nowrap;
+  opacity: var(--ti-e);
+  transform: translate(-50%, calc(-50% + (1 - var(--ti-e)) * 24px));
+}
+/* Note: Geist Light (300) 18/28, #433D1F, 422 wide, centred on (724, 677). */
+.envelopeText {
+  position: absolute;
+  left: calc(724 * var(--eu));
+  top: calc(677 * var(--eu));
+  width: calc(422 * var(--eu));
+  color: #433d1f;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: calc(18 * var(--eu));
+  line-height: calc(28 * var(--eu));
+  text-align: center;
+  opacity: var(--tx-e);
+  transform: translate(-50%, calc(-50% + (1 - var(--tx-e)) * 24px));
+}
+/* Desktop: centre the 1440-wide artwork on wider screens. */
+@media (min-width: 768px) {
+  .envelopeImg,
+  .envelopeTitle,
+  .envelopeText {
+    margin-left: calc((100% - 1440 * var(--eu)) / 2);
+  }
+}
+/* Phones: the envelope is drawn larger (1 Figma px = 100vw/414, sides
+   cropped) so the card is wide enough; it rises to 40px from the top, and
+   the title (wrapping) and the note sit on the card above the pocket's V. */
+@media (max-width: 767px) {
+  .envelope {
+    --eu: calc(100vw / 414);
+  }
+  .envelopeImg {
+    left: calc(50% - 446 * var(--eu));
+    top: calc(40px + (1 - var(--a)) * (100svh - 160px));
+  }
+  .envelopeTitle,
+  .envelopeText {
+    left: 50%;
+  }
+  .envelopeTitle {
+    top: calc(40px + 448 * var(--eu));
+    width: min(80vw, 300px);
+    font-size: 28px;
+    line-height: 32px;
+    letter-spacing: -0.5px;
+    white-space: normal;
+  }
+  .envelopeText {
+    top: calc(40px + 492 * var(--eu));
+    width: min(72vw, 270px);
+    font-size: 15px;
+    line-height: 23px;
+    transform: translate(-50%, calc((1 - var(--tx-e)) * 24px));
+  }
+}

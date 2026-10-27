@@ -4,6 +4,7 @@ import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
 import { absoluteUrl } from '@/lib/site';
 import { listPlaces } from '@/lib/places';
+import { BLOG_POSTS, blogPostPath } from '@/lib/blogPosts';
 
 // Regenerated per request so new scraped events appear without a redeploy.
 export const dynamic = 'force-dynamic';
@@ -56,5 +57,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     images: place.imageUrl ? [place.imageUrl] : undefined,
   }));
 
-  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...eventPages];
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: absoluteUrl(blogPostPath(post.slug)),
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+    images: [absoluteUrl(post.image)],
+  }));
+
+  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...blogPages, ...eventPages];
 }

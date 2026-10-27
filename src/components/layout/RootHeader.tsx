@@ -99,7 +99,27 @@ function useScrollCollapse(ref: React.RefObject<HTMLDivElement | null>) {
 export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   useScrollCollapse(headerRef);
+
+  // Blog posts are standalone landings with their own wordmark; they keep only
+  // the menu "+" (cream, top-right, scrolling away with the page — Figma
+  // "Application/plus" 355:2860).
+  if (pathname.startsWith('/blog/')) {
+    return (
+      <>
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          aria-label="Open menu"
+          className="absolute z-30 right-3 top-3.5 flex items-center justify-center size-[54px] hover:opacity-60 transition-opacity"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- 54px vector icon */}
+          <img src="/blog/menu-plus.svg" alt="" width={54} height={54} />
+        </button>
+        <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
+      </>
+    );
+  }
 
   return (
     <>
