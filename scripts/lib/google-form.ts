@@ -22,7 +22,9 @@ const UA = { 'User-Agent': 'Mozilla/5.0' };
 
 /** All Google Form links on a Linktree page. */
 export async function linktreeFormLinks(linktreeUrl: string): Promise<LinktreeLink[]> {
-  const res = await fetch(linktreeUrl, { headers: UA });
+  // Plain fetch, as in fable-lisbon.ts: Linktree answers HTTP 406 to the bare
+  // 'Mozilla/5.0' UA (seen 2026-10-27).
+  const res = await fetch(linktreeUrl);
   if (!res.ok) throw new Error(`Linktree HTTP ${res.status}`);
   const m = (await res.text()).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
   if (!m) throw new Error('Linktree __NEXT_DATA__ not found');
