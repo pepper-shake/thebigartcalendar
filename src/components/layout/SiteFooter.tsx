@@ -38,7 +38,7 @@ export default async function SiteFooter() {
     ],
     [
       { href: '/places', label: 'Art places' },
-      { href: '/places?category=shop', label: 'Art stores' },
+      { href: '/places?category=shop', label: 'Art shops' },
     ],
     [
       { href: '/blog', label: 'Blog' },
