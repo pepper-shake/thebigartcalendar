@@ -110,7 +110,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           </div>
         </div>
         <div className={s.introPhoto}>
-          <Image src={post.image} alt={post.imageAlt} fill sizes="(max-width: 767px) 100vw, 41vw" className={s.cover} />
+          <Image src={`${A}/intro-photo.jpg`} alt="Wrapped Christmas presents under a decorated tree" fill sizes="(max-width: 767px) 100vw, 41vw" className={s.cover} />
         </div>
       </ScrollScene>
 
