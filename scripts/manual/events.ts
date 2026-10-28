@@ -1,5 +1,5 @@
-// Hand-entered events, as reviewable data — for places with no scrapable
-// source (Instagram-only venues). `npm run events:manual` upserts every entry
+// Hand-entered events, as reviewable data — for places with no scraper
+// (Instagram-only venues, or a few dated sessions on a small site). `npm run events:manual` upserts every entry
 // (see docs/product/event-curation.md §Manual events). Past entries can stay:
 // the site shows them as past, and re-syncing them is harmless.
 //
@@ -33,6 +33,16 @@ export const MANUAL_VENUES = {
     imageUrl:
       'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/svet-space-UX2oKCIU9mJfRHeATtFaXqSQwRXsVr.jpg',
     bookingNote: 'Book via Instagram @svet__space.',
+  },
+  'eva-le-ceramics': {
+    venue: 'Eva Lé Ceramics',
+    city: 'Lisbon',
+    country: 'Portugal',
+    address: 'Rua Laureano de Oliveira 24A, 1885-051 Moscavide',
+    url: 'https://www.evaleceramics.com/classes',
+    imageUrl:
+      'https://images.squarespace-cdn.com/content/v1/618324d3161175414b596c45/7ede22cb-845a-46db-9b28-69ed3dcfb7ca/IMG_0193.JPG',
+    bookingNote: 'Book on evaleceramics.com.',
   },
 } as const;
 
@@ -98,4 +108,54 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['soap-making', 'crafts'],
     source: 'Instagram post + poster (2026-10-25)',
   },
+  // --- Eva Lé Ceramics, dated sessions from the booking shop on
+  // evaleceramics.com/classes (2026-10-28). Classes booked first and scheduled
+  // afterwards (wheel taster, wheel pack, regular classes) are not events.
+  {
+    venue: 'eva-le-ceramics',
+    title: 'After Work: Paint a Ceramic Piece',
+    type: 'workshop',
+    startDate: '2026-10-29',
+    startTime: '18:00',
+    endTime: '20:00',
+    price: '€30',
+    description:
+      'Thursday after-work ceramics session: pick a ready-made ceramic piece and decorate it with colours and patterns. No experience needed; materials and firing included.',
+    imageUrl:
+      'https://images.squarespace-cdn.com/content/v1/618324d3161175414b596c45/e20e2ffd-7fbb-47ec-a6b5-e21abb8a71d4/IMG_5917.png',
+    ticketsUrl: 'https://www.evaleceramics.com/classes/p/0n4nag02tedew56w7irj2rcvhyxpyv-48f4p',
+    tags: ['ceramics', 'painting'],
+    source: 'evaleceramics.com booking shop',
+  },
+  {
+    venue: 'eva-le-ceramics',
+    title: 'After Work: Free Clay Piece',
+    type: 'workshop',
+    startDate: '2026-11-05',
+    startTime: '18:00',
+    endTime: '20:00',
+    price: '€30',
+    description:
+      'Thursday after-work ceramics session with no rules or template: make whatever you like in clay. No experience needed; clay, tools, slips and firing included.',
+    imageUrl:
+      'https://images.squarespace-cdn.com/content/v1/618324d3161175414b596c45/e20e2ffd-7fbb-47ec-a6b5-e21abb8a71d4/IMG_5917.png',
+    ticketsUrl: 'https://www.evaleceramics.com/classes/p/0n4nag02tedew56w7irj2rcvhyxpyv-48f4p',
+    tags: ['ceramics'],
+    source: 'evaleceramics.com booking shop',
+  },
+  ...['2026-11-14', '2026-11-21'].map(
+    (startDate): ManualEvent => ({
+      venue: 'eva-le-ceramics',
+      title: 'Ceramics & Tea Workshop',
+      type: 'workshop',
+      startDate,
+      startTime: '11:00',
+      endTime: '13:30',
+      price: '€40',
+      description: 'Saturday-morning ceramics workshop with tea at the Eva Lé Ceramics atelier.',
+      ticketsUrl: 'https://www.evaleceramics.com/classes/p/workshoop-ceramica-iniciao-anj5d-b2wfc-hcahj',
+      tags: ['ceramics'],
+      source: 'evaleceramics.com booking shop (operator screenshot)',
+    }),
+  ),
 ];

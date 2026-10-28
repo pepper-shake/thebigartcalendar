@@ -133,6 +133,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/De4XVpkCNIC/',
     'https://www.instagram.com/p/Dey06t2iBWp/',
   ],
+  'eva-le-ceramics': [
+    'https://www.instagram.com/p/DVL7tHCgnVN/',
+    'https://www.instagram.com/p/DfA2NBHDNBG/',
+    'https://www.instagram.com/p/De38uW7AqN9/',
+    'https://www.instagram.com/reel/DeHrXM1ixAm/',
+  ],
 };
 
 export interface InstagramPost {
