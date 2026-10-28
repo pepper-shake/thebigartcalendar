@@ -22,6 +22,10 @@ export type Shop = {
   /** Paper texture(s) behind the zoom, bottom first. */
   texture: Layer[];
   photo: { src: string; w: number; h: number; alt: string; position: string };
+  /** Phones: the full-bleed photo is a square (side = screen height), cover-
+   *  cropped, its left edge at this fraction of the side (Figma "Mob" frames;
+   *  default: centred). */
+  mobileX?: number;
   /** The shop's logo on the full-bleed photo, centred on (cx, cy). A `mask`
    *  logo is a cream fill through the image; otherwise the image itself. */
   logo?: { src: string; w: number; h: number; cx: number; cy: number; mask?: boolean; label: string };
@@ -35,7 +39,7 @@ export type Shop = {
   textTop: number;
   /** Top of the collage box, Figma px from the frame top. */
   collageTop: number;
-  backCard: { color: string; src: string; w: number; h: number; alt: string };
+  backCard: { color: string; src: string; w: number; h: number; alt: string; fit?: 'contain' };
   productCard: { panel?: Box & { color: string }; img: Box & { src: string; iw: number; ih: number; alt: string } };
   stars: (Box & { src: string })[];
   link: { x: number; y: number };
@@ -43,6 +47,9 @@ export type Shop = {
 
 const BIG_STAR = { x: 518, y: 90, w: 169, h: 194 };
 const SMALL_STAR = { x: 698, y: 187, w: 72.3, h: 83 };
+
+/** What the card collage needs (a template shop, or Choosing Keeping on phones). */
+export type CollageData = Pick<Shop, 'texture' | 'backCard' | 'productCard' | 'stars' | 'link'> & { href: string };
 
 export const SHOPS: Record<'giveapon' | 'wielonki' | 'tartagelatina' | 'annanina' | 'goodmood', Shop> = {
   giveapon: {
@@ -52,6 +59,7 @@ export const SHOPS: Record<'giveapon' | 'wielonki' | 'tartagelatina' | 'annanina
     productUrl: 'https://giveapon.nl/en/collections/new/products/meraki',
     bg: '#1a3263',
     texture: [{ src: `${A}/blue-texture.jpg` }],
+    mobileX: -41 / 871,
     photo: {
       src: `${A}/giveapon-photo.jpg`,
       w: 890,
@@ -90,6 +98,7 @@ export const SHOPS: Record<'giveapon' | 'wielonki' | 'tartagelatina' | 'annanina
     productUrl: 'https://wielonki.pl/produkt/czapka-blurred/',
     bg: '#962424',
     texture: [{ src: `${A}/red-texture.jpg` }],
+    mobileX: -311 / 871,
     photo: {
       src: `${A}/wielonki-photo.jpg`,
       w: 1440,
