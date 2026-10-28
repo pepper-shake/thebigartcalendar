@@ -2,10 +2,12 @@
 
 Posts live at `/blog/<slug>`. Each one is a **standalone, hand-built landing page** (its own route folder), not a template filled from data. The `/blog` index lists them as cards that open the post in a **new tab** (`target="_blank"`).
 
+**Index (`/blog`, Figma *Calendar* `287:4760`):** breadcrumbs (Calendar / Blog), then a grid of white cards, 3 across from 1024px, 2 from 640px, 1 on phones (gap 16, padding 24). Each card has the title (Newsreader Light 34/36, −0.68px), built as kicker + title in sentence case by `blogPostCardTitle`, above the post's `cover` (a designed collage at 405:310, separate from the share `image`). The design has no visible heading, so the page has an `sr-only` `<h1>`.
+
 ## Where things are
 | What | Where |
 |---|---|
-| Post list (slug, title, kicker, description, date, cover) | [`src/lib/blogPosts.ts`](../../src/lib/blogPosts.ts). Feeds `/blog`, the sitemap, metadata and `Article` JSON-LD. |
+| Post list (slug, title, kicker, description, date, share image, card cover) | [`src/lib/blogPosts.ts`](../../src/lib/blogPosts.ts). Feeds `/blog`, the sitemap, metadata and `Article` JSON-LD. |
 | Index page | [`src/app/blog/page.tsx`](../../src/app/blog/page.tsx) |
 | A post's route | `src/app/blog/<slug>/page.tsx`: metadata, the landing component, `SiteFooter`, `blogPostJsonLd` |
 | A post's landing | `src/components/blog/<name>/` (component + CSS module) |
