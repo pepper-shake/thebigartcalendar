@@ -521,4 +521,27 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/evaleceramics/',
     openingHours: { note: 'Monday to Friday, by appointment.' },
   },
+  {
+    id: 'auake',
+    slug: 'auake',
+    name: 'AUAKE',
+    aliases: ['AUAKE Pottery Studio', 'auake_'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Pottery studio and ceramics brand in the village of Almoçageme near Adraga Beach, Sintra, run by a Portuguese-French duo making minimalist functional homeware. Runs weekend handbuilding workshops (with coffee or Portuguese natural wines), children\'s classes, six-session intensive courses, private handbuilding and wheel classes, and studio-time subscriptions for resident artists; the studio is also a gift shop.',
+    imageUrl:
+      'https://www.auake.com/cdn/shop/files/COMPRESSED_NEW_BLACK_TRANSPARENT_LOGO.png?width=1200',
+    address: 'Rua da Praia da Adraga 26, Almoçageme, 2705-059 Colares',
+    city: 'Sintra',
+    country: 'Portugal',
+    lat: 38.7969506, // from the studio's own Google Maps link
+    lng: -9.4712043,
+    websiteUrl: 'https://www.auake.com/',
+    instagramUrl: 'https://www.instagram.com/auake_/',
+    openingHours: {
+      wed: '11:00-19:00', thu: '11:00-19:00', fri: '11:00-19:00',
+      sat: '11:00-19:00', sun: '11:00-19:00',
+    },
+  },
 ];

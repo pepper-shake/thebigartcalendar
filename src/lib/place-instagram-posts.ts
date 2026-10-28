@@ -139,6 +139,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/De38uW7AqN9/',
     'https://www.instagram.com/reel/DeHrXM1ixAm/',
   ],
+  'auake': [
+    'https://www.instagram.com/p/De6cbDtDkbu/',
+    'https://www.instagram.com/p/DbSl-djiI6x/',
+    'https://www.instagram.com/p/DYJz9NKCKLx/',
+    'https://www.instagram.com/p/DeFY-lBji-O/',
+  ],
 };
 
 export interface InstagramPost {
