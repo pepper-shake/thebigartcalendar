@@ -30,7 +30,7 @@ Events publish immediately (`status` defaults to `published`). The operator uses
 Editing happens in Retool: [references/retool.md](../references/retool.md). Image uploads: [references/vercel-blob.md](../references/vercel-blob.md). Rationale: [decision #0002](../design/decisions.md).
 
 ## Manual events
-For places with **no scrapable source** (Instagram-only venues, e.g. Svet Space), events are hand-entered as reviewable data in [scripts/manual/events.ts](../../scripts/manual/events.ts), then `npm run events:manual` upserts them.
+For places with **no scrapable source** (Instagram-only venues, e.g. Svet Space; or a small site with a few dated sessions, e.g. Eva Lé Ceramics), events are hand-entered as reviewable data in [scripts/manual/events.ts](../../scripts/manual/events.ts), then `npm run events:manual` upserts them.
 - Each entry gives title, type and date (+ optional times, price, description); venue, address, image and booking link fall back to the venue's defaults in `MANUAL_VENUES` there.
 - Same write path as the scraper (`upsertEvents`), so curation columns survive re-syncs. The id is `hash("manual:<venue>" + title + date[+time])`, so fixing a typo in a title creates a new row: hide the old one via curation.
 - Removing an entry does **not** delete the row; past entries can stay in the file.

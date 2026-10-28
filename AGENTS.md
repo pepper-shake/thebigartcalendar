@@ -13,7 +13,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 - `npm run scrape` — run the daily scraper (needs `DATABASE_URL` + `ANTHROPIC_API_KEY`)
 - **Local DB (optional):** `npm run db:local` (PGlite Postgres on :5432, data in `.local-db/`) → `DATABASE_URL=postgresql://postgres@localhost:5432/postgres npx drizzle-kit push` → `npx tsx scripts/dev/copy-prod-to-local.ts` (read-only copy of prod events) → put that `DATABASE_URL` in `.env.development.local` so `next dev` uses it. Delete that file to go back to prod.
 - `npm run places:sync` — upsert `scripts/places/places.ts` into the `places` table
-- `npm run events:manual` — upsert hand-entered events from `scripts/manual/events.ts` (Instagram-only venues)
+- `npm run events:manual` — upsert hand-entered events from `scripts/manual/events.ts` (venues with no scraper)
 - `npm run db:push` — apply schema to Neon · `npm run db:studio` — browse data
 
 ## What counts as done
