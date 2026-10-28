@@ -7,7 +7,7 @@ Posts live at `/blog/<slug>`. Each one is a **standalone, hand-built landing pag
 ## Where things are
 | What | Where |
 |---|---|
-| Post list (slug, title, kicker, description, date, share image, card cover) | [`src/lib/blogPosts.ts`](../../src/lib/blogPosts.ts). Feeds `/blog`, the sitemap, metadata and `Article` JSON-LD. |
+| Post list (slug, title, kicker, meta title, description, keywords, date, share image, card cover) | [`src/lib/blogPosts.ts`](../../src/lib/blogPosts.ts). Feeds `/blog`, the sitemap, metadata and `Article` JSON-LD. `metaTitle` is used as the page `<title>` as-is (`title.absolute`, no site-name suffix) and for OG / X / JSON-LD `headline`; `keywords` go to `<meta name="keywords">` and JSON-LD. |
 | Index page | [`src/app/blog/page.tsx`](../../src/app/blog/page.tsx) |
 | A post's route | `src/app/blog/<slug>/page.tsx`: metadata, the landing component, `SiteFooter`, `blogPostJsonLd` |
 | A post's landing | `src/components/blog/<name>/` (component + CSS module) |
@@ -35,6 +35,8 @@ Weights and styles come from Figma per text layer. Check each one: "Light Italic
 
 ## Posts
 ### Online Stores for Creative Christmas Gifts (2026-10-27)
+**SEO:** meta title "Our Guide to Online Stores for Creative Christmas Gifts"; main keyword "creative Christmas gifts online", supporting: unique Christmas gifts, handmade gifts, gifts for friends, Secret Santa ideas, small online shops. **Share image** (`share.jpg`, 1200×630) is the landing's first screen: captured from the running page at 1200×630 (2× then downscaled) with the cookie banner, menu "+" and "Scroll" hint hidden. Re-capture it if the hero changes. The intro photo is separate (`intro-photo.jpg`, set in `GiftGuide.tsx`).
+
 Figma *Calendar* `335:2017` is a 1440×850 storyboard of frames (27,703px tall). Every section slides over the one before it: hero → intro → Give A Pon → Wielonki → Tarta Gelatina → anna + nina → Choosing Keeping → GoodMood Prints → envelope → footer. Details sections are pinned only from 1024px up; on tablet and mobile they're taller than a screen, so they scroll normally. The CSS uses `--u` = one Figma px fitted to the screen (`min(100vw/1440, 100svh/850)`), so desktop matches the frames.
 
 | File | Role |
