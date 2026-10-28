@@ -4,6 +4,7 @@ import { REGION_ADJECTIVE } from '@/lib/site';
 import { BLOG_POSTS, blogPostCardTitle, blogPostPath } from '@/lib/blogPosts';
 import PageShell from '@/components/seo/PageShell';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import BlogCardLink from '@/components/analytics/BlogCardLink';
 export const metadata: Metadata = {
   title: 'Blog',
   description: `Writing about art events, the ${REGION_ADJECTIVE} art scene, and how to get the most out of The Big Art Calendar.`,
@@ -35,11 +36,9 @@ export default function BlogPage() {
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <li key={post.slug}>
-              {/* Posts are standalone landings, opened in their own tab. */}
-              <a
+              <BlogCardLink
+                slug={post.slug}
                 href={blogPostPath(post.slug)}
-                target="_blank"
-                rel="noopener"
                 className="group flex h-full flex-col gap-4 bg-white p-6 text-ink"
               >
                 <h2
@@ -62,7 +61,7 @@ export default function BlogPage() {
                     className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.015]"
                   />
                 </div>
-              </a>
+              </BlogCardLink>
             </li>
           ))}
         </ul>
