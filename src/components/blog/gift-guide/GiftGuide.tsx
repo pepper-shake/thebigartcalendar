@@ -4,9 +4,9 @@ import Link from 'next/link';
 import localFont from 'next/font/local';
 import ScrollScene from '@/components/blog/ScrollScene';
 import type { BlogPost } from '@/lib/blogPosts';
-import ShopStory, { ShopCopy } from './ShopStory';
+import ShopStory, { Collage, ShopCopy } from './ShopStory';
 import { Arrow, ProductLink } from './ProductLink';
-import { SHOPS } from './shops';
+import { SHOPS, type CollageData } from './shops';
 import s from './GiftGuide.module.css';
 
 // Figma sets this page in Newsreader 300/400/500 with italics, and renders
@@ -30,6 +30,20 @@ const A = '/blog/online-stores-for-creative-christmas-gifts';
 
 const CHOOSING_KEEPING_URL = 'https://www.choosingkeeping.com';
 const CHOOSING_KEEPING_PRODUCT_URL = 'https://choosingkeeping.com/products/pastel-clown-glass-ornament';
+
+/** Choosing Keeping's cards on phones (Figma "Mob" Group 28): the template
+ *  collage with the moon in the white card and the clown on the back card. */
+const CK_COLLAGE: CollageData = {
+  href: CHOOSING_KEEPING_PRODUCT_URL,
+  texture: [{ src: `${A}/red-texture.jpg` }],
+  backCard: { color: '#520b0e', src: `${A}/clown.webp`, w: 700, h: 1386, alt: '', fit: 'contain' },
+  productCard: {
+    panel: { x: 20, y: 20, w: 400, h: 488, color: '#eaded5' },
+    img: { x: 74.5, y: 47.4, w: 272.3, h: 432.8, src: `${A}/moon.webp`, iw: 1000, ih: 1586, alt: '' },
+  },
+  stars: [{ x: 518, y: 90, w: 169, h: 194, src: `${A}/star-green.svg` }],
+  link: { x: 571, y: 604 },
+};
 
 /**
  * The gift-guide landing (Figma "Online Stores for Creative Christmas Gifts",
@@ -62,6 +76,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           {/* Layer order as in Figma, back to front. */}
           {/* eslint-disable @next/next/no-img-element -- vector pocket panels */}
           <img src={`${A}/pocket-back.svg`} alt="" className={s.pocketBack} />
+          <img src={`${A}/pocket-back-m.svg`} alt="" className={`${s.pocketM} ${s.pocketBackM}`} />
           <div className={s.pocketPaperGroup}>
             <Image src={`${A}/pocket-paper.webp`} alt="" width={657} height={862} className={s.pocketPaper} preload />
             <div className={s.heroClip}>
@@ -79,6 +94,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           <Image src={`${A}/hero-mushroom.webp`} alt="" width={1000} height={1081} sizes="(max-width: 767px) 35vw, 624px" className={s.heroMushroom} />
           <Image src={`${A}/hero-mug.webp`} alt="" width={1000} height={1081} sizes="(max-width: 767px) 35vw, 495px" className={s.heroMug} />
           <img src={`${A}/pocket-front.svg`} alt="" className={s.pocketFront} />
+          <img src={`${A}/pocket-front-m.svg`} alt="" className={`${s.pocketM} ${s.pocketFrontM}`} />
           <img src={`${A}/star-green.svg`} alt="" className={s.heroStar} />
           {/* eslint-enable @next/next/no-img-element */}
         </div>
@@ -124,10 +140,12 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           paper fades in, the moon dims to 30% and the cream logo appears
           (Figma frame 11); then the logo leaves, the moon comes back and moves
           right, and the details appear around it (frame 12). */}
-      <ScrollScene length={2.3} hold={3.5} mobileHold={1} cover="desktop" className={`${s.zoom} ${s.ck}`} style={{ background: '#962424' }} label="Choosing Keeping">
+      <ScrollScene length={2.3} hold={3.5} mobileHold={2} cover="desktop" className={`${s.zoom} ${s.ck}`} style={{ background: '#962424', '--mx': -291 / 871, '--hmx': 1 } as CSSProperties} label="Choosing Keeping">
         <Image src={`${A}/red-texture.jpg`} alt="" fill sizes="100vw" className={s.cover} />
         <div className={s.zoomBox}>
-          <Image src={`${A}/harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.harlequin}`} />
+          <Image src={`${A}/harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.harlequin} ${s.aboveSm}`} />
+          {/* Phones: the moon on harlequin as one picture that zooms (Figma "Mob"). */}
+          <Image src={`${A}/ck-moon-harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.belowSm}`} />
         </div>
         <div className={`${s.fill} ${s.zoomVeil}`}>
           <Image src={`${A}/red-texture.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.ckRedLayer}`} />
@@ -138,7 +156,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           width={1000}
           height={1586}
           sizes="(max-width: 767px) 60vw, 400px"
-          className={s.moon}
+          className={`${s.moon} ${s.aboveSm}`}
         />
         <span className={s.ckBigLogo} role="img" aria-label="Choosing Keeping" />
       </ScrollScene>
@@ -151,14 +169,16 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
         mode="pin-desktop"
         className={`${s.shop} ${s.staged} ${s.tShop} ${s.ckDetails}`}
         stageClassName={s.shopStage}
-        style={{ '--text-top': 117, '--bg': '#962424' } as CSSProperties}
+        style={{ '--text-top': 117, '--bg': '#962424', '--mx': -291 / 871, '--hmx': 1 } as CSSProperties}
       >
         {/* Below 1024px nothing is pinned underneath: draw the layers here. */}
-        <div className={`${s.fill} ${s.belowDesktop}`}>
-          <Image src={`${A}/harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.harlequin}`} />
+        <div className={`${s.fill} ${s.stagedBg} ${s.belowDesktop}`}>
+          <Image src={`${A}/harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.harlequin} ${s.aboveSm}`} />
+          <Image src={`${A}/ck-moon-harlequin.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.stagedPhoto} ${s.belowSm}`} />
           <Image src={`${A}/red-texture.jpg`} alt="" fill sizes="100vw" className={`${s.cover} ${s.ckRedLayer}`} />
         </div>
         <ShopCopy
+          before={<span className={`${s.ckCopyLogo} ${s.belowSm}`} role="img" aria-label="Choosing Keeping" />}
           shop={{
             heading: 'Choosing Keeping: the most beautiful Christmas ornaments I’ve seen',
             paragraphs: [
@@ -170,7 +190,8 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
             url: CHOOSING_KEEPING_URL,
           }}
         />
-        <div className={s.ckProducts}>
+        <Collage data={CK_COLLAGE} className={s.belowSm} />
+        <div className={`${s.ckProducts} ${s.aboveSm}`}>
           <Image
             src={`${A}/torn-paper.webp`}
             alt=""
@@ -201,7 +222,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
           <ProductLink href={CHOOSING_KEEPING_PRODUCT_URL} className={s.ckLink} style={{ '--d': 0.2 } as CSSProperties} />
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element -- vector star */}
-        <img src={`${A}/star-green.svg`} alt="" className={`${s.piece} ${s.ckStar}`} style={{ '--d': 0.14 } as CSSProperties} />
+        <img src={`${A}/star-green.svg`} alt="" className={`${s.piece} ${s.ckStar} ${s.aboveSm}`} style={{ '--d': 0.14 } as CSSProperties} />
       </ScrollScene>
 
       <ShopStory shop={SHOPS.goodmood} />

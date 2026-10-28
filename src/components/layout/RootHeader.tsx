@@ -103,18 +103,26 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
   useScrollCollapse(headerRef);
 
   // Blog posts are standalone landings with their own wordmark; they keep only
-  // the menu "+" (cream, top-right, scrolling away with the page — Figma
-  // "Application/plus" 355:2860).
+  // the menu button (cream, top-right, scrolling away with the page): the "+"
+  // from 768px (Figma "Application/plus" 355:2860), "Menu" on phones.
   if (pathname.startsWith('/blog/')) {
     return (
       <>
         <button
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
-          className="absolute z-30 right-3 top-3.5 flex items-center justify-center size-[54px] hover:opacity-60 transition-opacity"
+          className="absolute z-30 right-3 top-3.5 hidden md:flex items-center justify-center size-[54px] hover:opacity-60 transition-opacity"
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- 54px vector icon */}
           <img src="/blog/menu-plus.svg" alt="" width={54} height={54} />
+        </button>
+        {/* Phones (Figma "Mob" 370:3952): a cream "Menu" label, Geist Light 18. */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute z-30 right-6 top-6 md:hidden text-[#f2efe4] hover:opacity-60 transition-opacity"
+          style={{ fontFamily: 'var(--font-meta)', fontWeight: 300, fontSize: 18, lineHeight: '23px' }}
+        >
+          Menu
         </button>
         <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
       </>
