@@ -43,6 +43,7 @@ export default function ScrollScene({
   className,
   stageClassName,
   label,
+  style,
   children,
 }: {
   length?: number;
@@ -56,6 +57,8 @@ export default function ScrollScene({
   stageClassName?: string;
   /** Accessible name for the scene's <section>. */
   label?: string;
+  /** Extra inline style (e.g. per-scene CSS variables). */
+  style?: CSSProperties;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -138,6 +141,7 @@ export default function ScrollScene({
           '--len-m': length + mobileHold,
           '--cover': coverScreens,
           '--cover-m': mobileCover,
+          ...style,
         } as CSSProperties
       }
     >
