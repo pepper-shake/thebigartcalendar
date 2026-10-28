@@ -501,4 +501,24 @@ export const PLACES: NewPlace[] = [
     websiteUrl: 'https://linktr.ee/macs_pt',
     instagramUrl: 'https://www.instagram.com/macs_pt/',
   },
+  {
+    id: 'eva-le-ceramics',
+    slug: 'eva-le-ceramics',
+    name: 'Eva Lé Ceramics',
+    aliases: ['eva lé ceramics', 'evaleceramics'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Ceramic atelier of artist Eva Lé in Moscavide, on the edge of Lisbon. Runs Saturday ceramics-and-tea workshops, Thursday after-work sessions, regular hand-building classes, pottery-wheel classes, private workshops and a ceramics cowork (Club Signature); also offers kiln firings and sells her own collection.',
+    imageUrl:
+      'https://static1.squarespace.com/static/618324d3161175414b596c45/t/6a764106feeb3b5d27c94521/1786134790517/logo_eva_2026-01.png?format=1500w',
+    address: 'Rua Laureano de Oliveira 24A, 1885-051 Moscavide',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7777304,
+    lng: -9.1011885,
+    websiteUrl: 'https://www.evaleceramics.com/',
+    instagramUrl: 'https://www.instagram.com/evaleceramics/',
+    openingHours: { note: 'Monday to Friday, by appointment.' },
+  },
 ];
