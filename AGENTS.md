@@ -41,6 +41,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Event editing / curation | [docs/product/event-curation.md](docs/product/event-curation.md) |
 | Portugal-only mode (feature flag) | [docs/product/portugal-only-mode.md](docs/product/portugal-only-mode.md) |
 | Places directory (add/edit places) | [docs/product/places.md](docs/product/places.md) |
+| Blog posts (landing pages, scroll scenes) | [docs/product/blog.md](docs/product/blog.md) |
 | Integrations (Vercel Blob, Retool) | [docs/references/](docs/references/) |
 | Analytics + consent banner (GA, Clarity) | [docs/references/analytics.md](docs/references/analytics.md) |
 | DB schema snapshot | [docs/generated/db-schema.md](docs/generated/db-schema.md) |

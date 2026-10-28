@@ -24,6 +24,6 @@ The repository is the source of truth. Anyone working on this project — human 
 - Regenerate `generated/` rather than editing by hand.
 - **If a doc contradicts the code, the code wins** — fix the doc.
 
-**Not yet written** (add when the work lands): `product/blog.md`, reliability/observability docs.
+**Not yet written** (add when the work lands): reliability/observability docs.
 
 **Future improvement:** a CI linter (valid links, referenced files exist, AGENTS.md stays bounded, schema doc matches the real schema) and a recurring doc-gardening agent that opens fix-up PRs for stale docs. Tracked in [exec-plans/tech-debt.md](exec-plans/tech-debt.md).

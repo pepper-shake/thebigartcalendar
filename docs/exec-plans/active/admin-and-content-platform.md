@@ -8,7 +8,8 @@
 - [x] **Deploy** — curation code + upload route live in production at `https://thebigartcalendar.vercel.app` (2026-06-07; merged to `main`, smoke-tested live).
 - [x] **Event SEO routing** — `/events/[slug]`, `/cities` + `/cities/[city]`, type hubs (`/exhibitions`…), `sitemap.ts`, `robots.ts`, `metadataBase` + per-page metadata, schema.org JSON-LD (Event/ItemList/Breadcrumb/WebSite/Org); slugs derived in code (no schema change); selectors reuse the curation-safe read path. Shipped 2026-06-10. See [ARCHITECTURE.md](../../ARCHITECTURE.md) §SEO & routing + [decision #0006](../../design/decisions.md).
 - [ ] **Retool app** — events table + edit form writing override/status columns; image upload wired to the route; "revert to scraped" = null the override.
-- [ ] **Blog** — `posts` table + SSR blog pages, reusing the SEO scaffolding now in place (`generateMetadata`, `sitemap.xml`, `robots.txt`, JSON-LD — add `Article` + OG images).
+- [x] **First blog post** — hand-built landing `/blog/online-stores-for-creative-christmas-gifts` (scroll scenes, `Article` JSON-LD, sitemap), listed from `src/lib/blogPosts.ts`; `/blog` index cards open posts in a new tab. 2026-10-27. See [product/blog.md](../../product/blog.md).
+- [ ] **Blog authoring** — `posts` table + SSR blog pages, reusing the SEO scaffolding now in place (`generateMetadata`, `sitemap.xml`, `robots.txt`, JSON-LD — add `Article` + OG images).
 - [ ] **(Deferred)** Claude skill for AI-assisted post drafting.
 
 ## Decision log

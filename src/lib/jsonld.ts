@@ -2,6 +2,7 @@ import { ArtEvent } from '@/types';
 import { type Place } from '@/db/schema';
 import { absoluteUrl, SITE_NAME, SITE_URL } from '@/lib/site';
 import { eventSlug } from '@/lib/slug';
+import { blogPostPath, type BlogPost } from '@/lib/blogPosts';
 import { eventTimeZone, isoWithOffset } from '@/lib/timezone';
 
 // schema.org JSON-LD builders. These power Google's event rich results and
@@ -193,4 +194,20 @@ export function placeJsonLd(place: Place, events: ArtEvent[]): Record<string, un
   }
   if (events.length) data.event = events.map((e) => eventJsonLd(e));
   return data;
+}
+
+export function blogPostJsonLd(post: BlogPost): Record<string, unknown> {
+  const url = absoluteUrl(blogPostPath(post.slug));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    image: [absoluteUrl(post.image)],
+    datePublished: post.publishedAt,
+    url,
+    mainEntityOfPage: url,
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+  };
 }

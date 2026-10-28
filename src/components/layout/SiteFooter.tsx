@@ -25,7 +25,8 @@ const meta: React.CSSProperties = {
 
 type FooterLinkItem = { href: string; label: string };
 
-export default async function SiteFooter() {
+/** `flush`: no top margin, for pages whose last section runs into the footer. */
+export default async function SiteFooter({ flush = false }: { flush?: boolean } = {}) {
   const active = await listActiveTypes();
   // Figma also has "Event of the month" — left out until that page exists.
   const columns: FooterLinkItem[][] = [
@@ -49,7 +50,7 @@ export default async function SiteFooter() {
 
   return (
     <footer
-      className="mt-16 px-6 pt-12 md:px-16 md:pt-16"
+      className={`${flush ? '' : 'mt-16 '}px-6 pt-12 md:px-16 md:pt-16`}
       style={{ backgroundColor: FOOTER_BG, color: FOOTER_TEXT }}
     >
       <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-10 md:gap-[42px]">

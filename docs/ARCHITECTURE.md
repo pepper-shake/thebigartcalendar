@@ -25,7 +25,7 @@ art websites → scraper (GitHub Actions, daily) → Neon `events` table
    **Any new event query must reuse this path**, or it bypasses curation (hidden events leak, overrides ignored).
 
 ## Folder map
-- `src/app/` — routes: `/` (calendar), `/events/[slug]`, `/cities` + `/cities/[city]`, type hubs (`/exhibitions`, `/art-fairs`, `/workshops`, `/performances`, `/auctions`), `/about`, `/blog`, `/contact`, `sitemap.ts`, `robots.ts`, and `api/admin/upload` (image upload route)
+- `src/app/` — routes: `/` (calendar), `/events/[slug]`, `/cities` + `/cities/[city]`, type hubs (`/exhibitions`, `/art-fairs`, `/workshops`, `/performances`, `/auctions`), `/about`, `/blog` + `/blog/<slug>`, `/contact`, `sitemap.ts`, `robots.ts`, and `api/admin/upload` (image upload route)
 - `src/components/` — `calendar/`, `events/`, `filters/`, `layout/`, `mobile/`, `ui/`
 - `src/db/` — `schema.ts`, `queries.ts`, `index.ts` (Neon connection)
 - `src/lib/` — `transform.ts`, calendar logic, `cn`
@@ -51,5 +51,8 @@ The calendar (`/`) is the hub; every event, city, and type also gets its own ser
 - **IndexNow** ([scripts/lib/indexnow.ts](../scripts/lib/indexnow.ts)): after each scrape, `run-all.ts` pings Bing/ChatGPT search with new upcoming event pages + their hubs; `places:sync` pings the place pages. Only when writing to the production DB. Key file: `public/<key>.txt` (public by design).
 - Public origin via `NEXT_PUBLIC_SITE_URL` (fallback `https://thebigartcalendar.com`). Custom-domain setup: [references/domain-setup.md](references/domain-setup.md).
 
+## Blog
+Posts are hand-built, server-rendered landing pages under `/blog/<slug>` with scroll-driven scenes, listed from `src/lib/blogPosts.ts`. See [product/blog.md](product/blog.md).
+
 ## Not built yet
-Blog content (planned: a Postgres `posts` table + SSR pages — [decision #0004](design/decisions.md)). Tracked in [exec-plans/active/admin-and-content-platform.md](exec-plans/active/admin-and-content-platform.md).
+DB-backed blog authoring (planned: a Postgres `posts` table — [decision #0004](design/decisions.md)). Tracked in [exec-plans/active/admin-and-content-platform.md](exec-plans/active/admin-and-content-platform.md).
