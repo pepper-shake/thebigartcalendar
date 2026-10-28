@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import GiftGuide from '@/components/blog/gift-guide/GiftGuide';
 import SiteFooter from '@/components/layout/SiteFooter';
 import JsonLd from '@/components/seo/JsonLd';
+import BlogReadTracker from '@/components/analytics/BlogReadTracker';
 import { blogPostPath, getBlogPost } from '@/lib/blogPosts';
 import { blogPostJsonLd } from '@/lib/jsonld';
 import { absoluteUrl } from '@/lib/site';
@@ -31,6 +32,7 @@ export default function GiftGuidePage() {
       <GiftGuide post={post} />
       <SiteFooter flush />
       <JsonLd data={blogPostJsonLd(post)} />
+      <BlogReadTracker slug={post.slug} />
     </>
   );
 }
