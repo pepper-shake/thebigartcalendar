@@ -43,7 +43,6 @@ export default function BlogPage() {
                 className="group flex h-full flex-col gap-4 bg-white p-6 text-ink"
               >
                 <h2
-                  className="group-hover:underline underline-offset-4 decoration-1"
                   style={{
                     fontFamily: 'var(--font-serif)',
                     fontWeight: 300,
