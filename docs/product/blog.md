@@ -2,7 +2,7 @@
 
 Posts live at `/blog/<slug>`. Each one is a **standalone, hand-built landing page** (its own route folder), not a template filled from data. The `/blog` index lists them as cards that open the post in a **new tab** (`target="_blank"`).
 
-**Index (`/blog`, Figma *Calendar* `287:4760`):** breadcrumbs (Calendar / Blog), then a grid of white cards, 3 across from 1024px, 2 from 640px, 1 on phones (gap 16, padding 24). Each card has the title (Newsreader Light 34/36, −0.68px), built as kicker + title in sentence case by `blogPostCardTitle`, above the post's `cover` (a designed collage at 405:310, separate from the share `image`). The design has no visible heading, so the page has an `sr-only` `<h1>`.
+**Index (`/blog`, Figma *Calendar* `287:4760`):** breadcrumbs (Calendar / Blog), then a grid of white cards, 3 across from 1024px, 2 from 640px, 1 on phones (gap 16, padding 24), oldest post first as in the design. Each card has the title (Newsreader Light 34/36, −0.68px), built as kicker + title in sentence case by `blogPostCardTitle` (or set by the post's `cardTitle`), above the post's `cover` (a designed collage at 405:310, separate from the share `image`). The design has no visible heading, so the page has an `sr-only` `<h1>`.
 
 ## Where things are
 | What | Where |
@@ -26,8 +26,16 @@ Posts live at `/blog/<slug>`. Each one is a **standalone, hand-built landing pag
 - **Staged fade-in instead of a slide** (the `.staged` class in the gift-guide CSS): the covering scene is transparent on desktop, so its slide is invisible. Once pinned, it fades in its background, then its copy, then its cards one by one. Give such a scene its fallback colour as `--bg` in `style`, **never as an inline `background`**: inline styles beat the `.staged` transparency rule, and the opaque sheet would then hide the pinned zoom (photo, veil, logo) underneath. The scene underneath must stay pinned for as long as the staged scene is pinned, so the staged scene must sit entirely inside its hold: underneath `hold` = staged `coverScreens` = staged `length + hold`. Otherwise the scene underneath scrolls away mid-way and the page background shows through. In this post every template shop's zoom has `hold={3.2}` and its details have `length={1.7} hold={1.5}`, which gives half a screen of rest before the next shop slides over. Choosing Keeping's zoom has `hold={3.5}` and its details `length={2} hold={1.5}`. Below 1024px the details don't pin, so `mobileHold` / `mobileCover` set these back to 1 there.
 - `prefers-reduced-motion`: no pinning, no overlap, and `--p = 1`, so every scene shows its end state.
 
+## Making a new post from the template
+The gift guide's scenes are the template: copy and images change, the animation stays. *Christmas movies* is the worked example.
+
+1. **Images:** `public/blog/<slug>/`. Reuse what's shared rather than copying it: the folder panels, grid paper, clip, paper textures, velvet, envelope and logo stay in the gift guide's folder.
+2. **Data:** a stories file like `christmas-movies/films.ts`. Each story is a `Story` (`gift-guide/shops.ts`): `name`, paper `texture`, `veil`, `photo`, optional `logo` and `textTop`.
+3. **Landing:** a component like `christmas-movies/ChristmasMovies.tsx`. Hero, intro and envelope are `ScrollScene`s using the classes in `GiftGuide.module.css`, with only the differences in the post's own CSS module. Each story is `<StoryZoom>` + `<StoryDetails>` from `gift-guide/ShopStory.tsx`, with the post's own copy and pictures as children.
+4. **Route:** `src/app/blog/<slug>/page.tsx`, copied from an existing post, with the post added to `src/lib/blogPosts.ts`. `BlogReadTracker` stays in the page, so the read-depth analytics work.
+
 ## Fonts (read before changing type)
-The landing does **not** use the site-wide `--font-serif`. That instance is static Newsreader 300/600 with no optical-size axis, so a 102px title renders in the low-contrast *text* cut and looks heavier than Figma. Instead, `GiftGuide.tsx` serves the **variable** Newsreader (wght 200–800, opsz 6–72, latin; OFL, from Google Fonts) from `src/fonts/` via `next/font/local`, under its own family name (`--font-guide-serif`), with `font-optical-sizing: auto`. Like Figma, the browser then uses the high-contrast display cut for big type and the text cut for small type.
+The landing does **not** use the site-wide `--font-serif`. That instance is static Newsreader 300/600 with no optical-size axis, so a 102px title renders in the low-contrast *text* cut and looks heavier than Figma. Instead, [`src/components/blog/fonts.ts`](../../src/components/blog/fonts.ts) serves the **variable** Newsreader (wght 200–800, opsz 6–72, latin; OFL, from Google Fonts) from `src/fonts/` via `next/font/local`, under its own family name (`--font-guide-serif`), with `font-optical-sizing: auto`. Like Figma, the browser then uses the high-contrast display cut for big type and the text cut for small type.
 
 Don't load it through `next/font/google`: that registers a second family also named "Newsreader", which clashes with the site-wide faces, and the browser may pick either one for the same weight.
 
@@ -55,6 +63,23 @@ To add or change a template shop, edit `shops.ts`; the layout lives in the `.t*`
 5. **Envelope** (closing block before the footer, Figma 360:2990): on the velvet with gold stars, the green envelope rises out of the bottom (top 329 → 194 → 85). Then the pink star, the title "The gift is the feeling" (Newsreader Italic 400, 40/76, #433D1F) and the note (Geist Light 18/28) appear on the card. On phones the envelope is drawn as a close-up (1 Figma px = 100vw/414), and the title wraps. **Phones:** the same pinned animation as desktop, in the Figma "Mob" Group 31 composition scaled so the envelope is 80% of the screen width (title Newsreader Italic 30 cream on the flap, note Geist Light 10/13 on the card, pink star at the flap's right); the envelope rises from the bottom of the screen in two steps and stops around the middle.
 
 Deviations from Figma: the post loads its own Newsreader cut (300/400/500 + italics); the site-wide one has only 300/600. Copy typos in the frames are fixed ("riends" → "friends", "f I'm" → "If I'm", "n the end" → "In the end", "prodcut" → "product"). The intro's two columns in Figma repeat the same text; the code splits it across them. A stray anna + nina wordmark under the Give A Pon details is left out. "Link to product" and the product card go to the featured product (`productUrl` in `shops.ts`; GoodMood has none yet, so it falls back to the homepage); "Shop:" goes to the shop homepage. The torn grid papers are exported from Figma as single WebP images rather than rebuilt from their masked vector layers.
+
+### Christmas movies to watch this holiday season (2026-11-04)
+Figma *Calendar* `380:2032`, the same storyboard format. Order: hero → intro → Grinch → Eloise → Curly Sue → Home Alone → tips → envelope → footer. No "Mob" frames exist for this post: phones use the template's mobile rules, with the new folder pieces placed by eye.
+
+| File | Role |
+|---|---|
+| `christmas-movies/ChristmasMovies.tsx` | Page order, hero, intro, tips, envelope, and `FilmStory` (zoom + details with the 4-still grid) |
+| `christmas-movies/films.ts` | Data for the four films and the tips |
+| `christmas-movies/ChristmasMovies.module.css` | Only what differs from the gift guide: snow, folder contents, grid, tips |
+
+- **Film titles are images.** `<film>-title.webp` is Soria 95px #FFDBDB drawn onto the oval flourish, so they use the template's logo animation and the font isn't served (its licence is unconfirmed). Changing a title means re-rendering its image. The film name stays as text in the details heading, and the image has alt text.
+- **Hero:** paper texture from the start (no velvet crossfade), snow across the top that leaves with the title. The folder holds the grid paper with Eloise and the clip, the polaroid, and the pine-cone ornament, which rises with the mushroom's timing.
+- **`photo.scale`:** Figma's framed crops are tighter than a cover fit, so the photo starts zoomed in and reaches 1 by full-bleed.
+- **Tips:** the same zoom with no title, then a centred list.
+- **Phones:** each film's grid is centred on its own screen (centred across on tablet too). The envelope is the desktop composition as a close-up (`.closing`), not the gift guide's "Mob" layout, so the title and note sit on the card as on desktop. The velvet asks for `sizes="(max-width: 767px) 190vh, 100vw"`: cover-fit on a tall phone it is about two screen-heights wide, and `100vw` would stretch a small copy until it blurs.
+
+Deviations from Figma: the pocket paragraph is cut off in the frame ("the lights get turned do"); the code ends it "turned down." Two stray "Link to prodcut" layers over the ornaments are left out, as are empty folder layers. The Figma title fill is a pale pink layer holding stray text ("some of my favourite…"), drawn as flat #FFDBDB. Curly Sue's details text is #E3E3E3, as in its frame. Grids get a small hover lift, in place of the template's back-card hover.
 
 ## Later
 The planned `posts` table and admin authoring ([decision #0004](../design/decisions.md)) suit plain article posts. Designed landings like this one stay as code.

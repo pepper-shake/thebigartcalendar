@@ -13,7 +13,8 @@ export const metadata: Metadata = {
 // Figma "Blog" (Calendar 287:4760): breadcrumbs, then a grid of white cards
 // (title above a 405:310 cover), three across on desktop.
 export default function BlogPage() {
-  const posts = [...BLOG_POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  // Oldest first, as in the design.
+  const posts = [...BLOG_POSTS].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
   return (
     <PageShell size="full">
       <Breadcrumbs

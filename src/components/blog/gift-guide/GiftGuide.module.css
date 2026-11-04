@@ -577,6 +577,10 @@
 .zoomPhoto {
   object-position: 50% 58%;
 }
+/* --zs: Figma's framed crops can be tighter than a cover fit (see photo.scale). */
+.zoomBox > img {
+  scale: calc(1 + (var(--zs, 1) - 1) * (1 - var(--b)));
+}
 /* Figma draws the harlequin paper ~1.5× larger than a plain cover fit. */
 .harlequin {
   transform: scale(1.5);
@@ -1350,7 +1354,7 @@ a.tValue:hover {
   .shopLogo {
     left: 50%;
     top: calc(50% + (var(--lcy) - 440) * var(--mu));
-    width: calc(var(--lw) * 0.535 * var(--mu));
+    width: calc(var(--lw) * var(--lms, 0.535) * var(--mu));
   }
 
   .shopStage.shopStage {
