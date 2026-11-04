@@ -77,6 +77,7 @@ Figma *Calendar* `380:2032`, the same storyboard format. Order: hero → intro �
 - **Hero:** paper texture from the start (no velvet crossfade), snow across the top that leaves with the title. The folder holds the grid paper with Eloise and the clip, the polaroid, and the pine-cone ornament, which rises with the mushroom's timing.
 - **`photo.scale`:** Figma's framed crops are tighter than a cover fit, so the photo starts zoomed in and reaches 1 by full-bleed.
 - **Tips:** the same zoom with no title, then a centred list.
+- **Phones:** each film's grid is centred on its own screen (centred across on tablet too). The envelope is the desktop composition as a close-up (`.closing`), not the gift guide's "Mob" layout, so the title and note sit on the card as on desktop. The velvet asks for `sizes="(max-width: 767px) 190vh, 100vw"`: cover-fit on a tall phone it is about two screen-heights wide, and `100vw` would stretch a small copy until it blurs.
 
 Deviations from Figma: the pocket paragraph is cut off in the frame ("the lights get turned do"); the code ends it "turned down." Two stray "Link to prodcut" layers over the ornaments are left out, as are empty folder layers. The Figma title fill is a pale pink layer holding stray text ("some of my favourite…"), drawn as flat #FFDBDB. Curly Sue's details text is #E3E3E3, as in its frame. Grids get a small hover lift, in place of the template's back-card hover.
 

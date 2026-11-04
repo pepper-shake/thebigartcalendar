@@ -118,9 +118,11 @@ export default function ChristmasMovies({ post }: { post: BlogPost }) {
 
       {/* Closing block, as in the gift guide: the envelope rises out of the
           bottom, then the pink star, the title and the note appear. */}
-      <ScrollScene length={2.5} cover="desktop" className={g.envelope} label="The magic of coming back">
-        <Image src={`${GUIDE}/hero-velvet.jpg`} alt="" fill sizes="100vw" className={g.cover} />
-        <Image src={`${GUIDE}/envelope.webp`} alt="" width={1600} height={2022} sizes="(max-width: 767px) 100vw, 892px" className={g.envelopeImg} />
+      <ScrollScene length={2.5} cover="desktop" className={`${g.envelope} ${m.closing}`} label="The magic of coming back">
+        {/* Cover-fit on a tall phone it is drawn about two screen-heights wide, so ask
+            for that much image: "100vw" would stretch a small copy until it blurs. */}
+        <Image src={`${GUIDE}/hero-velvet.jpg`} alt="" fill sizes="(max-width: 767px) 190vh, 100vw" className={g.cover} />
+        <Image src={`${GUIDE}/envelope.webp`} alt="" width={1600} height={2022} sizes="(max-width: 767px) 140vw, 892px" className={`${g.envelopeImg} ${m.closingImg}`} />
         {/* eslint-disable-next-line @next/next/no-img-element -- vector star */}
         <img src={`${GUIDE}/star-pink.svg`} alt="" className={`${g.envelopeStar} ${m.closingStar}`} />
         <h2 className={`${g.envelopeTitle} ${m.closingTitle}`}>The magic of coming back</h2>
@@ -165,7 +167,7 @@ function FilmStory({ film }: { film: Film }) {
               key={i}
               src={st.src}
               alt=""
-              className={`${g.piece} ${g.tStar}`}
+              className={`${g.piece} ${g.tStar} ${m.filmStar}`}
               style={{ '--sx': st.x, '--sy': st.y, width: `calc(${st.w} * var(--cu))`, height: `calc(${st.h} * var(--cu))`, '--d': 0.14 + i * 0.04, '--rise': '120px' } as CSSProperties}
             />
           ))}

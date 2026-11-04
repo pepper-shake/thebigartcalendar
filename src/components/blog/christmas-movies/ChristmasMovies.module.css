@@ -102,12 +102,28 @@
     box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
   }
 }
-/* Phones: a screen of its own, the grid centred; stars as in the gift guide. */
+/* Tablet: the grid is alone in its row, so centre it in the 794-wide box
+   (left 111, not 145); the stars move with it. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid {
+    left: calc(111 * var(--cu));
+  }
+  .filmStar {
+    left: calc((var(--sx) - 34) * var(--cu));
+  }
+}
+/* Phones: a screen of its own, the grid (388.6 square at this scale) centred
+   both ways; the stars keep their place on it, moved in from the screen edge
+   (tripled class to beat the gift guide's phone star rule). */
 @media (max-width: 767px) {
   .grid.grid {
     z-index: 2;
     left: calc((100vw - 388.6 * var(--mu)) / 2);
-    top: calc(var(--oy) + 98.2 * var(--mu));
+    top: calc(50svh - 194.3 * var(--mu));
+  }
+  .filmStar.filmStar.filmStar {
+    left: calc(var(--sx) * var(--cu) - 108.5 * var(--mu));
+    top: calc(50svh - 288.7 * var(--mu) + var(--sy) * var(--cu));
   }
 }
 
@@ -173,21 +189,45 @@
 }
 
 /* Closing card: the note is centred 10px lower than the gift guide's (more
-   lines); on phones the title is longer, so a little smaller, with the star
-   clear of it. */
+   lines).
+   Phones: unlike the gift guide, the desktop composition as a close-up, so the
+   title and note sit on the card exactly as on desktop, at a readable size
+   (--eu: the 730-wide card runs a little past the screen edges, the text box
+   doesn't). --ex centres the 1440 frame; --et is the envelope's final top, with
+   the card's middle on the screen's middle. */
 .closingText.closingText {
   top: calc(687 * var(--eu));
 }
 @media (max-width: 767px) {
-  .closingTitle.closingTitle {
-    font-size: calc(21 * var(--eu));
+  .closing.closing {
+    --eu: calc(100vw / 640);
+    --ex: calc(50% - 720 * var(--eu));
+    --et: calc(50svh - 565 * var(--eu));
+    --es: calc(100svh - 120 * var(--eu));
+  }
+  .closingImg.closingImg {
+    left: calc(var(--ex) + 274 * var(--eu));
+    width: calc(892 * var(--eu));
   }
   .closingStar.closingStar {
-    top: calc(var(--et) + 4 * var(--eu));
+    left: calc(var(--ex) + 860 * var(--eu));
+    top: calc(var(--et) + 98 * var(--eu));
+    width: calc(169 * var(--eu));
+  }
+  .closingTitle.closingTitle {
+    left: calc(var(--ex) + 719.5 * var(--eu));
+    top: calc(var(--et) + 489 * var(--eu));
+    color: #433d1f;
+    font-size: calc(40 * var(--eu));
+    line-height: calc(76 * var(--eu));
+    letter-spacing: calc(-0.8 * var(--eu));
   }
   .closingText.closingText {
-    top: calc(var(--et) + 118 * var(--eu));
-    font-size: calc(9 * var(--eu));
-    line-height: calc(12 * var(--eu));
+    left: calc(var(--ex) + 724 * var(--eu));
+    top: calc(var(--et) + 602 * var(--eu));
+    width: calc(422 * var(--eu));
+    font-size: calc(18 * var(--eu));
+    line-height: calc(28 * var(--eu));
+    transform: translate(-50%, calc(-50% + (1 - var(--tx-e)) * 24px));
   }
 }
