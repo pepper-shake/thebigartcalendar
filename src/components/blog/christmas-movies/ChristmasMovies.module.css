@@ -63,17 +63,21 @@
     width: calc(135 * var(--pu));
     height: calc(130 * var(--pu));
   }
+  /* The window's lower part isn't hidden by the folder here: fill all of it. */
   .polaroidPhoto {
-    left: calc(148.9 * var(--pu));
-    top: calc(206.9 * var(--pu));
-    width: calc(253.7 * var(--pu));
-    height: calc(190.3 * var(--pu));
+    left: calc(163.71 * var(--pu));
+    top: calc(198.29 * var(--pu));
+    width: calc(227.76 * var(--pu));
+    height: calc(283.43 * var(--pu));
+    object-position: 62% 50%;
   }
+  /* Behind the paper and polaroid, so both photos stay clear: it peeks out. */
   .ornament {
-    left: calc(214 * var(--pu));
-    top: calc(262 * var(--pu));
-    width: calc(150 * var(--pu));
-    height: calc(255.4 * var(--pu));
+    z-index: -1;
+    left: calc(10 * var(--pu));
+    top: calc(146 * var(--pu));
+    width: calc(136 * var(--pu));
+    height: calc(231.6 * var(--pu));
   }
   .snow {
     inset: 0 0 auto;
