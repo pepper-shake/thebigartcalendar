@@ -11,32 +11,56 @@ const A = '/blog/online-stores-for-creative-christmas-gifts';
 export type Layer = { src: string; opacity?: number };
 export type Box = { x: number; y: number; w: number; h: number };
 
-export type Shop = {
-  id: string;
+/** What the zoom and details scenes need (a shop, a film, ...). */
+export type Story = {
   name: string;
-  url: string;
-  /** The featured product ("Link to product" and the product card); the shop homepage if not set. */
-  productUrl?: string;
   /** Fallback colour under the paper texture (never see-through while loading). */
   bg: string;
   /** Paper texture(s) behind the zoom, bottom first. */
   texture: Layer[];
-  photo: { src: string; w: number; h: number; alt: string; position: string };
+  photo: {
+    src: string;
+    w: number;
+    h: number;
+    alt: string;
+    position: string;
+    /** Extra zoom in the framed steps, gone by full-bleed (Figma's crop is tighter than cover). */
+    scale?: number;
+  };
   /** Phones: the full-bleed photo is a square (side = screen height), cover-
    *  cropped, its left edge at this fraction of the side (Figma "Mob" frames;
    *  default: centred). */
   mobileX?: number;
-  /** The shop's logo on the full-bleed photo, centred on (cx, cy). A `mask`
-   *  logo is a cream fill through the image; otherwise the image itself. */
-  logo?: { src: string; w: number; h: number; cx: number; cy: number; mask?: boolean; label: string };
+  /** The logo on the full-bleed photo, centred on (cx, cy). A `mask` logo is a
+   *  cream fill through the image; otherwise the image itself. */
+  logo?: {
+    src: string;
+    w: number;
+    h: number;
+    cx: number;
+    cy: number;
+    mask?: boolean;
+    label: string;
+    /** next/image `sizes`, for logos wider than a shop's wordmark. */
+    sizes?: string;
+    /** Phones: its size relative to desktop (default 0.535). */
+    mobileScale?: number;
+  };
   /** Paper layer(s) that fade in over the full-bleed photo (the details background). */
   veil: Layer[];
+  /** Top of the text block, Figma px from the frame top. */
+  textTop: number;
+};
+
+export type Shop = Story & {
+  id: string;
+  url: string;
+  /** The featured product ("Link to product" and the product card); the shop homepage if not set. */
+  productUrl?: string;
   heading: string;
   paragraphs: string[];
   perfectFor: string;
   shopLabel: string;
-  /** Top of the text block, Figma px from the frame top. */
-  textTop: number;
   /** Top of the collage box, Figma px from the frame top. */
   collageTop: number;
   backCard: { color: string; src: string; w: number; h: number; alt: string; fit?: 'contain' };

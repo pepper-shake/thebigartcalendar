@@ -1,0 +1,189 @@
+/* What the Christmas movies landing (Figma Calendar 380:2032) adds to the gift
+   guide's scenes (GiftGuide.module.css, which holds the animation): the snow,
+   the folder's new contents, the still grid and the tips. Doubled classes beat
+   the gift guide's single-class rules. */
+
+/* Frame 0: the title colour is the only change (Newsreader Light Italic). */
+.heroTitle.heroTitle {
+  color: #d1c7ad;
+}
+/* Snow across the top of frame 0 (Figma "O1 2/3": 1161×256, tiled, 14 down). */
+.heroSnow {
+  position: absolute;
+  inset: calc(14 * var(--u)) 0 auto;
+  height: calc(256 * var(--u));
+  background: url('/blog/christmas-movies-to-watch-this-holiday-season/snow.webp') left top / auto 100% repeat-x;
+  opacity: calc(1 - var(--t));
+}
+/* The same snow on the full-bleed stills: it fades with the title. */
+.snow {
+  position: absolute;
+  z-index: 1;
+  inset: calc(5 * var(--u)) 0 auto;
+  height: calc(318 * var(--u));
+  background: url('/blog/christmas-movies-to-watch-this-holiday-season/snow.webp') center top / auto 100% repeat-x;
+  opacity: calc(var(--c) * (1 - clamp(0, var(--h, 0), 1)));
+}
+
+/* Folder contents, Figma px from the back panel (--pu). */
+/* Eloise on the grid paper (304×292, -3.52°), under the clip. */
+.paperPhoto {
+  left: calc(207.7 * var(--pu));
+  top: calc(-10.7 * var(--pu));
+  width: calc(304 * var(--pu));
+  height: calc(292 * var(--pu));
+  transform: rotate(-3.52deg);
+}
+/* The still in the polaroid's window (444×333). */
+.polaroidPhoto {
+  left: calc(768 * var(--pu));
+  top: calc(-58.7 * var(--pu));
+  width: calc(444 * var(--pu));
+  height: calc(333 * var(--pu));
+  object-fit: cover;
+}
+/* The pine-cone ornament (360×613): rises like the gift guide's hanging
+   mushroom, with the same little swing (--k-m). */
+.ornament {
+  left: calc(434 * var(--pu));
+  top: calc(-132.7 * var(--pu));
+  width: calc(360 * var(--pu));
+  height: calc(613 * var(--pu));
+  transform: translateY(calc((1 - var(--k-m)) * 470 * var(--pu)))
+    rotate(calc((1 - var(--k-m)) * 9deg * (1 - 2 * var(--k-m))));
+}
+@media (max-width: 767px) {
+  .heroSnow {
+    inset: 0 0 auto;
+    height: calc(170 * var(--mu));
+  }
+  .paperPhoto {
+    left: calc(71.5 * var(--pu));
+    top: calc(320.3 * var(--pu));
+    width: calc(135 * var(--pu));
+    height: calc(130 * var(--pu));
+  }
+  .polaroidPhoto {
+    left: calc(148.9 * var(--pu));
+    top: calc(206.9 * var(--pu));
+    width: calc(253.7 * var(--pu));
+    height: calc(190.3 * var(--pu));
+  }
+  .ornament {
+    left: calc(214 * var(--pu));
+    top: calc(262 * var(--pu));
+    width: calc(150 * var(--pu));
+    height: calc(255.4 * var(--pu));
+  }
+  .snow {
+    inset: 0 0 auto;
+    height: calc(170 * var(--mu));
+  }
+}
+
+/* The 4-still grid: 572 square at (769, 139), left 624 of the collage box. */
+.grid {
+  left: calc(145 * var(--cu));
+  top: calc(139 * var(--cu));
+  width: calc(572 * var(--cu));
+  height: calc(572 * var(--cu));
+  max-width: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .grid {
+    transition: scale 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+  }
+  .grid:hover {
+    scale: 1.03;
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  }
+}
+/* Phones: a screen of its own, the grid centred; stars as in the gift guide. */
+@media (max-width: 767px) {
+  .grid.grid {
+    z-index: 2;
+    left: calc((100vw - 388.6 * var(--mu)) / 2);
+    top: calc(var(--oy) + 98.2 * var(--mu));
+  }
+}
+
+/* The tips (Figma "Text" 380:3014): 1167 wide, centred, from (136, 314).
+   Heading Newsreader Bold 42/42; list Geist 24/42, its leads bold. */
+.tips.tips {
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  padding: 96px 24px;
+  text-align: center;
+}
+.tipsHeading {
+  color: var(--cream);
+  font-weight: 700;
+  font-size: clamp(30px, calc(42 * var(--u)), 42px);
+  line-height: 1.15;
+}
+.tipsList {
+  color: #f5f5f5;
+  font-family: var(--sans);
+  font-size: clamp(18px, calc(24 * var(--u)), 24px);
+  line-height: 1.75;
+  list-style: decimal inside;
+}
+.tipsList strong {
+  font-weight: 700;
+}
+.tipStar {
+  --cu: var(--u);
+  position: absolute;
+  z-index: 1;
+  height: auto;
+}
+@media (min-width: 1024px) {
+  .tips.tips {
+    top: calc(314 * var(--u));
+    left: calc(136 * var(--u));
+    width: calc(1167 * var(--u));
+    padding: 0;
+    gap: calc(12 * var(--u));
+    transform: translateY(calc((1 - var(--in-e)) * 40px));
+  }
+  .tipsHeading {
+    line-height: 1;
+  }
+}
+@media (max-width: 1023px) {
+  .tips.tips {
+    min-height: 100svh;
+  }
+  .tipStar.tipStar {
+    left: auto;
+    right: 40px;
+    top: 24px;
+    width: 72px !important;
+  }
+  .tipStarSmall.tipStarSmall {
+    right: 16px;
+    top: 72px;
+    width: 30px !important;
+  }
+}
+
+/* Closing card: the note is centred 10px lower than the gift guide's (more
+   lines); on phones the title is longer, so a little smaller, with the star
+   clear of it. */
+.closingText.closingText {
+  top: calc(687 * var(--eu));
+}
+@media (max-width: 767px) {
+  .closingTitle.closingTitle {
+    font-size: calc(21 * var(--eu));
+  }
+  .closingStar.closingStar {
+    top: calc(var(--et) + 4 * var(--eu));
+  }
+  .closingText.closingText {
+    top: calc(var(--et) + 118 * var(--eu));
+    font-size: calc(9 * var(--eu));
+    line-height: calc(12 * var(--eu));
+  }
+}
