@@ -481,6 +481,23 @@ export const PLACES: NewPlace[] = [
     },
   },
   {
+    id: 'espaco-62',
+    slug: 'espaco-62',
+    name: 'Espaço 62',
+    aliases: ['Espaco 62', 'espaco62'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Shared artists\' studio with a street-front space near Praça da Alegria in Lisbon. Its resident artists also show together, including a group exhibition with an art and art-book market at the Convento dos Cardaes in 2025. Shows are announced on Instagram.',
+    imageUrl: '/venues/espaco-62.jpg',
+    address: 'Rua da Conceição da Glória 62, 1250-082 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7168574, // street-level (Nominatim had no house number)
+    lng: -9.1458271,
+    instagramUrl: 'https://www.instagram.com/espaco62/',
+  },
+  {
     id: 'hall-atelier',
     slug: 'hall-atelier',
     name: 'hALL',

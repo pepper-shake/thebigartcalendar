@@ -145,6 +145,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/De38uW7AqN9/',
     'https://www.instagram.com/reel/DeHrXM1ixAm/',
   ],
+  'espaco-62': [
+    'https://www.instagram.com/p/DUQcOGQDGKc/',
+    'https://www.instagram.com/p/DaxI-7gst0E/',
+    'https://www.instagram.com/p/DPSAPmcDBVf/',
+    'https://www.instagram.com/p/DQMaIYNjHXl/',
+  ],
 };
 
 export interface InstagramPost {
