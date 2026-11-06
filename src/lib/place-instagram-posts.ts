@@ -13,6 +13,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/DdegMqSBCwy/',
     'https://www.instagram.com/p/DdcHTJctCf_/',
   ],
+  amazonas: [
+    'https://www.instagram.com/p/Der2buBN5u2/',
+    'https://www.instagram.com/p/DfZq9L_DaK9/',
+    'https://www.instagram.com/p/DfZbseYjdv5/',
+    'https://www.instagram.com/p/DfZPGnQDf5c/',
+  ],
   'disco-wheel': [
     'https://www.instagram.com/p/DezXQr-DTb7/',
     'https://www.instagram.com/p/DehMWn0F3mI/',

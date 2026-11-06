@@ -24,6 +24,15 @@ export interface ManualEvent {
 }
 
 export const MANUAL_VENUES = {
+  amazonas: {
+    venue: 'Amazonas',
+    city: 'Lisbon',
+    country: 'Portugal',
+    address: '8 Marvila, Praça David Leandro da Silva 8, 1950-064 Lisboa',
+    url: 'https://www.instagram.com/amazonas.events/',
+    imageUrl: '/venues/amazonas-market-art-weekend.jpg',
+    bookingNote: 'Details on Instagram @amazonas.events.',
+  },
   'svet-space': {
     venue: 'Svet Space',
     city: 'Porto',
@@ -47,6 +56,21 @@ export const MANUAL_VENUES = {
 } as const;
 
 export const MANUAL_EVENTS: ManualEvent[] = [
+  // --- Amazonas, Art Weekend Edition post (2026-10-19).
+  {
+    venue: 'amazonas',
+    title: 'Amazonas Market: Art Weekend Edition',
+    type: 'fair',
+    startDate: '2026-11-07',
+    endDate: '2026-11-08',
+    startTime: '12:00',
+    endTime: '20:00',
+    price: 'Free',
+    description:
+      'Art weekend edition of the Amazonas market at 8 Marvila: 70+ independent artists, designers and makers presenting original art and prints, ceramics, fashion and jewellery. Workshops all weekend, exhibitions along the 8 Marvila corridor, live performances, and DJs and live music from noon.',
+    tags: ['market', 'art', 'design', 'ceramics', 'jewellery'],
+    source: 'https://www.instagram.com/p/Der2buBN5u2/',
+  },
   // --- Svet Space, October 2026 programme poster + operator notes (2026-10-25).
   // Skipped from the poster: ceramic coworking (studio time, not an event) and
   // the Portuguese speaking club (not art).
