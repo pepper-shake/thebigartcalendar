@@ -40,12 +40,13 @@ export const PLACES: NewPlace[] = [
     category: 'other',
     description:
       'Lisbon curators of independent markets and events at 8 Marvila: handpicked artists, designers and makers selling their own work, with workshops, exhibitions and live music.',
+    imageUrl: 'https://amazonas-events.com/8-marvila.webp',
     address: '8 Marvila, Praça David Leandro da Silva 8, 1950-064 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
     lat: 38.7422845, // Eventbrite's pin for 8 Marvila
     lng: -9.1020918,
-    websiteUrl: 'https://linktr.ee/amz.amazonas',
+    websiteUrl: 'https://amazonas-events.com/',
     instagramUrl: 'https://www.instagram.com/amazonas.events/',
   },
   {

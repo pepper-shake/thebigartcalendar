@@ -71,6 +71,199 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['market', 'art', 'design', 'ceramics', 'jewellery'],
     source: 'https://www.instagram.com/p/Der2buBN5u2/',
   },
+  // --- Amazonas Linktree, Art Weekend workshops (2026-11-06). Skipped: Drawing
+  // Session 7 Nov (Lisbon Drawing Club #189, already scraped), Collage Workshop
+  // (Collage Working Club parser), and the sold-out Mood Board 7 Nov and Lost Wax.
+  {
+    venue: 'amazonas',
+    title: 'Arraiolos Embroidery Workshop',
+    type: 'workshop',
+    startDate: '2026-11-07',
+    startTime: '14:00',
+    endTime: '17:00',
+    price: '€60',
+    description:
+      'A contemporary take on the traditional Portuguese Arraiolos stitch with A Rendeira, at Amazonas Market. All materials included; take home your piece and what you need to finish it. Limited to 8 people.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/fe48ccc7-1843-4a65-a805-3f10954b66b8_Arraiolos-EN-1x.png',
+    ticketsUrl: 'https://forms.gle/4Fe79GY4cfEpqL9v9',
+    tags: ['embroidery', 'textiles'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Make Your Own Charms',
+    type: 'workshop',
+    startDate: '2026-11-07',
+    startTime: '16:00',
+    endTime: '18:00',
+    price: '€69',
+    description:
+      'Jewellery workshop with After Hours at Amazonas Market: make five charms using bronze metal clay, enamel colour and semi-precious beads.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/a2962044-d248-4d06-ae2d-21c829ecf23f_motion-photo-7659414819783442307.webp',
+    ticketsUrl: 'https://afterhoursexperiences.com/products/charms-making?variant=61333591327054',
+    tags: ['jewellery'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Cyanotype on Paper Workshop',
+    type: 'workshop',
+    startDate: '2026-11-07',
+    startTime: '16:00',
+    endTime: '18:00',
+    price: '€55.50',
+    description:
+      'Learn cyanotype step by step at Amazonas Market, from preparing the paper to exposing and developing prints of plants and objects. Take your prints home.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/ce043b14-9a4a-425e-8638-e4d2fd08deb2_Capture-decran-2026-10-30-a-10.43.58.png',
+    ticketsUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdMuenEh4HhuXfYME2q1M2sMnjmQjk3RXUyXZLywun_IbFxVg/viewform',
+    tags: ['cyanotype', 'photography'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Portrait Session',
+    type: 'workshop',
+    startDate: '2026-11-07',
+    startTime: '18:00',
+    endTime: '20:00',
+    price: '€10',
+    description:
+      'Lx Atelier joins Amazonas Market for a two-hour portrait drawing session with a life model.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/c7930c8d-e301-4b6f-a3e6-e30e51fa636c_images--2-.jpeg',
+    ticketsUrl: 'https://www.lxatelier.pt/lifedrawing',
+    tags: ['drawing', 'portrait'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Cyanotype Workshop',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '12:00',
+    endTime: '14:00',
+    price: '€25',
+    description:
+      'Cyanotype workshop with photographer Sofia Konstantinidou at Amazonas Market. Bring favourite flat objects to print. Materials included; limited to 12 people.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/616002a0-af26-46a5-8c5a-1d0ce4396767_wmo2-G5Alt3AIGDzWBgzF07N9h9k4VbKdAS8HOpaS-8.jpeg',
+    ticketsUrl: 'https://forms.gle/zaYSJRBBxmqoPacz9',
+    tags: ['cyanotype', 'photography'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Watercolour & Bookbinding Workshop',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '12:00',
+    endTime: '14:30',
+    price: '€25',
+    description:
+      'Meraki workshop at Amazonas Market: paint in watercolour from a floral arrangement, then bind two notebooks with your drawings. From age 10, no experience needed. Materials and a snack included.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/5ef3d414-02ed-4f51-80fb-30225da9b474_Capture-decran-2026-11-01-a-21.02.24.png',
+    ticketsUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfQKGu7rRw5PR4W8ntJIdlT0ARe7L2TFBFl3Gq8ZFmeo2oA7g/viewform?usp=header',
+    tags: ['watercolour', 'bookbinding'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Create Your 2027 Mood Board',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '12:30',
+    endTime: '14:00',
+    price: '€25',
+    description:
+      'The Ritual Collective at Amazonas Market: turn your intentions for 2027 into images, colours and words on a mood board.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/65772690-60f5-4ccd-8a60-698314d38b51_d2f2cf22-7972-47c4-be50-6c39cb2a770d.avif',
+    ticketsUrl: 'https://luma.com/zo9cv6by',
+    tags: ['collage'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Phytography Workshop',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '12:30',
+    endTime: '14:00',
+    price: '€16',
+    description:
+      'Hands-on botanical photography workshop with Imagerie at Amazonas Market, using plant chemicals to develop images on analogue materials. In Portuguese; English speakers welcome.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/2b82f6c5-d654-4ff3-864f-a1d30824df60_fitografia-imagerie-02-HlX4mBqsh1jqHkoo.jpeg',
+    ticketsUrl: 'https://imageriecasadeimagens.com/phytography-workshop-at-amazonas-market#info',
+    tags: ['photography'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Phytography Workshop',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '14:30',
+    endTime: '16:00',
+    price: '€16',
+    description:
+      'Hands-on botanical photography workshop with Imagerie at Amazonas Market, using plant chemicals to develop images on analogue materials. In Portuguese; English speakers welcome.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/2b82f6c5-d654-4ff3-864f-a1d30824df60_fitografia-imagerie-02-HlX4mBqsh1jqHkoo.jpeg',
+    ticketsUrl: 'https://imageriecasadeimagens.com/phytography-workshop-at-amazonas-market#info',
+    tags: ['photography'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Life Drawing Session',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '15:00',
+    endTime: '17:30',
+    price: '€15',
+    description:
+      'Life drawing at Amazonas Art Weekend with three live models, in short and long poses of 2 to 20 minutes. All levels welcome.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/bf4c8bd7-b6fa-4eda-aa01-41351bd7fe16_Capture-decran-2026-10-17-a-19.40.59.png',
+    ticketsUrl: 'https://forms.gle/axscv9WUc3gfBwdC9',
+    tags: ['drawing', 'life-drawing'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  {
+    venue: 'amazonas',
+    title: 'Meditative Ink Art',
+    type: 'workshop',
+    startDate: '2026-11-08',
+    startTime: '18:00',
+    endTime: '20:00',
+    price: '€25',
+    description:
+      'Workshop with Qian Shi at Amazonas Market combining breathwork, guided meditation and intuitive ink painting.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/4bfb6af3-8b7e-43ec-a645-d7e8442316cb_d3d82e62-84a1-4510-b1e0-02280aa9a250.avif',
+    ticketsUrl: 'https://luma.com/pqduqxak',
+    tags: ['painting', 'ink'],
+    source: 'linktr.ee/amz.amazonas + sign-up page',
+  },
+  // Hours left out: the organiser's form says "11pm–8pm", an obvious typo.
+  {
+    venue: 'amazonas',
+    title: 'Amazonas Christmas Market',
+    type: 'fair',
+    startDate: '2026-12-12',
+    endDate: '2026-12-13',
+    description:
+      'Christmas edition of the Amazonas market: all of 8 Marvila becomes a Christmas village with lights, decorations, music and festive food, plus gifts from independent brands and makers, workshops for kids and adults, and a visit from Santa Claus.',
+    imageUrl:
+      'https://ugc.production.linktr.ee/4b19e2c8-bd25-4fd1-aa00-8071ee06acb0_JS1-8135.jpeg',
+    tags: ['market', 'christmas', 'design'],
+    source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas)',
+  },
   // --- Svet Space, October 2026 programme poster + operator notes (2026-10-25).
   // Skipped from the poster: ceramic coworking (studio time, not an event) and
   // the Portuguese speaking club (not art).
