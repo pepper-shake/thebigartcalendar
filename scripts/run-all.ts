@@ -23,6 +23,7 @@ import { run as discoWheel } from './parsers/disco-wheel';
 import { run as ajudaLab } from './parsers/ajuda-lab';
 import { run as galeria1758 } from './parsers/galeria-1758';
 import { run as saltedBooks } from './parsers/salted-books';
+import { run as amazonas } from './parsers/amazonas';
 
 // Load .env.local for local development. In CI, env vars are injected via secrets.
 // We parse manually so we can overwrite empty-string vars (process.loadEnvFile skips them).
@@ -68,6 +69,7 @@ const parsers = [
   { name: 'Ajuda Lab', fn: ajudaLab },
   { name: 'Galeria 1758', fn: galeria1758 },
   { name: 'Salted Books', fn: saltedBooks },
+  { name: 'Amazonas', fn: amazonas },
 ];
 
 interface NewRow {
