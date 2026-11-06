@@ -13,6 +13,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/DdegMqSBCwy/',
     'https://www.instagram.com/p/DdcHTJctCf_/',
   ],
+  amazonas: [
+    'https://www.instagram.com/p/Der2buBN5u2/',
+    'https://www.instagram.com/p/DfZq9L_DaK9/',
+    'https://www.instagram.com/p/DfZbseYjdv5/',
+    'https://www.instagram.com/p/DfZPGnQDf5c/',
+  ],
   'disco-wheel': [
     'https://www.instagram.com/p/DezXQr-DTb7/',
     'https://www.instagram.com/p/DehMWn0F3mI/',
@@ -42,6 +48,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/reel/DehDjWsj-6I/',
     'https://www.instagram.com/reel/DeZhj77jsXY/',
     'https://www.instagram.com/reel/DeO4-pSFIQG/',
+  ],
+  'collage-working-club': [
+    'https://www.instagram.com/p/DfUCNcDEakX/',
+    'https://www.instagram.com/p/DfW6KsEEduI/',
+    'https://www.instagram.com/p/DfJ5MJBkb6n/',
+    'https://www.instagram.com/p/DezZRvPFziI/',
   ],
   'collage-club-ldn': [
     'https://www.instagram.com/p/C6QgWjCiuNG/',
@@ -138,6 +150,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/DfA2NBHDNBG/',
     'https://www.instagram.com/p/De38uW7AqN9/',
     'https://www.instagram.com/reel/DeHrXM1ixAm/',
+  ],
+  'espaco-62': [
+    'https://www.instagram.com/p/DUQcOGQDGKc/',
+    'https://www.instagram.com/p/DaxI-7gst0E/',
+    'https://www.instagram.com/p/DPSAPmcDBVf/',
+    'https://www.instagram.com/p/DQMaIYNjHXl/',
   ],
 };
 

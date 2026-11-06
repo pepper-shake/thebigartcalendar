@@ -43,7 +43,7 @@ function eventbriteLinks(html: string): string[] {
     .map((l) => l.url!.split('?')[0]); // drop the affiliate/tracking query
 }
 
-function jsonLdEvent(html: string): JsonLdEvent | null {
+export function jsonLdEvent(html: string): JsonLdEvent | null {
   for (const m of html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
     try {
       const data = JSON.parse(m[1]);

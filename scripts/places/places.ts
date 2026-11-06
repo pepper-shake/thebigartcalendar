@@ -32,6 +32,24 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/ajudalab',
   },
   {
+    id: 'amazonas',
+    slug: 'amazonas',
+    name: 'Amazonas',
+    aliases: ['Amazonas Market', 'Amazonas - Events', 'amazonas.events'],
+    kind: 'both',
+    category: 'other',
+    description:
+      'Lisbon curators of independent markets and events at 8 Marvila: handpicked artists, designers and makers selling their own work, with workshops, exhibitions and live music.',
+    imageUrl: 'https://amazonas-events.com/8-marvila.webp',
+    address: '8 Marvila, Praça David Leandro da Silva 8, 1950-064 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7422845, // Eventbrite's pin for 8 Marvila
+    lng: -9.1020918,
+    websiteUrl: 'https://amazonas-events.com/',
+    instagramUrl: 'https://www.instagram.com/amazonas.events/',
+  },
+  {
     id: 'disco-wheel',
     slug: 'disco-wheel',
     name: 'Disco Wheel',
@@ -131,6 +149,24 @@ export const PLACES: NewPlace[] = [
     city: 'Lisbon',
     country: 'Portugal',
     instagramUrl: 'https://www.instagram.com/arthome.lisbon',
+  },
+  {
+    id: 'collage-working-club',
+    slug: 'collage-working-club',
+    name: 'Collage Working Club',
+    aliases: ['CWC', 'collageworkingclub'],
+    kind: 'both',
+    category: 'workshop-space',
+    description:
+      'Lisbon collage community and open workspace for artists working with paper. Runs drop-in Scissor Sessions and workshops with guest artists at Jardins do Bombarda, plus sessions at partner venues. No experience needed; materials are provided.',
+    imageUrl: '/venues/collage-working-club.jpg',
+    address: 'Jardins do Bombarda, Rua Gomes Freire 161, Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7251103,
+    lng: -9.1410369,
+    websiteUrl: 'https://www.eventbrite.pt/o/collage-working-club-55562553233',
+    instagramUrl: 'https://www.instagram.com/collageworkingclub/',
   },
   {
     id: 'collage-club-ldn',
@@ -461,6 +497,23 @@ export const PLACES: NewPlace[] = [
       sat: '11:30-16:00', sun: '14:00-20:30',
       note: 'Hours from the October 2026 calendar; workshops and walk-ins inside these hours.',
     },
+  },
+  {
+    id: 'espaco-62',
+    slug: 'espaco-62',
+    name: 'Espaço 62',
+    aliases: ['Espaco 62', 'espaco62'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Shared artists\' studio with a street-front space near Praça da Alegria in Lisbon. Its resident artists also show together, including a group exhibition with an art and art-book market at the Convento dos Cardaes in 2025. Shows are announced on Instagram.',
+    imageUrl: '/venues/espaco-62.jpg',
+    address: 'Rua da Conceição da Glória 62, 1250-082 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7168574, // street-level (Nominatim had no house number)
+    lng: -9.1458271,
+    instagramUrl: 'https://www.instagram.com/espaco62/',
   },
   {
     id: 'hall-atelier',
