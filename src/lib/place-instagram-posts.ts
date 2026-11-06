@@ -43,6 +43,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/reel/DeZhj77jsXY/',
     'https://www.instagram.com/reel/DeO4-pSFIQG/',
   ],
+  'collage-working-club': [
+    'https://www.instagram.com/p/DfUCNcDEakX/',
+    'https://www.instagram.com/p/DfW6KsEEduI/',
+    'https://www.instagram.com/p/DfJ5MJBkb6n/',
+    'https://www.instagram.com/p/DezZRvPFziI/',
+  ],
   'collage-club-ldn': [
     'https://www.instagram.com/p/C6QgWjCiuNG/',
     'https://www.instagram.com/p/DebKL94jQW1/',
