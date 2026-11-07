@@ -14,6 +14,9 @@ export const dynamic = 'force-dynamic';
 const xmlEscape = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
+// Google rejects relative image URLs (local place photos are stored as `/venues/…`).
+const toAbsolute = (src: string) => (/^https?:\/\//.test(src) ? src : absoluteUrl(src));
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, cities, places, activeTypes] = await Promise.all([
     getCurrentEvents(),
@@ -51,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
-    images: e.image ? [e.image] : undefined,
+    images: e.image ? [toAbsolute(e.image)] : undefined,
   }));
 
   const placePages: MetadataRoute.Sitemap = places.map(({ place }) => ({
@@ -59,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: place.updatedAt,
     changeFrequency: 'weekly',
     priority: 0.6,
-    images: place.imageUrl ? [place.imageUrl] : undefined,
+    images: place.imageUrl ? [toAbsolute(place.imageUrl)] : undefined,
   }));
 
   const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
