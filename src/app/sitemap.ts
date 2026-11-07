@@ -9,6 +9,11 @@ import { BLOG_POSTS, blogPostPath } from '@/lib/blogPosts';
 // Regenerated per request so new scraped events appear without a redeploy.
 export const dynamic = 'force-dynamic';
 
+// Next writes `url` and `images` into the XML verbatim, so a scraped image URL
+// with `&` in its query string makes the whole sitemap invalid for Google.
+const xmlEscape = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, cities, places, activeTypes] = await Promise.all([
     getCurrentEvents(),
@@ -65,5 +70,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     images: [absoluteUrl(post.image)],
   }));
 
-  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...blogPages, ...eventPages];
+  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...blogPages, ...eventPages].map((entry) => ({
+    ...entry,
+    url: xmlEscape(entry.url),
+    images: entry.images?.map(xmlEscape),
+  }));
 }
