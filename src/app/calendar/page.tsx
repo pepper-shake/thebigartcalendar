@@ -15,8 +15,10 @@ export const metadata: Metadata = {
   openGraph: { url: absoluteUrl('/calendar') },
 };
 
-export default async function HomePage() {
+export default async function CalendarPage({ searchParams }: { searchParams: Promise<{ date?: string | string[] }> }) {
   // Place-linked (like the SEO routes) so cards can use a place's pinned colour.
-  const events = await getPublishedEvents();
-  return <CalendarClient events={events} footer={<SiteFooter />} />;
+  const [events, { date }] = await Promise.all([getPublishedEvents(), searchParams]);
+  // ?date=YYYY-MM-DD (homepage day links) opens on that day; anything else is ignored.
+  const initialDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined;
+  return <CalendarClient events={events} footer={<SiteFooter />} initialDate={initialDate} />;
 }
