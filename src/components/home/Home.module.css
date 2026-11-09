@@ -29,11 +29,11 @@
   margin-bottom: clamp(5vh, calc(2.8vw + 3.7vh), 9vh);
 }
 .hero h1 {
-  max-width: 1700px;
+  max-width: 1400px;
   font-family: var(--font-serif);
   font-weight: 300;
   font-style: italic;
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-l);
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
