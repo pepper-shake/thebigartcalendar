@@ -6,10 +6,10 @@ import { FilterSelect } from '@/components/ui/FilterSelect';
 
 const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
 
-/** Type filter options: "All Types" plus only the types that have events. */
+/** Type filter options: "All types" plus only the types that have events. */
 export function typeOptions(types: EventType[]): { value: EventType | 'all'; label: string }[] {
   return [
-    { value: 'all', label: 'All Types' },
+    { value: 'all', label: 'All types' },
     ...EVENT_TYPES.filter((t) => types.includes(t)).map((t) => ({
       value: t,
       label: eventTypeColors[t].label,

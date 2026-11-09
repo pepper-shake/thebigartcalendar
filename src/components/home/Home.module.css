@@ -1,0 +1,365 @@
+/* Homepage sizing and spacing, taken from the Myoan Ghost theme (fueko,
+   ThemeForest licence) — its fluid type scale, 5vw page gutters, 4vw grid gap
+   and "Editor's choice" grid. Fonts and colours stay the site's own (see
+   docs/design/style.md); Myoan's rem values are converted at its 10px root. */
+.home {
+  --site-gap: 5vw;
+  --grid-gap: 4vw;
+  --font-size-xl: clamp(38px, calc(3.6vw + 21px), 90px);
+  --font-size-l: clamp(30px, calc(2.1vw + 20px), 60px);
+  --font-size-button: clamp(20px, calc(1.4vw + 13px), 40px);
+  --font-size-m: clamp(22px, calc(1.3vw + 16px), 40px);
+  --font-size-s: clamp(18px, calc(0.8vw + 14px), 30px);
+  --font-size-xs: clamp(18px, calc(0.6vw + 15px), 26px);
+  --font-size-xxs: clamp(18px, calc(0.3vw + 17px), 22px);
+  --font-size-xxxs: clamp(18px, calc(0.1vw + 17px), 20px);
+}
+
+.wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(1730px + var(--site-gap) * 2);
+  margin: 0 auto;
+  padding: 0 var(--site-gap);
+}
+
+/* Hero */
+.hero {
+  margin-top: clamp(2vh, calc(3.5vw + 0.3vh), 7vh);
+  margin-bottom: clamp(5vh, calc(2.8vw + 3.7vh), 9vh);
+}
+.hero h1 {
+  max-width: 1700px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--font-size-xl);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Label row: "Editor choice in November" + #type links */
+.label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0 1em;
+  margin-bottom: 1.6vh;
+  font-family: var(--font-meta);
+  font-size: calc(var(--font-size-s) * 0.8);
+  line-height: 1.4;
+}
+.label h2 {
+  flex: 1 0 auto;
+  font: inherit;
+}
+.tags a {
+  margin-left: 0.6em;
+}
+.tags a:hover {
+  opacity: 0.6;
+}
+
+/* Small cards use Myoan's "compact" Editor's Choice sizes (as on its demo):
+   S titles, XXXS meta. The lead keeps XL title, XXS meta. */
+
+/* Olive band: no top padding, so the lead image sits flush with its edge */
+.band .wrap {
+  padding-bottom: clamp(5vh, calc(2.1vw + 4vh), 8vh);
+}
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto 1fr;
+}
+
+.item {
+  display: block;
+  align-self: start;
+}
+.item:first-child {
+  grid-column: span 2;
+  grid-row: 1 / 3;
+}
+.item:nth-child(2),
+.item:nth-child(3) {
+  margin-top: 6vh;
+}
+
+.img {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin-bottom: max(1.8vh, 16px);
+  background-color: var(--page);
+}
+.img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 250ms ease-out;
+}
+.item:hover .img img {
+  transform: scale(1.015);
+}
+
+.meta {
+  margin-bottom: max(0.8em, 16px);
+  font-family: var(--font-meta);
+  font-size: var(--font-size-xxxs);
+  line-height: 1.3;
+}
+
+.item:first-child .meta {
+  font-size: var(--font-size-xxs);
+}
+.item:first-child .meta p {
+  display: inline;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--font-size-s);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.item:first-child .title {
+  font-size: var(--font-size-xl);
+  line-height: 1.08;
+}
+
+.excerpt {
+  max-width: 1000px;
+  margin-top: 0.8em;
+  font-family: var(--font-meta);
+  font-weight: 300;
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+.more {
+  display: inline-block;
+  margin-top: calc(var(--grid-gap) * 1.5);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--font-size-m);
+}
+.more:hover {
+  opacity: 0.6;
+}
+
+/* Newsletter band (Figma "Home page"), padded like Myoan's subscribe section */
+.newsletter {
+  padding: clamp(60px, 11vh, 120px) 0;
+  text-align: center;
+}
+.newsletterTitle {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--font-size-l);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.newsletterForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: clamp(32px, 6vh, 64px) auto 0;
+}
+.newsletterForm input[type='email'] {
+  width: 100%;
+  padding: 0.4em 0;
+  border: 0;
+  border-bottom: 1.5px solid color-mix(in srgb, var(--fg) 70%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--font-size-xs);
+}
+.newsletterForm input[type='email']::placeholder {
+  color: inherit;
+  opacity: 0.6;
+}
+.newsletterForm input[type='email']:focus {
+  border-bottom-color: var(--fg);
+}
+.newsletterForm button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: min(390px, 100%);
+  margin-top: clamp(28px, 5vh, 48px);
+  padding: 0.5em 1.4em;
+  line-height: 1;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--font-size-button);
+  transition: opacity 0.2s ease;
+}
+.newsletterForm button:hover {
+  opacity: 0.85;
+}
+.newsletterForm button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.newsletterConsent {
+  margin-top: 1.6em;
+  font-family: var(--font-meta);
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+.newsletterError {
+  align-self: flex-start;
+  margin-top: 0.6em;
+  font-family: var(--font-meta);
+  font-size: 15px;
+}
+.newsletterDone {
+  margin-top: clamp(32px, 6vh, 64px);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--font-size-m);
+}
+
+/* "What's new?" — Myoan's feed grid: 15 columns, the lead spans 10 and two
+   rows, the rest 5 each (two beside the lead, then rows of three). */
+.feed {
+  padding: clamp(60px, 11vh, 120px) 0;
+}
+.feedHeading {
+  margin-bottom: clamp(2vh, calc(1.4vw + 1.3vh), 4vh);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: var(--font-size-xl);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.feedGrid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: auto 1fr;
+}
+.feedItem {
+  display: block;
+  align-self: start;
+  grid-column: span 5;
+}
+.feedItem:first-child {
+  grid-column: span 10;
+  grid-row: 1 / 3;
+}
+.feedImg {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin-bottom: max(1.8vh, 16px);
+}
+.feedImg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 250ms ease-out;
+}
+.feedItem:hover .feedImg img {
+  transform: scale(1.015);
+}
+.feedMeta {
+  margin-bottom: max(0.8em, 16px);
+  font-family: var(--font-meta);
+  font-size: var(--font-size-xxs);
+  line-height: 1.3;
+}
+/* Serif card titles sit tighter than Myoan's 1.2 / 1.3, which suit its sans. */
+.feedTitle {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--font-size-m);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.feedItem:first-child .feedTitle {
+  font-size: var(--font-size-xl);
+  line-height: 1.08;
+}
+.feedExcerpt {
+  max-width: 1000px;
+  margin-top: 0.8em;
+  font-family: var(--font-meta);
+  font-weight: 300;
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+/* Tablet (Myoan 481–1024px): lead takes 2/3, two small cards beside it */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(15, 1fr);
+  }
+  .item:first-child {
+    grid-column: span 10;
+  }
+  .item {
+    grid-column: span 5;
+  }
+  .item:nth-child(n + 4) {
+    display: none;
+  }
+  .item:nth-child(3) {
+    margin-top: 0;
+  }
+}
+
+/* Phones (Myoan ≤480px): lead full width without excerpt, then 2-up */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .item:first-child {
+    grid-column: span 2;
+    grid-row: auto;
+    margin-bottom: 1.6vh;
+  }
+  .item,
+  .item:nth-child(n + 4) {
+    display: block;
+    grid-column: span 1;
+  }
+  .item:nth-child(2) {
+    margin-top: 0;
+  }
+  .item:first-child .excerpt,
+  .tags,
+  .feedItem:first-child .feedExcerpt {
+    display: none;
+  }
+  .feedGrid {
+    grid-template-columns: 1fr;
+    gap: calc(var(--grid-gap) * 2.4);
+  }
+  .feedItem,
+  .feedItem:first-child {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .tags {
+    display: none;
+  }
+}

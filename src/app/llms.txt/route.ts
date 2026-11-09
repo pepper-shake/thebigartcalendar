@@ -39,7 +39,7 @@ export async function GET() {
     `${SITE_NAME} is a free calendar of art events in ${REGION}: workshops, exhibitions, performances and more, collected daily from venues' own websites. Each event page lists the date, time, venue, price and a link to book with the organiser. Event and place pages include schema.org JSON-LD.`,
     '',
     '## Browse',
-    `- [Calendar](${absoluteUrl('/')}): all upcoming events by date`,
+    `- [Calendar](${absoluteUrl('/calendar')}): all upcoming events by date`,
     ...EVENT_TYPES.filter((t) => activeTypes.includes(t.type)).map(
       (t) => `- [${t.plural}](${absoluteUrl(`/${t.slug}`)}): ${t.blurb}`,
     ),
@@ -63,7 +63,7 @@ export async function GET() {
       return `- [${e.title}](${absoluteUrl(`/events/${eventSlug(e)}`)}): ${formatDateRange(e)}${time}${repeats} · ${where}${price}`;
     }),
     ...(upcoming.length > MAX_EVENTS
-      ? ['', `More events: ${absoluteUrl('/')} and ${absoluteUrl('/sitemap.xml')}`]
+      ? ['', `More events: ${absoluteUrl('/calendar')} and ${absoluteUrl('/sitemap.xml')}`]
       : []),
     '',
     '## More',

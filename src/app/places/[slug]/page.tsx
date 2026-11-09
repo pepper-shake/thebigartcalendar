@@ -116,7 +116,7 @@ export default async function PlacePage({ params }: Params) {
       <div className={`${INNER} pt-8 pb-12 lg:pb-[62px]`}>
         <Breadcrumbs
           items={[
-            { name: 'Calendar', href: '/' },
+            { name: 'Calendar', href: '/calendar' },
             { name: 'Places', href: '/places' },
             { name: place.name, href: `/places/${slug}` },
           ]}

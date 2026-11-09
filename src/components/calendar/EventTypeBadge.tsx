@@ -6,7 +6,7 @@ export const eventTypeColors: Record<
 > = {
   gallery:     { bg: 'bg-blue-50',    text: 'text-blue-600',   dot: 'bg-blue-500',    label: 'Gallery' },
   performance: { bg: 'bg-violet-50',  text: 'text-violet-600', dot: 'bg-violet-500',  label: 'Performance' },
-  fair:        { bg: 'bg-amber-50',   text: 'text-amber-600',  dot: 'bg-amber-500',   label: 'Art Fair' },
+  fair:        { bg: 'bg-amber-50',   text: 'text-amber-600',  dot: 'bg-amber-500',   label: 'Art fair' },
   auction:     { bg: 'bg-rose-50',    text: 'text-rose-600',   dot: 'bg-rose-500',    label: 'Auction' },
   workshop:    { bg: 'bg-emerald-50', text: 'text-emerald-600',dot: 'bg-emerald-500', label: 'Workshop' },
 };

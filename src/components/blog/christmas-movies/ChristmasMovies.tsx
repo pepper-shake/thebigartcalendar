@@ -27,7 +27,7 @@ export default function ChristmasMovies({ post }: { post: BlogPost }) {
       <ScrollScene length={2.6} hold={1} className={g.hero} label="Introduction">
         <Image src={`${A}/paper-texture.jpg`} alt="" fill sizes="100vw" className={g.cover} preload />
         <div className={m.heroSnow} aria-hidden />
-        <Link href="/" className={g.heroLogo} aria-label="The Big Art Calendar — all events">
+        <Link href="/" className={g.heroLogo} aria-label="The Big Art Calendar — home">
           {/* eslint-disable-next-line @next/next/no-img-element -- vector wordmark */}
           <img src={`${GUIDE}/logo.svg`} alt="the big art calendar." width={163} height={56} />
         </Link>

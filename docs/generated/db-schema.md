@@ -46,3 +46,14 @@ Hand-curated directory — see [product/places.md](../product/places.md). Events
 | `created_at` / `updated_at` | timestamptz NOT NULL, default `now()` | |
 
 **Blog `posts` table:** not yet created — planned in [exec-plans/active/admin-and-content-platform.md](../exec-plans/active/admin-and-content-platform.md).
+
+## `newsletter_subscribers`
+Homepage newsletter sign-ups (personal data — see [SECURITY.md](../SECURITY.md)). Created by hand with `CREATE TABLE IF NOT EXISTS`, not `db:push`.
+
+| Column | Type | Notes |
+|---|---|---|
+| `email` | text PK | lower-cased; a repeat sign-up is a no-op |
+| `source` | text NOT NULL | where they signed up, e.g. `home` |
+| `consent_text` | text NOT NULL | the consent wording shown at sign-up |
+| `status` | text NOT NULL DEFAULT `'subscribed'` | `subscribed` \| `unsubscribed` |
+| `created_at` | timestamptz NOT NULL DEFAULT now() | |

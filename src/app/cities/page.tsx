@@ -21,7 +21,7 @@ export default async function CitiesPage() {
     <PageShell wide>
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: 'Cities', href: '/cities' },
         ]}
       />

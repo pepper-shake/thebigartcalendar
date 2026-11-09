@@ -66,7 +66,7 @@ export default async function PlacesPage({ searchParams }: Props) {
     <PageShell wide>
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: 'Places', href: '/places' },
         ]}
       />

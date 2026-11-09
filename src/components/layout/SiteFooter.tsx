@@ -31,7 +31,7 @@ export default async function SiteFooter({ flush = false }: { flush?: boolean } 
   // Figma also has "Event of the month" — left out until that page exists.
   const columns: FooterLinkItem[][] = [
     [
-      { href: '/', label: 'All events' },
+      { href: '/calendar', label: 'All events' },
       { href: '/cities/lisbon', label: 'Art events in Lisbon' },
       { href: '/cities/porto', label: 'Art events in Porto' },
       // Type hubs with no upcoming events 404, so the link goes with them.
