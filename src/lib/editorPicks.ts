@@ -12,7 +12,9 @@ import { isCurrent, todayISO } from '@/lib/events';
  * empty. See docs/product/homepage.md.
  */
 export const EDITOR_PICKS: Record<string, string[]> = {
-  // '2026-11': ['some-event-slug', '…'],
+  '2026-11': [
+    'zinemaking-as-alternative-future-making-with-ema-goncalves-lisbon-c91411fa',
+  ],
 };
 
 export const EDITOR_PICKS_COUNT = 5;
