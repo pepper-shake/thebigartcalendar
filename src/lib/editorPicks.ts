@@ -9,10 +9,25 @@ import { isCurrent, todayISO } from '@/lib/events';
  *
  * Picks that are hidden, deleted or already finished drop out, and the band is
  * topped up with the next upcoming events that have an image, so it is never
- * empty. See docs/product/homepage.md.
+ * empty. A pick can carry its own `image` for the homepage card only (the
+ * event page keeps its own): a site path under public/editor-picks/<month>/ or
+ * any image URL. See docs/product/homepage.md.
  */
-export const EDITOR_PICKS: Record<string, string[]> = {
-  // '2026-11': ['some-event-slug', '…'],
+export type EditorPick = string | { slug: string; image: string };
+
+export const EDITOR_PICKS: Record<string, EditorPick[]> = {
+  '2026-11': [
+    'zinemaking-as-alternative-future-making-with-ema-goncalves-lisbon-c91411fa',
+    {
+      slug: 'drawing-session-190-lisbon-840706d1',
+      // Lisbon Drawing Club's photo from its /places page.
+      image:
+        'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/lisbon-drawing-club-Qyv1pSdmp5T6jVtEyBDfNgWEAy671a.jpg',
+    },
+    'soap-making-porto-cad848c6',
+    'ceramic-workshop-with-the-artist-mab-ko-porto-09270406',
+    { slug: 'embroidery-workshop-lisbon-c358269f', image: '/editor-picks/2026-11/embroidery-workshop.webp' },
+  ],
 };
 
 export const EDITOR_PICKS_COUNT = 5;
@@ -24,11 +39,16 @@ export interface EditorChoice {
 }
 
 export function selectEditorChoice(current: ArtEvent[], today: string = todayISO()): EditorChoice {
-  const slugs = EDITOR_PICKS[today.slice(0, 7)] ?? [];
+  const picks = EDITOR_PICKS[today.slice(0, 7)] ?? [];
   const bySlug = new Map(current.map((e) => [eventSlug(e), e]));
-  const picked = slugs
-    .map((s) => bySlug.get(s))
-    .filter((e): e is ArtEvent => !!e && isCurrent(e, today))
+  const picked = picks
+    .map((p) => {
+      const pick = typeof p === 'string' ? { slug: p } : p;
+      const e = bySlug.get(pick.slug);
+      if (!e || !isCurrent(e, today)) return undefined;
+      return 'image' in pick ? { ...e, image: pick.image } : e;
+    })
+    .filter((e): e is ArtEvent => !!e)
     .slice(0, EDITOR_PICKS_COUNT);
 
   const chosen = new Set(picked.map((e) => e.id));

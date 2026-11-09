@@ -27,6 +27,8 @@ export const PROPER_NOUNS = [
   'Alfaiate do Livro', 'Israeli Pavilion',
   'Lego', 'Tetrapak', 'Tetrapack', 'Nerikomi', 'Matcha',
   'The Writer’s Hour', "The Writer's Hour",
+  // People (artists, hosts) named in titles
+  'Ema Gonçalves',
 ];
 
 // A capitalised word that is otherwise lower case, e.g. "Workshop", "Cerâmica".
