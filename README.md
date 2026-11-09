@@ -1,6 +1,6 @@
 # The Big Art Calendar
 
-An informational portal for art events across Europe. The calendar is the main page — every visitor lands there and can browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
+An informational portal for art events across Europe. The homepage introduces the site and the month's editor's choice; the calendar (`/calendar`) lets visitors browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
 
 **The problem it solves:** art lovers and creative professionals often miss events or find out too late to plan travel and book tickets at a good price. This portal gives them a single place to discover what's happening, plan ahead, and never miss an event that matters to them.
 

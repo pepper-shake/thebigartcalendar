@@ -19,7 +19,7 @@ export default function BlogPage() {
     <PageShell size="full">
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: 'Blog', href: '/blog' },
         ]}
       />

@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import MenuPanel from './MenuPanel';
+import HeaderNav from './HeaderNav';
 
 // Scroll distance over which the header goes from rest (0) to collapsed (1).
 // Roughly what the header gives back, so the wordmark shrinks about 1:1 with
 // the content moving under it.
 const RANGE_DESKTOP = 120;
 const RANGE_MOBILE = 72;
+
 
 /** The element whose vertical scroll an event inside `node` would move. */
 function scrollerFor(node: EventTarget | null): Element {
@@ -140,11 +142,14 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
           art calendar.
         </Link>
 
-        {/* Desktop: "+" icon. Mobile (Figma 296:5212): a plain "Menu" label. */}
+        <HeaderNav />
+
+        {/* Tablet: "+" icon (from lg up the text links replace it).
+            Mobile (Figma 296:5212): a plain "Menu" label. */}
         <button
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
-          className="absolute right-4 top-3 hidden md:flex items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity"
+          className="absolute right-4 top-3 hidden md:flex lg:hidden items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity"
         >
           <Plus className="size-8" strokeWidth={1.25} />
         </button>

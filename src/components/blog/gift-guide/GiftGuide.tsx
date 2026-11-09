@@ -47,7 +47,7 @@ export default function GiftGuide({ post }: { post: BlogPost }) {
         <div className={`${s.fill} ${s.heroRedPaper}`}>
           <Image src={`${A}/red-texture.jpg`} alt="" fill sizes="100vw" className={s.cover} />
         </div>
-        <Link href="/" className={s.heroLogo} aria-label="The Big Art Calendar — all events">
+        <Link href="/" className={s.heroLogo} aria-label="The Big Art Calendar — home">
           {/* eslint-disable-next-line @next/next/no-img-element -- vector wordmark */}
           <img src={`${A}/logo.svg`} alt="the big art calendar." width={163} height={56} />
         </Link>

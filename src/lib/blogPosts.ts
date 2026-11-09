@@ -31,7 +31,7 @@ export const BLOG_POSTS: BlogPost[] = [
     kicker: '4 Cosy',
     title: 'Christmas movies to watch this holiday season',
     cardTitle: 'Christmas movies to watch this holiday season',
-    metaTitle: '4 Cosy Christmas Movies to Watch This Holiday Season',
+    metaTitle: '4 cosy Christmas movies to watch this holiday season',
     description:
       'From the Grinch to Home Alone, four Christmas movies that make December feel magical. Perfect picks for family nights, cosy evenings and holiday parties.',
     keywords: [
@@ -53,7 +53,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: 'online-stores-for-creative-christmas-gifts',
     kicker: 'Our Guide to',
     title: 'Online stores for creative Christmas gifts',
-    metaTitle: 'Our Guide to Online Stores for Creative Christmas Gifts',
+    metaTitle: 'Our guide to online stores for creative Christmas gifts',
     description:
       'Six small online shops I love for unique Christmas gifts: handmade slippers, colourful hats, happy towels, artist prints, beautiful stationery and jewellery.',
     keywords: [

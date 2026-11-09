@@ -71,6 +71,28 @@
   text-align: center;
   white-space: nowrap;
 }
+/* Header links either side of the wordmark (HeaderNav, Figma "Home page"),
+   level with its first line and following it as it shrinks. Desktop only
+   (`lg:flex`). Gutters, gap and size from the Myoan theme's header. */
+.header-nav {
+  position: absolute;
+  left: 5vw;
+  right: 5vw;
+  top: calc(var(--logo-top) + var(--logo-size) * 0.3);
+  justify-content: space-between;
+  pointer-events: none;
+  font-family: var(--font-meta);
+  font-size: 20px;
+  line-height: 1.5;
+}
+.header-nav ul {
+  display: flex;
+  gap: 1.8vw;
+  pointer-events: auto;
+}
+.header-nav a:hover {
+  opacity: 0.6;
+}
 /* Mobile: 24px padding, a "Menu" row, then the wordmark — 48px in a 161px
    header at rest, ~29px in a 125px header scrolled (158×54 in Figma), with a
    hairline fading in below it. Filters and strips scroll away underneath. */
@@ -222,6 +244,13 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  /* No sideways scrolling or sideways rubber-band anywhere: nothing should
+     ever move the page left/right. `clip` (not `hidden`) keeps sticky working. */
+  html,
+  body {
+    overflow-x: clip;
+    overscroll-behavior-x: none;
   }
   body {
     @apply bg-background text-foreground;
