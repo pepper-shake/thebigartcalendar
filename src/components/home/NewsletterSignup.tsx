@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { trackEvent } from '@/lib/analytics';
 import { subscribeToNewsletter, type SignupState } from '@/app/actions/newsletter';
 import { CARD_SCHEMES } from '@/lib/eventColor';
 import { NEWSLETTER_CONSENT } from '@/lib/newsletter';
@@ -13,6 +14,11 @@ const BLUSH = CARD_SCHEMES[0];
  *  also works before hydration / without JS. */
 export default function NewsletterSignup() {
   const [state, action, pending] = useActionState<SignupState, FormData>(subscribeToNewsletter, { status: 'idle' });
+
+  // A key event (conversion) in GA4: see docs/references/analytics.md.
+  useEffect(() => {
+    if (state.status === 'ok') trackEvent('newsletter_signup', { source: 'home' });
+  }, [state.status]);
 
   return (
     <section

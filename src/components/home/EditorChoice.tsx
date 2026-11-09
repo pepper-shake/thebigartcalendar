@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import TrackedLink from '@/components/analytics/TrackedLink';
 import type { ArtEvent } from '@/types';
 import { CARD_SCHEMES } from '@/lib/eventColor';
 import { MONTH_NAMES } from '@/lib/calendarUtils';
@@ -17,9 +18,15 @@ function placeLabel(e: ArtEvent): string {
   return parts.length ? parts.join(', ') : 'Virtual';
 }
 
-function Item({ event, lead }: { event: ArtEvent; lead: boolean }) {
+function Item({ event, lead, position }: { event: ArtEvent; lead: boolean; position: number }) {
+  const slug = eventSlug(event);
   return (
-    <Link href={`/events/${eventSlug(event)}`} prefetch={false} className={s.item}>
+    <TrackedLink
+      href={`/events/${slug}`}
+      event="editor_choice_click"
+      params={{ item: slug, position }}
+      className={s.item}
+    >
       {/* The band sits just below the intro, so its images load straight away. */}
       <div className={s.img}>
         {event.image && (
@@ -44,7 +51,7 @@ function Item({ event, lead }: { event: ArtEvent; lead: boolean }) {
       </div>
       <h3 className={s.title}>{event.title}</h3>
       {lead && event.description && <p className={`${s.excerpt} line-clamp-4`}>{event.description}</p>}
-    </Link>
+    </TrackedLink>
   );
 }
 
@@ -85,7 +92,7 @@ export default function EditorChoice({
       <div className={s.band} style={{ backgroundColor: OLIVE.bg, color: OLIVE.fg }}>
         <div className={`${s.wrap} ${s.grid}`}>
           {events.map((e, i) => (
-            <Item key={e.id} event={e} lead={i === 0} />
+            <Item key={e.id} event={e} lead={i === 0} position={i + 1} />
           ))}
         </div>
       </div>
