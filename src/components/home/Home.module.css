@@ -141,7 +141,6 @@
 
 .more {
   display: inline-block;
-  margin: clamp(32px, 6vh, 64px) 0;
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--font-size-m);
@@ -303,6 +302,56 @@
   font-weight: 300;
   font-size: var(--font-size-xs);
   line-height: 1.5;
+}
+
+/* "See the full calendar →" + next days with events: the day strip copies the
+   calendar's (Newsreader 300 18px, full day names, hairlines above and below,
+   today italic semibold). */
+.nextRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px var(--grid-gap);
+  padding-top: clamp(32px, 6vh, 64px);
+  padding-bottom: clamp(32px, 6vh, 64px);
+}
+.nextDays {
+  display: flex;
+  flex: 0 1 52%;
+  justify-content: center;
+  gap: 24px 44px;
+  min-height: 66px;
+  align-items: center;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 18px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.nextDay,
+.nextDayActive {
+  font-weight: 300;
+  transition: opacity 0.2s ease;
+}
+.nextDayActive {
+  font-weight: 600;
+  font-style: italic;
+}
+.nextDay:hover,
+.nextDayActive:hover {
+  opacity: 0.6;
+}
+@media (max-width: 768px) {
+  .nextDays {
+    flex-basis: 100%;
+    justify-content: space-between;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 }
 
 /* Tablet (Myoan 481–1024px): lead takes 2/3, two small cards beside it */

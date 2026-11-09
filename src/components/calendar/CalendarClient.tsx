@@ -15,17 +15,19 @@ interface Props {
   events: ArtEvent[];
   /** The server-rendered SiteFooter, shown at the end of each scroll pane. */
   footer?: React.ReactNode;
+  /** Open on this day (YYYY-MM-DD), from /calendar?date=… (homepage day links). */
+  initialDate?: string;
 }
 
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
-export default function CalendarClient({ events, footer }: Props) {
+export default function CalendarClient({ events, footer, initialDate }: Props) {
   const today = useMemo(() => new Date(), []);
   // The year/month the user asked for; what's shown is resolved against the
   // months that actually have events (below).
-  const [requestedYear, setYear] = useState(today.getFullYear());
-  const [requestedMonth, setMonth] = useState(today.getMonth());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [requestedYear, setYear] = useState(initialDate ? Number(initialDate.slice(0, 4)) : today.getFullYear());
+  const [requestedMonth, setMonth] = useState(initialDate ? Number(initialDate.slice(5, 7)) - 1 : today.getMonth());
+  const [selectedDate, setSelectedDate] = useState<string | null>(initialDate ?? null);
   const [filters, setFilters] = useState<CalendarFilters>(DEFAULT_FILTERS);
 
   // Only offer years, months, types and cities that lead to events, each

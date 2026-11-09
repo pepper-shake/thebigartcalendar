@@ -47,6 +47,8 @@ Sent with `trackEvent` like the blog funnel. Clicks use [TrackedLink](../../src/
 |---|---|---|
 | `newsletter_signup` | The newsletter form succeeds ([NewsletterSignup](../../src/components/home/NewsletterSignup.tsx)) | `source` = `home` |
 | `editor_choice_click` | A card in Editor's choice is clicked | `item` = event slug, `position` 1–5 (1 = large card) |
+| `next_day_click` | A day in the next-days strip is clicked | `date` = YYYY-MM-DD, `position` 1–4 |
+| `full_calendar_click` | "See the full calendar →" on the homepage | `from` = `home` |
 | `whats_new_click` | A card in What's new? is clicked | `kind` = `event` \| `post`, `item` = slug, `position` 1–6 |
 
 **`newsletter_signup` is a key event** (GA → Admin → Data display → Key events), so it shows as a conversion in Acquisition reports by source. GA lists a new event name only after it has been received once; mark it as key then, or create the key event by name in advance. To break clicks down by `item`/`position`, register them as event-scoped custom dimensions (Admin → Custom definitions); until then they're visible in Explore and DebugView only.

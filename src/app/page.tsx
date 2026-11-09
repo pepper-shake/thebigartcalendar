@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { getCurrentEvents, listActiveTypes, todayISO } from '@/lib/events';
 import { selectEditorChoice } from '@/lib/editorPicks';
 import { selectWhatsNew } from '@/lib/whatsNew';
+import { nextEventDays } from '@/lib/nextEventDays';
 import { BLOG_POSTS } from '@/lib/blogPosts';
 import { itemListJsonLd } from '@/lib/jsonld';
 import EditorChoice from '@/components/home/EditorChoice';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
+import NextDays from '@/components/home/NextDays';
 import WhatsNew from '@/components/home/WhatsNew';
 import s from '@/components/home/Home.module.css';
 import JsonLd from '@/components/seo/JsonLd';
@@ -29,6 +30,7 @@ export default async function HomePage() {
   const today = todayISO();
   const [current, activeTypes] = await Promise.all([getCurrentEvents(), listActiveTypes()]);
   const { events, curated } = selectEditorChoice(current, today);
+  const nextDays = nextEventDays(current, today);
   const whatsNew = selectWhatsNew(current, BLOG_POSTS, events, today);
 
   return (
@@ -44,11 +46,7 @@ export default async function HomePage() {
 
         <EditorChoice events={events} curated={curated} month={Number(today.slice(5, 7))} activeTypes={activeTypes} />
 
-        <div className={s.wrap}>
-          <Link href="/calendar" className={`${s.more} text-ink`}>
-            See the full calendar →
-          </Link>
-        </div>
+        <NextDays days={nextDays} today={today} />
 
         <NewsletterSignup />
 
