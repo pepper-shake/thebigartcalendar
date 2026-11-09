@@ -68,9 +68,6 @@ export default function WhatsNew({ items }: { items: WhatsNewItem[] }) {
             <Card key={item.kind === 'post' ? item.post.slug : item.event.id} item={item} lead={i === 0} />
           ))}
         </div>
-        <Link href="/calendar" className={s.more}>
-          See the full calendar →
-        </Link>
       </div>
     </section>
   );

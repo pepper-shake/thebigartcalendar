@@ -141,7 +141,7 @@
 
 .more {
   display: inline-block;
-  margin-top: calc(var(--grid-gap) * 1.5);
+  margin: clamp(32px, 6vh, 64px) 0;
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--font-size-m);

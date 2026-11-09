@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getCurrentEvents, listActiveTypes, todayISO } from '@/lib/events';
 import { selectEditorChoice } from '@/lib/editorPicks';
 import { selectWhatsNew } from '@/lib/whatsNew';
@@ -42,6 +43,12 @@ export default async function HomePage() {
         </div>
 
         <EditorChoice events={events} curated={curated} month={Number(today.slice(5, 7))} activeTypes={activeTypes} />
+
+        <div className={s.wrap}>
+          <Link href="/calendar" className={`${s.more} text-ink`}>
+            See the full calendar →
+          </Link>
+        </div>
 
         <NewsletterSignup />
 
