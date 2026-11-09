@@ -12,7 +12,7 @@ Sizing and spacing follow the **Myoan** Ghost theme (fueko, ThemeForest licence)
 - `SiteFooter` (flush, straight after What's new).
 
 ## Choosing the editor's picks
-Picks are set by hand each month in [`src/lib/editorPicks.ts`](../../src/lib/editorPicks.ts): `EDITOR_PICKS['2026-11'] = ['event-slug', …]` — slugs are the part after `/events/`; the first is the large card. Picks that are hidden, deleted or finished drop out. Missing places are topped up with the soonest upcoming events that have an image; when **no** pick is live the label reads "Coming up in <Month>" instead of "Editor choice".
+Picks are set by hand each month in [`src/lib/editorPicks.ts`](../../src/lib/editorPicks.ts): `EDITOR_PICKS['2026-11'] = ['event-slug', …]` — slugs are the part after `/events/`; the first is the large card. Picks that are hidden, deleted or finished drop out. A pick can be `{ slug, image }` to use a different image on the homepage card only (the event page is unchanged); put uploaded files in `public/editor-picks/<YYYY-MM>/`. Missing places are topped up with the soonest upcoming events that have an image; when **no** pick is live the label reads "Coming up in <Month>" instead of "Editor choice".
 
 ## Caching
 The page uses `export const revalidate = 600` (ISR) rather than `force-dynamic`, so it hits Neon at most every 10 minutes instead of per visit. Picks changes ship with a deploy, which rebuilds it.
