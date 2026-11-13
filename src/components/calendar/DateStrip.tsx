@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { springScrollTo } from '@/lib/springScroll';
 
 const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -19,13 +19,22 @@ export default function DateStrip({ eventDates, selectedDate, onChange, scrollab
   const stripRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
+  const placedRef = useRef(false);
 
-  useEffect(() => {
+  // Centre the active item. The first time, jump there before paint so the
+  // page opens on it (not on the start of the strip, sliding over); later
+  // changes spring.
+  useLayoutEffect(() => {
     const strip = stripRef.current;
     const active = activeRef.current;
     if (!strip || !active) return;
     cancelRef.current?.();
     const target = active.offsetLeft - strip.offsetWidth / 2 + active.offsetWidth / 2;
+    if (!placedRef.current) {
+      placedRef.current = true;
+      strip.scrollLeft = target;
+      return;
+    }
     cancelRef.current = springScrollTo(strip, target);
     return () => cancelRef.current?.();
   }, [selectedDate]);
