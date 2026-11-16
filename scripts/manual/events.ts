@@ -19,6 +19,8 @@ export interface ManualEvent {
   imageUrl?: string;
   ticketsUrl?: string;
   tags?: string[];
+  /** Who runs it, when not the venue (a visiting artist). Defaults to the venue. */
+  organiser?: { name: string; url: string };
   /** Where the details came from (a post, a poster). Not shown on the site. */
   source?: string;
 }
@@ -58,10 +60,10 @@ export const MANUAL_VENUES = {
     city: 'Lisbon',
     country: 'Portugal',
     address: 'Rua das Mercês 71A, 1300-405 Lisboa',
-    url: 'https://www.instagram.com/by.soizic/',
+    url: 'https://www.instagram.com/meialuamercearia/',
     imageUrl:
       'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/soizic-watercolor-xmas-ornament-photo-qAGSsieidBWDNowXZt79lbQJTW2WMS.jpg',
-    bookingNote: 'Register via Instagram @by.soizic or WhatsApp +351 916 086 107.',
+    bookingNote: 'Details on Instagram @meialuamercearia.',
   },
 } as const;
 
@@ -397,6 +399,7 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     description:
       'Watercolor workshop with Soizic: paint your own Christmas ornament. Limited spots; register via Instagram @by.soizic or WhatsApp +351 916 086 107.',
     ticketsUrl: 'https://www.instagram.com/by.soizic/',
+    organiser: { name: 'Soizic', url: 'https://www.bysoizic.com/fine-art-prints-tirages-d-art' },
     tags: ['watercolor', 'painting', 'christmas'],
     source: 'poster (operator, 2026-11-16)',
   },
