@@ -60,7 +60,7 @@ export const MANUAL_VENUES = {
     address: 'Travessa da Boa Hora, Ajuda, Lisboa',
     url: 'https://www.instagram.com/by.soizic/',
     imageUrl:
-      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/soizic-watercolor-xmas-ornament-HIwN5GwwAGQ6B1eIwytr0HcNFk4dOP.jpg',
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/soizic-watercolor-xmas-ornament-photo-qAGSsieidBWDNowXZt79lbQJTW2WMS.jpg',
     bookingNote: 'Register via Instagram @by.soizic or WhatsApp +351 916 086 107.',
   },
 } as const;
