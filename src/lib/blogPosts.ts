@@ -23,9 +23,36 @@ export type BlogPost = {
   /** Site-relative card image on the /blog index (a designed collage, 405:310). */
   cover: string;
   coverAlt: string;
+  /**
+   * 'landing' (default): a designed, scroll-animated page with its own wordmark,
+   * so the site header shows only the menu button. 'article': a plain article
+   * (`components/blog/article/`) under the normal site header.
+   */
+  layout?: 'landing' | 'article';
 };
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'museu-nacional-de-arte-antiga-reopens-with-free-entry',
+    layout: 'article',
+    title: "One of Portugal's most important museums reopens, with free entry",
+    metaTitle: 'Museu Nacional de Arte Antiga reopens in Lisbon with free entry',
+    description:
+      'After more than a year of restoration, Lisbon\'s National Museum of Ancient Art reopens on 21 November with concerts, tours and workshops, and free entry until 1 December.',
+    keywords: [
+      'Museu Nacional de Arte Antiga reopening',
+      'MNAA Lisbon',
+      'National Museum of Ancient Art Lisbon',
+      'free museums Lisbon',
+      'Lisbon art events November',
+      'Capela das Albertas',
+    ],
+    publishedAt: '2026-11-16',
+    image: '/blog/museu-nacional-de-arte-antiga-reopens-with-free-entry/share.jpg',
+    imageAlt: 'The Museu Nacional de Arte Antiga reopening poster: "voltámos, we are back, 21/11" over a gilded Namban screen',
+    cover: '/blog/museu-nacional-de-arte-antiga-reopens-with-free-entry/card-cover.jpg',
+    coverAlt: '"voltámos, we are back, 21/11" over a gilded Namban screen with Portuguese merchants',
+  },
   {
     slug: 'christmas-movies-to-watch-this-holiday-season',
     kicker: '4 Cosy',
@@ -90,6 +117,13 @@ export function blogPostCardTitle(post: BlogPost): string {
 /** The title for search results and link previews. */
 export function blogPostMetaTitle(post: BlogPost): string {
   return post.metaTitle ?? (post.kicker ? `${post.kicker} ${post.title}` : post.title);
+}
+
+/** Whether `pathname` is a designed landing (the site header steps aside there). */
+export function isBlogLandingPath(pathname: string): boolean {
+  if (!pathname.startsWith('/blog/')) return false;
+  const post = BLOG_POSTS.find((p) => pathname === blogPostPath(p.slug));
+  return (post?.layout ?? 'landing') === 'landing';
 }
 
 export const blogPostPath = (slug: string) => `/blog/${slug}`;
