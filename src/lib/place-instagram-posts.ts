@@ -157,6 +157,12 @@ export const PLACE_INSTAGRAM_POSTS: Record<string, string[]> = {
     'https://www.instagram.com/p/DPSAPmcDBVf/',
     'https://www.instagram.com/p/DQMaIYNjHXl/',
   ],
+  'meia-lua-mercearia': [
+    'https://www.instagram.com/p/DeMzL85jmWG/',
+    'https://www.instagram.com/p/Dd_j4xzDgPO/',
+    'https://www.instagram.com/p/DdtS-O8Dvpl/',
+    'https://www.instagram.com/p/DdY3luWjqgr/',
+  ],
 };
 
 export interface InstagramPost {

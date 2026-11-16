@@ -585,6 +585,8 @@ export const PLACES: NewPlace[] = [
     category: 'shop',
     description:
       'Bakery and café with a small grocery (mercearia) in Ajuda, Lisbon: eat in or take away, plus regular workshops and pop-ups.',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/meia-lua-mercearia-KijEX2lPzpHDDPE0jFQZXh7DhH5Fg6.jpg',
     address: 'Rua das Mercês 71A, 1300-405 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
