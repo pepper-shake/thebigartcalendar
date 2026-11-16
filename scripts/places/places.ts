@@ -574,4 +574,29 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/evaleceramics/',
     openingHours: { note: 'Monday to Friday, by appointment.' },
   },
+  // Operator, 2026-11-16 (Google Maps link + Instagram bio, sent in chat).
+  // Coords from that Google Maps pin (Nominatim only knows the street).
+  {
+    id: 'meia-lua-mercearia',
+    slug: 'meia-lua-mercearia',
+    name: 'Meia-Lua Mercearia',
+    aliases: ['Méia-Lua Mercearia', 'Meia Lua Mercearia', 'meialuamercearia'],
+    kind: 'venue',
+    category: 'shop',
+    description:
+      'Bakery and café with a small grocery (mercearia) in Ajuda, Lisbon: eat in or take away, plus regular workshops and pop-ups.',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/meia-lua-mercearia-KijEX2lPzpHDDPE0jFQZXh7DhH5Fg6.jpg',
+    address: 'Rua das Mercês 71A, 1300-405 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7035507,
+    lng: -9.1982774,
+    websiteUrl: null,
+    instagramUrl: 'https://www.instagram.com/meialuamercearia/',
+    openingHours: {
+      tue: '10:00-18:30', wed: '10:00-18:30', thu: '10:00-18:30', fri: '10:00-18:30',
+      sat: '10:00-15:00',
+    },
+  },
 ];

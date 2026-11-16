@@ -19,6 +19,8 @@ export interface ManualEvent {
   imageUrl?: string;
   ticketsUrl?: string;
   tags?: string[];
+  /** Who runs it, when not the venue (a visiting artist). Defaults to the venue. */
+  organiser?: { name: string; url: string };
   /** Where the details came from (a post, a poster). Not shown on the site. */
   source?: string;
 }
@@ -52,6 +54,16 @@ export const MANUAL_VENUES = {
     imageUrl:
       'https://images.squarespace-cdn.com/content/v1/618324d3161175414b596c45/7ede22cb-845a-46db-9b28-69ed3dcfb7ca/IMG_0193.JPG',
     bookingNote: 'Book on evaleceramics.com.',
+  },
+  'meia-lua-mercearia': {
+    venue: 'Méia-Lua Mercearia',
+    city: 'Lisbon',
+    country: 'Portugal',
+    address: 'Rua das Mercês 71A, 1300-405 Lisboa',
+    url: 'https://www.instagram.com/meialuamercearia/',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/soizic-watercolor-xmas-ornament-photo-qAGSsieidBWDNowXZt79lbQJTW2WMS.jpg',
+    bookingNote: 'Details on Instagram @meialuamercearia.',
   },
 } as const;
 
@@ -375,4 +387,20 @@ export const MANUAL_EVENTS: ManualEvent[] = [
       source: 'evaleceramics.com booking shop (operator screenshot)',
     }),
   ),
+  // --- Soizic (@by.soizic) at Méia-Lua Mercearia, poster (2026-11-16).
+  {
+    venue: 'meia-lua-mercearia',
+    title: 'Watercolor Workshop: Paint Your Own Xmas Ornament',
+    type: 'workshop',
+    startDate: '2026-11-28',
+    startTime: '10:30',
+    endTime: '13:30',
+    price: '€35',
+    description:
+      'Watercolor workshop with Soizic: paint your own Christmas ornament. Limited spots; register via Instagram @by.soizic or WhatsApp +351 916 086 107.',
+    ticketsUrl: 'https://www.instagram.com/by.soizic/',
+    organiser: { name: 'Soizic', url: 'https://www.bysoizic.com/fine-art-prints-tirages-d-art' },
+    tags: ['watercolor', 'painting', 'christmas'],
+    source: 'poster (operator, 2026-11-16)',
+  },
 ];
