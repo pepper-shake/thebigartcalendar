@@ -13,6 +13,7 @@ const INSTAGRAM = 'https://www.instagram.com/amazonas.events/';
 //   "Arraiolos Embroidery · 07.11 | 14:00–17:00"
 //   "Phytography · Botanical Photography Workshop | 08.11 | 12:30 & 14:30"
 //   "AMAZONAS CHRISTMAS MARKET | 12 & 13 DECEMBER | 8 MARVILA"
+//   "Amazonas Xmas Market | 12+13 December | @8marvila, Lisboa · Billets Shotgun"
 // Deterministic, no LLM. Titles carry no year, so see resolveDate().
 
 // Stall sign-ups, the workshop open call, and the links that are not events.
@@ -23,7 +24,7 @@ const SCRAPED_ELSEWHERE = /eventbrite\.[^ ]*collage-working-club|collage working
 
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 const WORKSHOP_TITLE = /^(.+?)[\s·|]+(\d{1,2})\.(\d{1,2})\s*(?:\|\s*(.+))?$/;
-const MARKET_DATE = new RegExp(`^((?:\\d{1,2}\\s*(?:&|,|-|–)\\s*)*\\d{1,2})\\s+(${MONTHS.join('|')})$`, 'i');
+const MARKET_DATE = new RegExp(`^((?:\\d{1,2}\\s*(?:&|\\+|,|-|–)\\s*)*\\d{1,2})\\s+(${MONTHS.join('|')})$`, 'i');
 
 interface Link extends LinktreeLink {
   id?: string;
