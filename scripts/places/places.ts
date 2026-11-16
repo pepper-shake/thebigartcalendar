@@ -574,8 +574,8 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/evaleceramics/',
     openingHours: { note: 'Monday to Friday, by appointment.' },
   },
-  // Operator, 2026-11-16 (Google Maps link + Instagram). Instagram bio wasn't
-  // readable logged-out; coords left null (Nominatim only knows the street).
+  // Operator, 2026-11-16 (Google Maps link + Instagram bio, sent in chat).
+  // Coords left null (Nominatim only knows the street).
   {
     id: 'meia-lua-mercearia',
     slug: 'meia-lua-mercearia',
@@ -583,7 +583,8 @@ export const PLACES: NewPlace[] = [
     aliases: ['Méia-Lua Mercearia', 'Meia Lua Mercearia', 'meialuamercearia'],
     kind: 'venue',
     category: 'shop',
-    description: 'Grocery shop (mercearia) in Ajuda, Lisbon, that hosts regular workshops.',
+    description:
+      'Bakery and café with a small grocery (mercearia) in Ajuda, Lisbon: eat in or take away, plus regular workshops and pop-ups.',
     address: 'Rua das Mercês 71A, 1300-405 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
@@ -591,5 +592,9 @@ export const PLACES: NewPlace[] = [
     lng: null,
     websiteUrl: null,
     instagramUrl: 'https://www.instagram.com/meialuamercearia/',
+    openingHours: {
+      tue: '10:00-18:30', wed: '10:00-18:30', thu: '10:00-18:30', fri: '10:00-18:30',
+      sat: '10:00-15:00',
+    },
   },
 ];
