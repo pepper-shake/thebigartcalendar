@@ -575,7 +575,7 @@ export const PLACES: NewPlace[] = [
     openingHours: { note: 'Monday to Friday, by appointment.' },
   },
   // Operator, 2026-11-16 (Google Maps link + Instagram bio, sent in chat).
-  // Coords left null (Nominatim only knows the street).
+  // Coords from that Google Maps pin (Nominatim only knows the street).
   {
     id: 'meia-lua-mercearia',
     slug: 'meia-lua-mercearia',
@@ -590,8 +590,8 @@ export const PLACES: NewPlace[] = [
     address: 'Rua das Mercês 71A, 1300-405 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
-    lat: null,
-    lng: null,
+    lat: 38.7035507,
+    lng: -9.1982774,
     websiteUrl: null,
     instagramUrl: 'https://www.instagram.com/meialuamercearia/',
     openingHours: {
