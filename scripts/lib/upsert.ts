@@ -35,6 +35,10 @@ export async function upsertEvents(newEvents: NewEvent[]): Promise<void> {
         startTime: sql`excluded.start_time`,
         endTime: sql`excluded.end_time`,
         venue: sql`excluded.venue`,
+        // Keep the stored value when a source doesn't send one.
+        venueUrl: sql`coalesce(excluded.venue_url, ${events.venueUrl})`,
+        organiserName: sql`coalesce(excluded.organiser_name, ${events.organiserName})`,
+        organiserUrl: sql`coalesce(excluded.organiser_url, ${events.organiserUrl})`,
         city: sql`excluded.city`,
         country: sql`excluded.country`,
         address: sql`excluded.address`,
