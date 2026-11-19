@@ -27,12 +27,14 @@ export default function NewsletterSignup({ source = 'home' }: { source?: Newslet
       style={{ backgroundColor: BLUSH.bg, color: BLUSH.fg, ['--fg' as string]: BLUSH.fg, ['--bg' as string]: BLUSH.bg }}
     >
       <div className={s.wrap}>
-        <h2 id="newsletter" className={s.newsletterTitle}>
-          Sketch. Make. Meet artists. In your city.
-        </h2>
-        <p className={s.newsletterLead}>
-          One email a month with the workshops, life-drawing sessions and creative meetups happening near you
-        </p>
+        <div className={s.newsletterText}>
+          <h2 id="newsletter" className={s.newsletterTitle}>
+            Sketch. Make. Meet artists. In your city.
+          </h2>
+          <p className={s.newsletterLead}>
+            One email a month with the workshops, life-drawing sessions and creative meetups happening near you
+          </p>
+        </div>
 
         {state.status === 'ok' ? (
           <p className={s.newsletterDone} role="status">
