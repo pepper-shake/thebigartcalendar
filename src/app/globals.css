@@ -84,6 +84,8 @@
 .site-header-nav li a[data-active] {
   font-weight: 600;
 }
+/* "Where art happens" button (Figma "Calendar" 415:3494): oxblood with blush
+   text; on hover the two colours swap. */
 .site-header-cta {
   margin-left: auto;
   padding: 10px 14px;
@@ -94,6 +96,12 @@
   font-size: 16px;
   line-height: 18px;
   white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.site-header-cta:hover,
+.site-header-cta:focus-visible {
+  background-color: #e4b6d1;
+  color: #5a1f2e;
 }
 
 /* Drop-down panel (desktop only — the links show from xl): a 300px blurb +
@@ -184,9 +192,6 @@
   height: 64px;
 }
 @media (min-width: 768px) {
-  .site-header {
-    padding: 0 50px;
-  }
   .site-header-row,
   .site-header-spacer {
     height: 102px;
@@ -228,6 +233,7 @@
   /* Site palette — see docs/design/style.md */
   --color-page: var(--page);
   --color-ink: var(--ink);
+  --color-oxblood: var(--oxblood);
   --color-rule: var(--rule);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -273,6 +279,7 @@
   --page: #F2EFE4;  /* page background */
   --ink: #383430;   /* default text / icons on the page */
   --rule: #B1B1B1;  /* hairline dividers between strips */
+  --oxblood: #5A1F2E; /* calendar controls (filters, month + day strips) */
   /* Small sans for card meta lines and chips (Figma uses Geist there). */
   --font-meta: var(--font-geist-sans), system-ui, sans-serif;
 
