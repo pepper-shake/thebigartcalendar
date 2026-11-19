@@ -8,6 +8,7 @@ import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
 import { typeOptions } from '@/components/filters/FilterBar';
+import { REGION } from '@/lib/site';
 
 interface Props {
   year: number;
@@ -65,15 +66,13 @@ export default function MobileAgenda({
         className="flex-1 min-h-0 overflow-y-auto"
         onScroll={handleScroll}
       >
-        {/* At least one header-collapse range (72px, see RootHeader) taller than
-            the viewport, so the wordmark can always shrink fully with the scroll. */}
-        <div className="min-h-[calc(100%+72px)]">
+        <div>
           <div className="flex items-center justify-between px-4 pt-[14px] pb-4">
             <FilterSelect
               size="sm"
               value={filters.city}
               onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
-              options={[{ value: 'all', label: 'All Portugal' }, ...cities.map((c) => ({ value: c, label: c }))]}
+              options={[{ value: 'all', label: REGION }, ...cities.map((c) => ({ value: c, label: c }))]}
             />
             <FilterSelect
               size="sm"

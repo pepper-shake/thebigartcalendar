@@ -7,7 +7,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import { EVENT_TYPES } from "@/lib/eventTypes";
-import { listActiveTypes } from "@/lib/events";
+import { listActiveTypes, todayISO } from "@/lib/events";
 import "./globals.css";
 
 // Menu links to type hubs with no upcoming events (those pages 404). If the DB
@@ -75,7 +75,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="h-full flex flex-col text-ink" style={{ backgroundColor: 'var(--page)' }}>
-        <RootHeader hiddenHrefs={hiddenHrefs} />
+        <RootHeader hiddenHrefs={hiddenHrefs} month={Number(todayISO().slice(5, 7))} />
         <div className="flex-1 min-h-0">{children}</div>
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />

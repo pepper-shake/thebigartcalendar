@@ -3,6 +3,7 @@
 import { CalendarFilters, EventType } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
 import { FilterSelect } from '@/components/ui/FilterSelect';
+import { REGION } from '@/lib/site';
 
 const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
 
@@ -31,7 +32,7 @@ export default function FilterBar({ filters, onChange, cities, types }: Props) {
         value={filters.city}
         onChange={(v) => onChange({ ...filters, city: v ?? 'all' })}
         options={[
-          { value: 'all', label: 'All Portugal' },
+          { value: 'all', label: REGION },
           ...cities.map((c) => ({ value: c, label: c })),
         ]}
       />
