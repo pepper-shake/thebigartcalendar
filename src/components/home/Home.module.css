@@ -55,6 +55,23 @@
   letter-spacing: -0.02em;
   text-align: center;
 }
+/* Tagline in the hero's bottom-left corner (Figma 417:4423): Newsreader 300
+   italic 52/64, cream, 858px wide, 50px in from the left and bottom. */
+.heroTagline {
+  position: absolute;
+  z-index: 1;
+  left: clamp(24px, 3.5vw, 50px);
+  right: clamp(24px, 3.5vw, 50px);
+  bottom: clamp(24px, 3.5vw, 50px);
+  max-width: 858px;
+  color: var(--page);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(28px, 3.6vw, 52px);
+  line-height: 1.23;
+  letter-spacing: -0.02em;
+}
 
 /* Editor's choice (Figma 411:2294): a sand band with the label row inside —
    "Editor choice in November" (Newsreader 300 italic 32/64, the month

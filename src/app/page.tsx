@@ -48,6 +48,9 @@ export default async function HomePage() {
             <br />
             art calendar.
           </h1>
+          <p className={s.heroTagline}>
+            We promote art and culture by sharing inspiring upcoming creative workshops. Join!
+          </p>
         </section>
 
         <NextDays days={nextDays} today={today} />
