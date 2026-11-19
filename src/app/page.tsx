@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { getCurrentEvents, listActiveTypes, todayISO } from '@/lib/events';
 import { selectEditorChoice } from '@/lib/editorPicks';
-import { selectWhatsNew } from '@/lib/whatsNew';
 import { nextEventDays } from '@/lib/nextEventDays';
-import { BLOG_POSTS } from '@/lib/blogPosts';
 import { itemListJsonLd } from '@/lib/jsonld';
 import EditorChoice from '@/components/home/EditorChoice';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
 import NextDays from '@/components/home/NextDays';
-import WhatsNew from '@/components/home/WhatsNew';
 import s from '@/components/home/Home.module.css';
 import JsonLd from '@/components/seo/JsonLd';
 import SiteFooter from '@/components/layout/SiteFooter';
@@ -31,26 +29,32 @@ export default async function HomePage() {
   const [current, activeTypes] = await Promise.all([getCurrentEvents(), listActiveTypes()]);
   const { events, curated } = selectEditorChoice(current, today);
   const nextDays = nextEventDays(current, today);
-  const whatsNew = selectWhatsNew(current, BLOG_POSTS, events, today);
 
   return (
     <div className={`${s.home} min-h-full flex flex-col`} style={{ backgroundColor: 'var(--page)' }}>
       <main className="flex-1">
-        {/* Figma "Home page": the intro line is the page's h1, light italic serif. */}
-        <div className={`${s.wrap} ${s.hero}`}>
-          <h1 className="text-ink">
-            Hey, we&rsquo;re Big Art Calendar! We promote art and culture by sharing inspiring upcoming creative
-            workshops.
+        {/* Figma "Home page" 387:2803: a full-bleed photo with the wordmark as
+            the page's h1. The fixed HomeHeader lies over its top. */}
+        <section className={s.hero}>
+          <Image
+            src="/home/hero.jpg"
+            alt="Brushes, paint tubes and a half-finished abstract painting on a table covered in newspaper"
+            fill
+            sizes="100vw"
+            preload
+          />
+          <h1 className="lowercase">
+            the big
+            <br />
+            art calendar.
           </h1>
-        </div>
-
-        <EditorChoice events={events} curated={curated} month={Number(today.slice(5, 7))} activeTypes={activeTypes} />
+        </section>
 
         <NextDays days={nextDays} today={today} />
 
-        <NewsletterSignup />
+        <EditorChoice events={events} curated={curated} month={Number(today.slice(5, 7))} activeTypes={activeTypes} />
 
-        <WhatsNew items={whatsNew} />
+        <NewsletterSignup />
       </main>
       <SiteFooter flush />
       {events.length > 0 && <JsonLd data={itemListJsonLd(events)} />}

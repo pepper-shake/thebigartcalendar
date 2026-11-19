@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import MenuPanel from './MenuPanel';
 import HeaderNav from './HeaderNav';
+import HomeHeader from './HomeHeader';
+import { isBlogLandingPath } from '@/lib/blogPosts';
 
 // Scroll distance over which the header goes from rest (0) to collapsed (1).
 // Roughly what the header gives back, so the wordmark shrinks about 1:1 with
@@ -104,10 +106,21 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
   const pathname = usePathname();
   useScrollCollapse(headerRef);
 
-  // Blog posts are standalone landings with their own wordmark; they keep only
+  // The homepage has its own header over the hero photo (HomeHeader); "Where
+  // art happens" uses it too, as a cream bar from the start.
+  if (pathname === '/' || pathname === '/where-art-happens') {
+    return (
+      <>
+        <HomeHeader onOpenMenu={() => setIsMenuOpen(true)} solid={pathname !== '/'} pathname={pathname} />
+        <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
+      </>
+    );
+  }
+
+  // Blog landings are standalone pages with their own wordmark; they keep only
   // the menu button (cream, top-right, scrolling away with the page): the "+"
   // from 768px (Figma "Application/plus" 355:2860), "Menu" on phones.
-  if (pathname.startsWith('/blog/')) {
+  if (isBlogLandingPath(pathname)) {
     return (
       <>
         <button

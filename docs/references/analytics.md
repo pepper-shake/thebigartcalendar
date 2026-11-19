@@ -45,7 +45,7 @@ Sent with `trackEvent` like the blog funnel. Clicks use [TrackedLink](../../src/
 
 | Event | When | Params |
 |---|---|---|
-| `newsletter_signup` | The newsletter form succeeds ([NewsletterSignup](../../src/components/home/NewsletterSignup.tsx)) | `source` = `home` |
+| `newsletter_signup` | The newsletter form succeeds ([NewsletterSignup](../../src/components/home/NewsletterSignup.tsx)) | `source` = `home` or `where-art-happens` |
 | `editor_choice_click` | A card in Editor's choice is clicked | `item` = event slug, `position` 1–5 (1 = large card) |
 | `next_day_click` | A day in the next-days strip is clicked | `date` = YYYY-MM-DD, `position` 1–4 |
 | `full_calendar_click` | "See the full calendar →" on the homepage | `from` = `home` |

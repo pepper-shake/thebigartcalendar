@@ -14,7 +14,11 @@ Posts live at `/blog/<slug>`. Each one is a **standalone, hand-built landing pag
 | A post's images | `public/blog/<slug>/` (photos as JPG ≤2.5k px, cut-outs as WebP, vectors as SVG; `next/image` serves resized copies) |
 | Scroll-scene engine | [`src/components/blog/ScrollScene.tsx`](../../src/components/blog/ScrollScene.tsx) |
 
-`RootHeader` shows only a cream menu "+" under `/blog/<slug>`, because the landings carry their own wordmark. The `/blog` index keeps the normal header.
+Posts come in two layouts (`layout` in `blogPosts.ts`):
+- **`landing`** (default): a designed, scroll-animated page from Figma (the Christmas posts). `RootHeader` shows only a cream menu "+" there (`isBlogLandingPath`), because the landings carry their own wordmark.
+- **`article`**: a plain news / short-read page under the normal site header, built from [`components/blog/article/Article.tsx`](../../src/components/blog/article/Article.tsx) (no Figma frame; follows [style.md](../design/style.md)): breadcrumbs, Geist kicker + date, Newsreader title, italic lead, an optional hero photo (max 560px wide, with credit), then the body (19/30 serif, italic h2s, ruled lists). `KeyInfo` / `InfoRow` is a cobalt/sage duotone panel of key facts and `Note` a beige caveat box. To add one: write the copy as a component in `components/blog/<name>/`, a route copied from the MNAA post, and an entry with `layout: 'article'`.
+
+The `/blog` index keeps the normal header.
 
 ## Scroll scenes (the etsyedit.com pattern)
 `<ScrollScene length={n}>` is `n` screens tall. Its stage sticks to the viewport while you scroll through it, and the scene's `--p` CSS variable runs from 0 to 1 over that distance. JS writes `--p` (and `--h`, see `hold`) once per animation frame, and everything else is CSS. Both come from the scene's scrolled distance, which is eased: each frame it moves 20% of the remaining way, which smooths out wheel steps. Each scene derives its phases from it, e.g. `--a: clamp(0, (var(--p) - 0.1) / 0.6, 1)`, eased as smoothstep. Text stays server-rendered and in the DOM, so SEO is unaffected.
@@ -80,6 +84,9 @@ Figma *Calendar* `380:2032`, the same storyboard format. Order: hero → intro �
 - **Phones:** each film's grid is centred on its own screen (centred across on tablet too). The envelope is the desktop composition as a close-up (`.closing`), not the gift guide's "Mob" layout, so the title and note sit on the card as on desktop. The velvet asks for `sizes="(max-width: 767px) 190vh, 100vw"`: cover-fit on a tall phone it is about two screen-heights wide, and `100vw` would stretch a small copy until it blurs.
 
 Deviations from Figma: the pocket paragraph is cut off in the frame ("the lights get turned do"); the code ends it "turned down." Two stray "Link to prodcut" layers over the ornaments are left out, as are empty folder layers. The Figma title fill is a pale pink layer holding stray text ("some of my favourite…"), drawn as flat #FFDBDB. Curly Sue's details text is #E3E3E3, as in its frame. Grids get a small hover lift, in place of the template's back-card hover.
+
+### Museu Nacional de Arte Antiga reopens, with free entry (2026-11-16)
+The first `article` post: English translation of a Russian news blurb about the MNAA reopening on 21 November 2026 (free entry 21 Nov – 1 Dec; opening weekend hours). Source: [Recuperar Portugal](https://recuperarportugal.gov.pt/museu-nacional-de-arte-antiga-reabre-a-21-de-novembro-com-apoio-do-prr/); official link http://www.museudearteantiga.pt (its https didn't answer). Images are the museum's "voltámos / we are back" poster from that page (800×1000): `hero.jpg` as is, `card-cover.jpg` and `share.jpg` (upscaled to 1200×630) cropped from it. The route also emits `Event` JSON-LD for the reopening weekend.
 
 ## Later
 The planned `posts` table and admin authoring ([decision #0004](../design/decisions.md)) suit plain article posts. Designed landings like this one stay as code.

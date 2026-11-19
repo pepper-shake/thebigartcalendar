@@ -5,7 +5,7 @@ import { isCurrent, todayISO } from '@/lib/events';
 /**
  * "Editor choice" on the homepage, chosen by hand each month. Keyed by month
  * ("YYYY-MM"); values are event slugs (the part after /events/). The first slug
- * is the large card, the next four the small ones.
+ * comes first; the homepage shows four cards.
  *
  * Picks that are hidden, deleted or already finished drop out, and the band is
  * topped up with the next upcoming events that have an image, so it is never
@@ -30,7 +30,7 @@ export const EDITOR_PICKS: Record<string, EditorPick[]> = {
   ],
 };
 
-export const EDITOR_PICKS_COUNT = 5;
+export const EDITOR_PICKS_COUNT = 4;
 
 export interface EditorChoice {
   /** True when at least one hand-picked event is shown. */

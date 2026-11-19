@@ -23,74 +23,124 @@
   padding: 0 var(--site-gap);
 }
 
-/* Hero */
+/* Hero: full-bleed photo under a 40% oxblood wash, the two-line wordmark
+   (Newsreader 300, 82/76 at desktop) centred on it. 811px tall at 1440. The
+   fixed homepage header lies over its top. */
 .hero {
-  margin-top: clamp(2vh, calc(3.5vw + 0.3vh), 7vh);
-  margin-bottom: clamp(5vh, calc(2.8vw + 3.7vh), 9vh);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(440px, 85svh, 811px);
+  overflow: hidden;
+  background-color: #5a1f2e;
+}
+.hero img {
+  object-fit: cover;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgb(90 31 46 / 0.4);
 }
 .hero h1 {
-  max-width: 1400px;
+  position: relative;
+  z-index: 1;
+  color: var(--page);
   font-family: var(--font-serif);
   font-weight: 300;
-  font-style: italic;
-  font-size: var(--font-size-l);
-  line-height: 1.2;
+  font-size: clamp(52px, 5.7vw, 82px);
+  line-height: 0.927;
   letter-spacing: -0.02em;
+  text-align: center;
 }
 
-/* Label row: "Editor choice in November" + #type links */
+/* Editor's choice (Figma 411:2294): a sand band with the label row inside —
+   "Editor choice in November" (Newsreader 300 italic 32/64, the month
+   underlined) and #type links on the right — then four equal cards: a
+   310×240 image, two Geist meta lines and a 24px serif title. */
+.band {
+  scroll-margin-top: 102px; /* "This month's events" lands under the fixed header */
+  padding: clamp(24px, 3.5vw, 50px) 0 clamp(48px, 6vw, 86px);
+  background-color: #e5e1d3;
+  color: var(--ink);
+}
 .label {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
+  align-items: center;
+  justify-content: space-between;
   gap: 0 1em;
-  margin-bottom: 1.6vh;
-  font-family: var(--font-meta);
-  font-size: calc(var(--font-size-s) * 0.8);
-  line-height: 1.4;
+  margin-bottom: clamp(12px, 1.7vw, 24px);
 }
 .label h2 {
-  flex: 1 0 auto;
-  font: inherit;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(26px, 2.2vw, 32px);
+  line-height: 2;
+  letter-spacing: -0.02em;
 }
-.tags a {
-  margin-left: 0.6em;
+.label h2 a {
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: from-font;
 }
+.label h2 a:hover,
 .tags a:hover {
   opacity: 0.6;
 }
-
-/* Small cards use Myoan's "compact" Editor's Choice sizes (as on its demo):
-   S titles, XXXS meta. The lead keeps XL title, XXS meta. */
-
-/* Olive band: no top padding, so the lead image sits flush with its edge */
-.band .wrap {
-  padding-bottom: clamp(5vh, calc(2.1vw + 4vh), 8vh);
+.tags {
+  font-family: var(--font-meta);
+  font-size: 16px;
+  line-height: 18px;
 }
+.tags a + a {
+  margin-left: 0.4em;
+}
+
+/* Phones: the cards scroll sideways (78vw each); 2-up from 640px, 4-up from
+   1024px. */
 .grid {
   display: grid;
-  gap: var(--grid-gap);
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto 1fr;
+  grid-auto-flow: column;
+  grid-auto-columns: 78vw;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--site-gap);
+  scrollbar-width: none;
+}
+.grid::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 24px;
+    overflow: visible;
+  }
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+  }
 }
 
 .item {
-  display: block;
-  align-self: start;
-}
-.item:first-child {
-  grid-column: span 2;
-  grid-row: 1 / 3;
-}
-.item:nth-child(2),
-.item:nth-child(3) {
-  margin-top: 6vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  scroll-snap-align: start;
 }
 
 .img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 310 / 240;
   overflow: hidden;
-  margin-bottom: max(1.8vh, 16px);
   background-color: var(--page);
 }
 .img img {
@@ -105,65 +155,51 @@
 }
 
 .meta {
-  margin-bottom: max(0.8em, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
   font-family: var(--font-meta);
-  font-size: var(--font-size-xxxs);
-  line-height: 1.3;
-}
-
-.item:first-child .meta {
-  font-size: var(--font-size-xxs);
+  font-size: 16px;
+  line-height: 18px;
 }
 
 .title {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: var(--font-size-s);
-  line-height: 1.15;
+  font-size: clamp(20px, 1.7vw, 24px);
+  line-height: 1;
   letter-spacing: -0.02em;
 }
-.item:first-child .title {
-  font-size: var(--font-size-xl);
-  line-height: 1.08;
-}
 
-.excerpt {
-  max-width: 1000px;
-  margin-top: 0.8em;
-  font-family: var(--font-meta);
-  font-weight: 300;
-  font-size: var(--font-size-xs);
-  line-height: 1.5;
-}
-
-.more {
-  display: inline-block;
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: var(--font-size-m);
-}
-.more:hover {
-  opacity: 0.6;
-}
-
-/* Newsletter band (Figma "Home page"), padded like Myoan's subscribe section */
+/* Newsletter band (Figma "Home page" 387:2935): a 42/56 serif title and a
+   24px subline above the form. */
 .newsletter {
-  padding: clamp(60px, 11vh, 120px) 0;
+  padding: clamp(56px, 6.3vw, 91px) 0 clamp(48px, 5.1vw, 74px);
   text-align: center;
 }
 .newsletterTitle {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: var(--font-size-l);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: clamp(30px, 2.9vw, 42px);
+  line-height: 1.33;
+  letter-spacing: -0.01em;
+}
+.newsletterLead {
+  max-width: 1000px;
+  margin: 10px auto 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(19px, 1.7vw, 24px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 .newsletterForm {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 600px;
-  margin: clamp(32px, 6vh, 64px) auto 0;
+  max-width: 876px;
+  margin: clamp(28px, 2.8vw, 40px) auto 0;
 }
 .newsletterForm input[type='email'] {
   width: 100%;
@@ -301,21 +337,33 @@
   line-height: 1.5;
 }
 
-/* "See the full calendar →" + next days with events: the day strip copies the
-   calendar's (Newsreader 300 18px, full day names, hairlines above and below,
+/* "Next events in Portugal →" + next days with events (Figma 390:3001): the
+   link at 32px on the left, the strip on the right copying the calendar's day
+   strip (Newsreader 300 18px, full day names, hairlines above and below,
    today italic semibold). */
 .nextRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 24px var(--grid-gap);
-  padding-top: clamp(32px, 6vh, 64px);
-  padding-bottom: clamp(32px, 6vh, 64px);
+  gap: 16px 32px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.more {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(26px, 2.2vw, 32px);
+  line-height: 2;
+  letter-spacing: -0.02em;
+}
+.more:hover {
+  opacity: 0.6;
 }
 .nextDays {
   display: flex;
-  flex: 0 1 52%;
+  flex: 0 1 765px;
   justify-content: center;
   gap: 24px 44px;
   min-height: 66px;
@@ -351,48 +399,8 @@
   }
 }
 
-/* Tablet (Myoan 481–1024px): lead takes 2/3, two small cards beside it */
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(15, 1fr);
-  }
-  .item:first-child {
-    grid-column: span 10;
-  }
-  .item {
-    grid-column: span 5;
-  }
-  .item:nth-child(n + 4) {
-    display: none;
-  }
-  .item:nth-child(3) {
-    margin-top: 0;
-  }
-}
-
-/* Phones (Myoan ≤480px): lead full width without excerpt, then 2-up */
+/* Phones: What's new goes to one column; the lead loses its excerpt. */
 @media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .item:first-child {
-    grid-column: span 2;
-    grid-row: auto;
-    margin-bottom: 1.6vh;
-  }
-  .item,
-  .item:nth-child(n + 4) {
-    display: block;
-    grid-column: span 1;
-  }
-  .item:nth-child(2) {
-    margin-top: 0;
-  }
-  .item:first-child .excerpt,
-  .tags,
-  .feedItem:first-child .feedExcerpt {
-    display: none;
-  }
   .feedGrid {
     grid-template-columns: 1fr;
     gap: calc(var(--grid-gap) * 2.4);
@@ -401,6 +409,9 @@
   .feedItem:first-child {
     grid-column: auto;
     grid-row: auto;
+  }
+  .feedItem:first-child .feedExcerpt {
+    display: none;
   }
 }
 

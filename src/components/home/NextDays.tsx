@@ -1,9 +1,10 @@
 import TrackedLink from '@/components/analytics/TrackedLink';
+import { REGION } from '@/lib/site';
 import s from './Home.module.css';
 
 const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-/** "See the full calendar →" plus the next days with events, styled like the
+/** "Next events in Portugal →" (links to the calendar) plus the next days with events, styled like the
  *  calendar's day strip; each day opens /calendar on that date. Today, when it
  *  has events, is shown as the active day (italic semibold). */
 export default function NextDays({ days, today }: { days: string[]; today: string }) {
@@ -15,7 +16,7 @@ export default function NextDays({ days, today }: { days: string[]; today: strin
         params={{ from: 'home' }}
         className={`${s.more} text-ink`}
       >
-        See the full calendar →
+        Next events in {REGION} →
       </TrackedLink>
       {days.length > 0 && (
         <nav aria-label="Next days with events" className={s.nextDays}>

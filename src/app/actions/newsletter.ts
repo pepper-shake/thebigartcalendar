@@ -2,7 +2,7 @@
 
 import { db } from '@/db';
 import { newsletterSubscribers } from '@/db/schema';
-import { NEWSLETTER_CONSENT } from '@/lib/newsletter';
+import { NEWSLETTER_CONSENT, NEWSLETTER_SOURCES, type NewsletterSource } from '@/lib/newsletter';
 
 export interface SignupState {
   status: 'idle' | 'ok' | 'error';
@@ -13,7 +13,7 @@ export interface SignupState {
 // this only rejects obvious junk and over-long input.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Saves a homepage newsletter sign-up. Answers the same whether or not the
+/** Saves a newsletter sign-up. Answers the same whether or not the
  *  address was already on the list, so the form can't be used to probe it. */
 export async function subscribeToNewsletter(_prev: SignupState, form: FormData): Promise<SignupState> {
   // Honeypot: a field hidden from people; bots that fill it get a fake success.
@@ -24,10 +24,15 @@ export async function subscribeToNewsletter(_prev: SignupState, form: FormData):
     return { status: 'error', message: 'Please enter a valid e-mail address.' };
   }
 
+  const sent = String(form.get('source') ?? '');
+  const source: NewsletterSource = (NEWSLETTER_SOURCES as readonly string[]).includes(sent)
+    ? (sent as NewsletterSource)
+    : 'home';
+
   try {
     await db
       .insert(newsletterSubscribers)
-      .values({ email, source: 'home', consentText: NEWSLETTER_CONSENT })
+      .values({ email, source, consentText: NEWSLETTER_CONSENT })
       .onConflictDoNothing();
   } catch (err) {
     console.error('newsletter signup failed', err);
