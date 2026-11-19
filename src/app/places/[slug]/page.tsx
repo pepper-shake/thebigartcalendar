@@ -48,9 +48,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 // Figma "Place page" (416:3836): breadcrumb and the place panel on the page
 // background, then full-width bands — "Upcoming events" (cream, oxblood
 // heading, the calendar's sand cards) and the place's Instagram posts
-// (oxblood, blush heading). Content is centred at the calendar's 1440px with
-// 42px gutters on desktop.
-const INNER = 'mx-auto w-full max-w-[1440px] px-6 md:px-[42px]';
+// (oxblood, blush heading). Content spans the window inside the 42px page
+// gutters (24px on phones), lining up with the header at any width.
+const INNER = 'w-full px-6 md:px-[42px]';
 
 // Band colours are fixed from Figma, the same on every place page.
 const UPCOMING_BAND = { bg: 'var(--page)', fg: '#5A1F2E' }; // cream / oxblood (416:3848)
