@@ -10,7 +10,7 @@ Page: [`src/app/where-art-happens/page.tsx`](../../src/app/where-art-happens/pag
 - **Photos** — three photos 359px tall, 10px apart, starting at the left gutter and running off the right edge: [`studio-1.jpg`](../../public/where-art-happens/studio-1.jpg), the homepage hero (`/home/hero.jpg`, same photo as in Figma), [`studio-2.jpg`](../../public/where-art-happens/studio-2.jpg). On phones the row scrolls sideways.
 - **"Every artwork starts somewhere"** — sky `#92B8DA` band, 42px heading left, two paragraphs right.
 - **"Photo of the month"** — sand `#E5E1D3` band, heading left, paragraph + "Share your space" right.
-- **FAQ** — ink on cream, an 866px list of native `<details name="faq">` (one open at a time, works without JS, answers in the HTML), `#E5E1D3` hairlines, "+" / "−" icons from [`public/icons/`](../../public/icons/). Emits `FAQPage` JSON-LD.
+- **FAQ** — answers in Newsreader Regular 400 (Figma), questions 300; ink on cream, an 866px list of native `<details name="faq">` (one open at a time, works without JS, answers in the HTML), `#E5E1D3` hairlines, "+" / "−" icons from [`public/icons/`](../../public/icons/). Emits `FAQPage` JSON-LD.
 - **Newsletter** — the homepage's `NewsletterSignup` with `source="where-art-happens"` (stored on the sign-up row and sent with the `newsletter_signup` event).
 - `SiteFooter` (flush).
 
