@@ -635,7 +635,7 @@ export const PLACES: NewPlace[] = [
     description:
       'Paper shop, print shop and coworking space in the Baixa, Lisbon: special papers, notebooks, envelopes and posters; digital printing and binding; desks and a meeting room, plus workshops.',
     imageUrl:
-      'https://omomento.pt/cdn/shop/files/unnamed_1b6622ee-1375-4165-8be5-91287da712f4.jpg?v=1783001054&width=800',
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/o-momento-vqTsJNWFje00CT7P6Y9pnBAZXjwAnn.webp',
     address: 'Rua do Crucifixo 32, 1100-183 Lisboa',
     city: 'Lisbon',
     country: 'Portugal',
