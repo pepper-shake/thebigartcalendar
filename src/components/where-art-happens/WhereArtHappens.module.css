@@ -7,11 +7,11 @@
   color: #5a1f2e;
 }
 
+/* Full width with the header's gutters, so headings line up with the
+   wordmark and the photo row on any screen width (no centred max-width). */
 .wrap {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
   padding: 0 var(--gap);
 }
 
