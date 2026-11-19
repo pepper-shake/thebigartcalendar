@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 // full-width colour bands — "Upcoming events" (sage, tomato heading) and the
 // place's Instagram posts (wine, pink heading). Content is centred at
 // the calendar's 1440px with 42px gutters on desktop.
-const INNER = 'mx-auto w-full max-w-[1440px] px-6 lg:px-[42px]';
+const INNER = 'mx-auto w-full max-w-[1440px] px-6 md:px-[42px]';
 
 // Band colours are fixed from Figma, the same on every place page.
 const UPCOMING_BAND = { bg: '#D4D5C7', fg: '#EB4A38' }; // sage / tomato (310:1974)

@@ -42,7 +42,7 @@ export default function DateStrip({ eventDates, selectedDate, onChange, scrollab
   if (eventDates.length === 0) {
     return (
       <div
-        className="flex-none h-[66px] flex items-center justify-center px-6 border-b border-rule text-ink/60 italic"
+        className="flex-none h-[66px] flex items-center justify-center px-6 md:px-[42px] border-b border-rule text-ink/60 italic"
         style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18 }}
       >
         No events this month
@@ -53,7 +53,7 @@ export default function DateStrip({ eventDates, selectedDate, onChange, scrollab
   return (
     <div
       ref={stripRef}
-      className={`flex-none flex items-center gap-[44px] border-b border-rule px-6 h-[66px] scrollbar-hide overflow-x-auto ${scrollable ? '' : 'justify-center-safe'}`}
+      className={`flex-none flex items-center gap-[44px] border-b border-rule px-6 md:px-[42px] h-[66px] scrollbar-hide overflow-x-auto ${scrollable ? '' : 'justify-center-safe'}`}
     >
       {eventDates.map((dateStr) => {
         const [y, m, d] = dateStr.split('-').map(Number);

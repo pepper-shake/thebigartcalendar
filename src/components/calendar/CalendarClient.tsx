@@ -178,7 +178,7 @@ export default function CalendarClient({ events, footer, initialDate }: Props) {
             cities={facets.cities}
             types={facets.types}
           />
-          <main className="px-6 py-4">
+          <main className="px-[42px] py-4">
             {selectedEvents.length === 0 ? (
               <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}

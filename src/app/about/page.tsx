@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-full flex flex-col" style={{ backgroundColor: 'var(--page)' }}>
-      <main className="flex-1 px-6 py-16 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-6 md:px-[42px] py-16 max-w-2xl mx-auto w-full">
 
         <h1
           className="text-ink lowercase mb-12"

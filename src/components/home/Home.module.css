@@ -1,9 +1,10 @@
 /* Homepage sizing and spacing, taken from the Myoan Ghost theme (fueko,
-   ThemeForest licence) — its fluid type scale, 5vw page gutters, 4vw grid gap
+   ThemeForest licence) — its fluid type scale, 4vw grid gap
    and "Editor's choice" grid. Fonts and colours stay the site's own (see
    docs/design/style.md); Myoan's rem values are converted at its 10px root. */
 .home {
-  --site-gap: 5vw;
+  /* Page gutters: 42px from tablet up (Figma 387:2803), 24px on phones. */
+  --site-gap: 24px;
   --grid-gap: 4vw;
   --font-size-xl: clamp(38px, calc(3.6vw + 21px), 90px);
   --font-size-l: clamp(30px, calc(2.1vw + 20px), 60px);
@@ -13,6 +14,11 @@
   --font-size-xs: clamp(18px, calc(0.6vw + 15px), 26px);
   --font-size-xxs: clamp(18px, calc(0.3vw + 17px), 22px);
   --font-size-xxxs: clamp(18px, calc(0.1vw + 17px), 20px);
+}
+@media (min-width: 768px) {
+  .home {
+    --site-gap: 42px;
+  }
 }
 
 .wrap {
@@ -56,13 +62,14 @@
   text-align: center;
 }
 /* Tagline in the hero's bottom-left corner (Figma 417:4423): Newsreader 300
-   italic 52/64, cream, 858px wide, 50px in from the left and bottom. */
+   italic 52/64, cream, 858px wide, in from the left and bottom by the page
+   gutter. */
 .heroTagline {
   position: absolute;
   z-index: 1;
-  left: clamp(24px, 3.5vw, 50px);
-  right: clamp(24px, 3.5vw, 50px);
-  bottom: clamp(24px, 3.5vw, 50px);
+  left: var(--site-gap);
+  right: var(--site-gap);
+  bottom: var(--site-gap);
   max-width: 858px;
   color: var(--page);
   font-family: var(--font-serif);

@@ -45,10 +45,10 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
       ref={stripRef}
       className={`flex-none flex items-center border-t border-b border-rule h-[84px] ${
         scrollable
-          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6'
+          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6 md:px-[42px]'
           : spread
             ? 'justify-between px-[120px]'
-            : 'justify-center gap-[72px] px-6'
+            : 'justify-center gap-[72px] px-[42px]'
       }`}
     >
       {visible.map((i) => {
