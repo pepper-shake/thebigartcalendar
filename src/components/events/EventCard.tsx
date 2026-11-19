@@ -25,7 +25,7 @@ interface Props {
   /** Text-only card: no image, height fits the text (stretches to its row). */
   hideImage?: boolean;
   /** Calendar card (Figma "Calendar" 387:2619): sand with oxblood text, date
-   *  line first, a fixed 310px image. Otherwise the event's duotone scheme. */
+   *  line first, a fixed 350px image. Otherwise the event's duotone scheme. */
   variant?: 'scheme' | 'calendar';
 }
 
@@ -115,7 +115,7 @@ export default function EventCard({ event, hideImage = false, variant = 'scheme'
             // Calendar: pinned to the card's foot, so chips and images line up
             // across a row even when one title runs to a single line.
             className={`${calendar ? 'flex-none mt-auto' : 'flex-1 min-h-0'} w-full overflow-hidden`}
-            style={calendar ? { height: 310 } : undefined}
+            style={calendar ? { height: 350 } : undefined}
           >
             {event.image ? (
               <img
