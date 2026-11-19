@@ -8,6 +8,7 @@ import { websiteJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import { EVENT_TYPES } from "@/lib/eventTypes";
 import { listActiveTypes } from "@/lib/events";
+import { getHeaderMenu, EMPTY_MENU, type HeaderMenu } from "@/lib/headerMenu";
 import "./globals.css";
 
 // Menu links to type hubs with no upcoming events (those pages 404). If the DB
@@ -18,6 +19,16 @@ async function hiddenTypeHrefs(): Promise<string[]> {
     return EVENT_TYPES.filter((t) => !active.includes(t.type)).map((t) => `/${t.slug}`);
   } catch {
     return [];
+  }
+}
+
+// The header's drop-down panels. Like the hidden menu links above, an
+// unreachable DB leaves them empty rather than breaking every page.
+async function headerMenu(): Promise<HeaderMenu> {
+  try {
+    return await getHeaderMenu();
+  } catch {
+    return EMPTY_MENU;
   }
 }
 
@@ -33,7 +44,8 @@ const geistMono = Geist_Mono({
 
 // The one content face: a light, high-contrast serif (Style Reference 1 —
 // Newsreader stands in for the commercial Times Now). Geist is kept for small
-// meta lines and chips, as in the Figma cards.
+// meta lines and chips, as in the Figma cards. 400 is for the header panels'
+// card titles and links (Figma "Header" 415:2859).
 const newsreader = Newsreader({
   weight: ["300", "400", "600"],
   style: ["normal", "italic"],
@@ -68,14 +80,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const hiddenHrefs = await hiddenTypeHrefs();
+  const [hiddenHrefs, menu] = await Promise.all([hiddenTypeHrefs(), headerMenu()]);
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <body className="h-full flex flex-col text-ink" style={{ backgroundColor: 'var(--page)' }}>
-        <RootHeader hiddenHrefs={hiddenHrefs} />
+        <RootHeader hiddenHrefs={hiddenHrefs} menu={menu} />
         <div className="flex-1 min-h-0">{children}</div>
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={organizationJsonLd()} />

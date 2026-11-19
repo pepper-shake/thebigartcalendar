@@ -16,7 +16,8 @@ interface Props {
 
 export default function AppHeader({ year, years, onYearChange, filters, onFiltersChange, cities, types }: Props) {
   return (
-    <div className="flex-none flex items-center justify-between px-6 pb-[1.5vh]">
+    // Place and type left, the year right, 28px under the site header bar.
+    <div className="flex-none flex items-center justify-between px-6 pt-[22px] pb-3">
       <FilterBar filters={filters} onChange={onFiltersChange} cities={cities} types={types} />
 
       <FilterSelect

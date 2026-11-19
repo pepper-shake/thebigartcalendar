@@ -31,109 +31,34 @@
   }
 }
 
-/* Site header wordmark (RootHeader). Two Figma states — desktop 283:2065 →
-   288:5052, mobile 296:5212 → 296:5353 — joined by a scroll-linked
-   interpolation: RootHeader writes --collapse (0 at the top, 1 once scrolled
-   past its range) straight from the scroll position every frame, and the
-   wordmark size, its top offset, the header height and the mobile hairline are
-   all computed from it. Scrolling halfway shrinks it halfway; scrolling back
-   grows it in step. The wordmark stays on two lines throughout. */
-@property --collapse {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
+/* Site header (SiteHeader; Figma "Header" component 415:2859). A fixed cream
+   bar with oxblood text: one-line wordmark (Newsreader 300, 32/42), Geist 16
+   links 24px apart, 80px after the wordmark, an oxblood "Where art happens"
+   button with blush text on the right. 50px gutters and a 102px bar at desktop,
+   64px on phones. On the homepage it starts transparent with cream text over
+   the hero and gets the bar once the page scrolls (data-scrolled) or a panel
+   opens (data-open); elsewhere a spacer holds its place in the flow. */
 .site-header {
-  /* rest → scrolled endpoints */
-  --logo-lg: clamp(36px, min(11.5vw, 6.5vh), 82px);
-  --logo-sm: clamp(24px, 7vw, 32px);
-  --top-lg: 2vh;
-  --top-sm: 14px;
-  --logo-size: calc(var(--logo-lg) + (var(--logo-sm) - var(--logo-lg)) * var(--collapse));
-  --logo-top: calc(var(--top-lg) + (var(--top-sm) - var(--top-lg)) * var(--collapse));
-  position: relative;
-  flex: none;
-  height: calc(var(--logo-top) * 1.5 + var(--logo-size) * 1.86);
-}
-/* Only when nothing can scroll (all cards fit), a wheel/swipe snaps the header
-   between its two states with a short ease instead. */
-.site-header[data-snapping] {
-  transition: --collapse 420ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.site-logo {
-  position: absolute;
-  top: var(--logo-top);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: var(--logo-size);
-  line-height: 0.93;
-  letter-spacing: -0.02em;
-  text-align: center;
-  white-space: nowrap;
-}
-/* Header links either side of the wordmark (HeaderNav, Figma "Home page"),
-   level with its first line and following it as it shrinks. Desktop only
-   (`lg:flex`). Gutters, gap and size from the Myoan theme's header. */
-.header-nav {
-  position: absolute;
-  left: 5vw;
-  right: 5vw;
-  top: calc(var(--logo-top) + var(--logo-size) * 0.3);
-  justify-content: space-between;
-  pointer-events: none;
-  font-family: var(--font-meta);
-  font-size: 20px;
-  line-height: 1.5;
-}
-.header-nav ul {
-  display: flex;
-  gap: 1.8vw;
-  pointer-events: auto;
-}
-.header-nav a:hover {
-  opacity: 0.6;
-}
-/* Mobile: 24px padding, a "Menu" row, then the wordmark — 48px in a 161px
-   header at rest, ~29px in a 125px header scrolled (158×54 in Figma), with a
-   hairline fading in below it. Filters and strips scroll away underneath. */
-@media (max-width: 767px) {
-  .site-header {
-    --logo-lg: 48px;
-    --logo-sm: 29px;
-    --top-lg: 47px;
-    --top-sm: 47px;
-    height: calc(var(--logo-top) + var(--logo-size) * 1.86 + 24px);
-    border-bottom: 1px solid color-mix(in srgb, var(--rule) calc(var(--collapse) * 100%), transparent);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .site-header[data-snapping] {
-    transition: none;
-  }
-}
-
-/* Homepage header (HomeHeader; Figma "Home page" 387:2803 → "Home page
-   scroll" 411:2361). Fixed over the hero photo in cream; once the page scrolls
-   it becomes a cream bar with oxblood text. One-line wordmark (Newsreader 300,
-   32/42), Geist 16 links 24px apart, an oxblood "Where art happens" button on
-   the right. 50px gutters and a 102px bar at desktop. */
-.home-header {
   position: fixed;
   inset: 0 0 auto;
   z-index: 30;
   display: flex;
-  align-items: center;
-  height: 64px;
+  flex-direction: column;
   padding: 0 24px;
   color: var(--page);
   background-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
-.home-header[data-scrolled] {
+.site-header[data-scrolled] {
   background-color: var(--page);
   color: #5a1f2e;
 }
-.home-header-logo {
+.site-header-row {
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+.site-header-logo {
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: 24px;
@@ -141,57 +66,156 @@
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
-.home-header-nav {
-  margin-left: 76px;
+.site-header-nav {
+  margin-left: 80px;
   font-family: var(--font-meta);
+  font-weight: 400;
   font-size: 16px;
   line-height: 18px;
 }
-.home-header-nav ul {
+.site-header-nav ul {
   display: flex;
   gap: 24px;
 }
-.home-header-nav a:hover,
-.home-header-logo:hover {
-  opacity: 0.6;
+.site-header-nav a {
+  display: block;
+  padding: 12px 0; /* a taller hover target, same look */
+}
+.site-header-nav li a[data-active] {
+  font-weight: 600;
 }
 /* "Where art happens" button (Figma "Calendar" 415:3494): oxblood with blush
    text; on hover the two colours swap. */
-.home-header-cta {
+.site-header-cta {
   margin-left: auto;
   padding: 10px 14px;
   background-color: #5a1f2e;
   color: #e4b6d1;
   font-family: var(--font-meta);
+  font-weight: 400;
   font-size: 16px;
   line-height: 18px;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.home-header-cta:hover,
-.home-header-cta:focus-visible {
+.site-header-cta:hover,
+.site-header-cta:focus-visible {
   background-color: #e4b6d1;
   color: #5a1f2e;
 }
-/* Holds the fixed header's place on pages without a hero (`solid`). */
-.home-header-spacer {
+
+/* Drop-down panel (desktop only — the links show from xl): a 300px blurb +
+   "See all →" on the left, three 12px-apart preview cards in a 998px row on
+   the right. */
+.site-header-panel {
+  display: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 42px;
+  padding: 24px 0 60px;
+  color: #5a1f2e;
+}
+.site-header-panel-intro {
+  display: flex;
+  flex: 0 0 300px;
+  flex-direction: column;
+  gap: 16px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+.site-header-panel-more {
+  align-self: flex-start;
+  font-weight: 400; /* Figma: Newsreader Regular */
+}
+.site-header-panel-cards {
+  display: grid;
+  flex: 0 1 998px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.site-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background-color: #e5e1d3;
+  color: #5a1f2d;
+}
+.site-header-card-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+}
+.site-header-card-chip {
+  padding: 8px 16px;
+  background-color: rgb(255 255 255 / 0.5);
+}
+.site-header-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-family: var(--font-serif);
+  font-weight: 400; /* Figma 415:3105: Newsreader Regular */
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+.site-header-card-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+.site-header-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  color: #977276;
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+/* Holds the fixed header's place on every page but the homepage. */
+.site-header-spacer {
   flex: none;
   height: 64px;
 }
 @media (min-width: 768px) {
-  .home-header {
+  .site-header-row,
+  .site-header-spacer {
     height: 102px;
   }
-  .home-header-logo {
+  .site-header-logo {
     font-size: 32px;
     line-height: 42px;
   }
-  .home-header-spacer {
-    height: 102px;
+}
+/* Panels only where the links show (xl), so one opened on a wide window
+   never lingers, squeezed, after the window is narrowed. */
+@media (min-width: 1280px) {
+  .site-header[data-open] {
+    background-color: var(--page);
+    color: #5a1f2e;
+    /* An open panel is an overlay: the one shadow the style allows. */
+    box-shadow: 0 4px 20px rgb(56 52 48 / 0.15);
+  }
+  .site-header-panel:not([hidden]) {
+    display: flex;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-header {
+  .site-header {
     transition: none;
   }
 }

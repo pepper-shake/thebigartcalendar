@@ -78,7 +78,7 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(26px, 2.2vw, 32px);
+  font-size: clamp(26px, 2.23vw, 32px);
   line-height: 2;
   letter-spacing: -0.02em;
 }
@@ -93,6 +93,7 @@
 }
 .tags {
   font-family: var(--font-meta);
+  font-weight: 400; /* Figma: Geist Regular (the page default is 300) */
   font-size: 16px;
   line-height: 18px;
 }
@@ -160,6 +161,7 @@
   gap: 8px;
   margin-bottom: 12px;
   font-family: var(--font-meta);
+  font-weight: 400; /* Figma: Geist Regular (the page default is 300) */
   font-size: 16px;
   line-height: 18px;
 }
@@ -182,16 +184,16 @@
 }
 .newsletterTitle {
   font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: clamp(30px, 2.9vw, 42px);
-  line-height: 1.33;
+  font-weight: 400; /* Figma: Newsreader Regular */
+  font-size: clamp(30px, 2.92vw, 42px);
+  line-height: 1.3334; /* 56px at 42px */
   letter-spacing: -0.01em;
 }
 .newsletterLead {
   max-width: 1000px;
   margin: 10px auto 0;
   font-family: var(--font-serif);
-  font-weight: 300;
+  font-weight: 400; /* Figma: Newsreader Regular */
   font-size: clamp(19px, 1.7vw, 24px);
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -356,7 +358,7 @@
   display: inline-block;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: clamp(26px, 2.2vw, 32px);
+  font-size: clamp(26px, 2.23vw, 32px);
   line-height: 2;
   letter-spacing: -0.02em;
 }
