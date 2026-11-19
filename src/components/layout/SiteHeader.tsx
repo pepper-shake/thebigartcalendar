@@ -12,8 +12,8 @@ import type { HeaderMenu, MenuCard } from '@/lib/headerMenu';
 // links and the "Where art happens" button. Hovering or focusing Calendar,
 // This month, Spaces or Shops (from xl) drops a panel under the bar: a short
 // blurb, a "See all" link and three preview cards (data from the root layout,
-// src/lib/headerMenu.ts). On the homepage (`overHero`) the header starts
-// transparent with cream text over the hero photo and turns into the bar once
+// src/lib/headerMenu.ts). On the homepage (`overHero`) the header starts as
+// a 70% oxblood bar with cream text over the hero photo (Figma 417:4438) and turns into the bar once
 // the page scrolls or a panel opens; everywhere else it is the bar from the
 // start, with a spacer holding its place. Styles: `.site-header` in globals.css.
 
