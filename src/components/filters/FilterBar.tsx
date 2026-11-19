@@ -27,7 +27,7 @@ interface Props {
 
 export default function FilterBar({ filters, onChange, cities, types }: Props) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex items-center gap-3 flex-wrap">
       <FilterSelect
         value={filters.city}
         onChange={(v) => onChange({ ...filters, city: v ?? 'all' })}

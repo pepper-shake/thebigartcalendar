@@ -18,7 +18,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--page` / `bg-page` | `#F2EFE4` | Page background |
 | `--ink` / `text-ink` | `#383430` | Default text and icons on the page |
 | `--rule` / `border-rule` | `#B1B1B1` | Hairlines around the month and day strips |
-| `--oxblood` / `text-oxblood` | `#5A1F2E` | Calendar controls: place/type/year filters (place and type on the left, year on the right), month and day strips |
+| `--oxblood` / `text-oxblood` | `#5A1F2E` | Calendar controls: place/type/year filters (Figma `387:2619`: place and type on the left 12px apart, year on the right, 42px under the header bar and 16px above the month strip; Newsreader 300, 24/32, −0.48px), month and day strips |
 | `--font-serif` | Newsreader | Everything |
 | `--font-meta` | Geist | Card and event meta, chips |
 
