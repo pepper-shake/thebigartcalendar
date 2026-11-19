@@ -15,10 +15,11 @@ export function FilterSelect({
   size?: 'sm' | 'md';
 }) {
   const label = options.find((o) => o.value === value)?.label ?? value;
+  // Figma: Newsreader 300, 24/32, -0.48px, oxblood (desktop); phones keep 24/24.
   const textStyle =
     size === 'sm'
       ? { fontSize: 24, lineHeight: '24px', letterSpacing: '-0.48px' }
-      : { fontSize: 32, lineHeight: '32px', letterSpacing: '-0.64px' };
+      : { fontSize: 24, lineHeight: '32px', letterSpacing: '-0.48px' };
 
   return (
     <SelectPrimitive.Root value={value} onValueChange={onChange}>
