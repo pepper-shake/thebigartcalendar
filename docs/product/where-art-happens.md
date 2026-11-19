@@ -1,6 +1,6 @@
 # Where art happens
 
-`/where-art-happens` (Figma "Calendar" → "where art happens" `411:2479`) invites artists to share the place where they make art; one space a month is meant to be featured on the homepage. It is the target of the oxblood "Where art happens" button in the homepage header.
+`/where-art-happens` (Figma "Calendar" → "where art happens" `411:2479`) invites artists to share the place where they make art; one space a month is meant to be featured on the homepage. It is the target of the blush "Where art happens" button in the homepage header.
 
 Page: [`src/app/where-art-happens/page.tsx`](../../src/app/where-art-happens/page.tsx); styles: [`WhereArtHappens.module.css`](../../src/components/where-art-happens/WhereArtHappens.module.css).
 

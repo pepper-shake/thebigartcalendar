@@ -33,11 +33,12 @@
 
 /* Site header (SiteHeader; Figma "Header" component 415:2859). A fixed cream
    bar with oxblood text: one-line wordmark (Newsreader 300, 32/42), Geist 16
-   links 24px apart, 80px after the wordmark, an oxblood "Where art happens"
-   button with blush text on the right. 50px gutters and a 102px bar at desktop,
-   64px on phones. On the homepage it starts transparent with cream text over
-   the hero and gets the bar once the page scrolls (data-scrolled) or a panel
-   opens (data-open); elsewhere a spacer holds its place in the flow. */
+   links 24px apart, 80px after the wordmark, a blush "Where art happens"
+   button with oxblood text on the right. 24px gutters and a 102px bar at
+   desktop, 64px on phones. On the homepage it starts as the "White" variant
+   (Figma 417:4438) over the hero: 70% oxblood with cream text. It gets the
+   cream bar once the page scrolls (data-scrolled) or a panel opens
+   (data-open); elsewhere a spacer holds its place in the flow. */
 .site-header {
   position: fixed;
   inset: 0 0 auto;
@@ -46,7 +47,7 @@
   flex-direction: column;
   padding: 0 24px;
   color: var(--page);
-  background-color: transparent;
+  background-color: rgb(90 31 46 / 0.7);
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 .site-header[data-scrolled] {
@@ -84,13 +85,13 @@
 .site-header-nav li a[data-active] {
   font-weight: 600;
 }
-/* "Where art happens" button (Figma "Calendar" 415:3494): oxblood with blush
+/* "Where art happens" button (Figma "Calendar" 415:3494): blush with oxblood
    text; on hover the two colours swap. */
 .site-header-cta {
   margin-left: auto;
   padding: 10px 14px;
-  background-color: #5a1f2e;
-  color: #e4b6d1;
+  background-color: #e4b6d1;
+  color: #5a1f2e;
   font-family: var(--font-meta);
   font-weight: 400;
   font-size: 16px;
@@ -100,8 +101,8 @@
 }
 .site-header-cta:hover,
 .site-header-cta:focus-visible {
-  background-color: #e4b6d1;
-  color: #5a1f2e;
+  background-color: #5a1f2e;
+  color: #e4b6d1;
 }
 
 /* Drop-down panel (desktop only — the links show from xl): a 300px blurb +
