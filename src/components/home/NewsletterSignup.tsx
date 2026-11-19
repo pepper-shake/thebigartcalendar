@@ -28,10 +28,11 @@ export default function NewsletterSignup() {
     >
       <div className={s.wrap}>
         <h2 id="newsletter" className={s.newsletterTitle}>
-          Sign up for our
-          <br />
-          monthly newsletter!
+          Sketch. Make. Meet artists. In your city.
         </h2>
+        <p className={s.newsletterLead}>
+          One email a month with the workshops, life-drawing sessions and creative meetups happening near you
+        </p>
 
         {state.status === 'ok' ? (
           <p className={s.newsletterDone} role="status">

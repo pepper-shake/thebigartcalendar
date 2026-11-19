@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import MenuPanel from './MenuPanel';
 import HeaderNav from './HeaderNav';
+import HomeHeader from './HomeHeader';
 import { isBlogLandingPath } from '@/lib/blogPosts';
 
 // Scroll distance over which the header goes from rest (0) to collapsed (1).
@@ -104,6 +105,16 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
   const headerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   useScrollCollapse(headerRef);
+
+  // The homepage has its own header over the hero photo (HomeHeader).
+  if (pathname === '/') {
+    return (
+      <>
+        <HomeHeader onOpenMenu={() => setIsMenuOpen(true)} />
+        <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
+      </>
+    );
+  }
 
   // Blog landings are standalone pages with their own wordmark; they keep only
   // the menu button (cream, top-right, scrolling away with the page): the "+"

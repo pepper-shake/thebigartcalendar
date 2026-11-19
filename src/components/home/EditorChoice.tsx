@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import TrackedLink from '@/components/analytics/TrackedLink';
 import type { ArtEvent } from '@/types';
-import { CARD_SCHEMES } from '@/lib/eventColor';
 import { MONTH_NAMES } from '@/lib/calendarUtils';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
@@ -9,16 +8,12 @@ import { EVENT_TYPES } from '@/lib/eventTypes';
 import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 import s from './Home.module.css';
 
-// Figma "Home page": the olive card scheme's background with the footer's
-// off-white text; everything inside the band takes that one foreground.
-const OLIVE = { bg: CARD_SCHEMES[4].bg, fg: '#FFFEF9' };
-
 function placeLabel(e: ArtEvent): string {
   const parts = [e.city, e.country].filter(Boolean);
   return parts.length ? parts.join(', ') : 'Virtual';
 }
 
-function Item({ event, lead, position }: { event: ArtEvent; lead: boolean; position: number }) {
+function Item({ event, position }: { event: ArtEvent; position: number }) {
   const slug = eventSlug(event);
   return (
     <TrackedLink
@@ -27,37 +22,34 @@ function Item({ event, lead, position }: { event: ArtEvent; lead: boolean; posit
       params={{ item: slug, position }}
       className={s.item}
     >
-      {/* The band sits just below the intro, so its images load straight away. */}
       <div className={s.img}>
         {event.image && (
           // eslint-disable-next-line @next/next/no-img-element -- scraped remote images, as in EventCard
           <img src={event.image} alt={event.title} />
         )}
       </div>
-      {/* The lead card has the width for place, date and time on one line;
-          small cards break before the time. */}
-      <div className={s.meta}>
-        <p>
-          {placeLabel(event)} · {formatDateShort(event.date)}
-          {lead && event.startTime && ' · '}
-        </p>
-        {event.startTime && (
+      <div>
+        <div className={s.meta}>
           <p>
-            {event.startTime}
-            {event.city ? ` ${event.city}` : ''}
-            <ViewerLocalTime event={event} />
+            {placeLabel(event)} · {formatDateShort(event.date)}
           </p>
-        )}
+          {event.startTime && (
+            <p>
+              {event.startTime}
+              {event.city ? ` ${event.city}` : ''}
+              <ViewerLocalTime event={event} />
+            </p>
+          )}
+        </div>
+        <h3 className={s.title}>{event.title}</h3>
       </div>
-      <h3 className={s.title}>{event.title}</h3>
-      {lead && event.description && <p className={`${s.excerpt} line-clamp-4`}>{event.description}</p>}
     </TrackedLink>
   );
 }
 
-/** "Editor choice in November": a large event card and up to four small ones
- *  on an olive band (Myoan's "Editor's Choice" grid), with links to the type
- *  hubs on the label row. */
+/** "Editor choice in November" (Figma "Home page" 411:2294): four equal event
+ *  cards on a sand band, with links to the type hubs on the label row. The
+ *  band is the target of the header's "This month's events" link. */
 export default function EditorChoice({
   events,
   curated,
@@ -72,12 +64,13 @@ export default function EditorChoice({
 }) {
   if (!events.length) return null;
   const hubs = EVENT_TYPES.filter((t) => activeTypes.includes(t.type));
-  const label = `${curated ? 'Editor choice' : 'Coming up'} in ${MONTH_NAMES[month - 1]}`;
 
   return (
-    <section aria-labelledby="editor-choice">
+    <section id="this-month" aria-labelledby="editor-choice" className={s.band}>
       <div className={`${s.wrap} ${s.label}`}>
-        <h2 id="editor-choice">{label}</h2>
+        <h2 id="editor-choice">
+          {curated ? 'Editor choice' : 'Coming up'} in <Link href="/calendar">{MONTH_NAMES[month - 1]}</Link>
+        </h2>
         {hubs.length > 0 && (
           <nav aria-label="Event types" className={s.tags}>
             {hubs.map((t) => (
@@ -89,12 +82,10 @@ export default function EditorChoice({
         )}
       </div>
 
-      <div className={s.band} style={{ backgroundColor: OLIVE.bg, color: OLIVE.fg }}>
-        <div className={`${s.wrap} ${s.grid}`}>
-          {events.map((e, i) => (
-            <Item key={e.id} event={e} lead={i === 0} position={i + 1} />
-          ))}
-        </div>
+      <div className={`${s.wrap} ${s.grid}`}>
+        {events.map((e, i) => (
+          <Item key={e.id} event={e} position={i + 1} />
+        ))}
       </div>
     </section>
   );
