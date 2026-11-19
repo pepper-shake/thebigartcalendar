@@ -599,4 +599,26 @@ export const PLACES: NewPlace[] = [
       sat: '10:00-15:00',
     },
   },
+  // Operator, 2026-11-19 (Google Maps link sent in chat). Details from
+  // omomento.pt; coords from Nominatim (the building at no. 32). Pinned first in
+  // the header's Shops panel (PINNED_SHOPS in src/lib/headerMenu.ts).
+  {
+    id: 'o-momento',
+    slug: 'o-momento',
+    name: 'O Momento',
+    aliases: ['omomento', 'omomento.pt'],
+    kind: 'venue',
+    category: 'shop',
+    description:
+      'Paper shop, print shop and coworking space in the Baixa, Lisbon: special papers, notebooks, envelopes and posters; digital printing and binding; desks and a meeting room, plus workshops.',
+    imageUrl:
+      'https://omomento.pt/cdn/shop/files/unnamed_1b6622ee-1375-4165-8be5-91287da712f4.jpg?v=1783001054&width=800',
+    address: 'Rua do Crucifixo 32, 1100-183 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7097607,
+    lng: -9.1386216,
+    websiteUrl: 'https://omomento.pt/',
+    instagramUrl: 'https://www.instagram.com/omomento.pt/',
+  },
 ];
