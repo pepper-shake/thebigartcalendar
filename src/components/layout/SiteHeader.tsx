@@ -125,7 +125,7 @@ export default function SiteHeader({
       <header
         ref={ref}
         className="site-header"
-        data-scrolled={overHero ? undefined : ''}
+        data-over-hero={overHero ? '' : undefined}
         data-open={active ? '' : undefined}
         onMouseLeave={() => show()}
         onBlur={(e) => {
