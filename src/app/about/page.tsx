@@ -40,10 +40,6 @@ export default function AboutPage() {
           <p>
             <strong style={{ fontWeight: 300 }}>Audience:</strong> artists, designers, curators, and anyone with a general interest in the arts across {REGION}.
           </p>
-
-          <p>
-            <strong style={{ fontWeight: 300 }}>How it works:</strong> events are scraped daily from art institution and gallery websites, normalised, and stored in a database. The calendar updates automatically every day so the information is always current.
-          </p>
         </div>
 
       </main>
