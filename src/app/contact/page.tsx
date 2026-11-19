@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import ContactForm from './ContactForm';
+import { absoluteUrl } from '@/lib/site';
 import SiteFooter from '@/components/layout/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Contact',
   description: 'Get in touch with The Big Art Calendar team — suggest an event source, report an issue, or just say hello.',
+  alternates: { canonical: absoluteUrl('/contact') },
 };
 
 export default function ContactPage() {

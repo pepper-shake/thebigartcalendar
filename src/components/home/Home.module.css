@@ -85,7 +85,7 @@
    underlined) and #type links on the right — then four equal cards: a
    310×240 image, two Geist meta lines and a 24px serif title. */
 .band {
-  scroll-margin-top: 102px; /* "This month's events" lands under the fixed header */
+  scroll-margin-top: 102px; /* /#this-month links land under the fixed header */
   padding: clamp(24px, 3.5vw, 50px) 0 clamp(48px, 6vw, 86px);
   background-color: #e5e1d3;
   color: var(--ink);

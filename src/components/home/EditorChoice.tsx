@@ -42,8 +42,7 @@ function Item({ event, position }: { event: ArtEvent; position: number }) {
 }
 
 /** "Editor choice in November" (Figma "Home page" 411:2294): four equal event
- *  cards on a sand band, with links to the type hubs on the label row. The
- *  band is the target of the header's "This month's events" link. */
+ *  cards on a sand band, with links to the type hubs on the label row. */
 export default function EditorChoice({
   events,
   curated,

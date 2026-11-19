@@ -20,5 +20,11 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
   const [events, { date }] = await Promise.all([getPublishedEvents(), searchParams]);
   // ?date=YYYY-MM-DD (homepage day links) opens on that day; anything else is ignored.
   const initialDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined;
-  return <CalendarClient events={events} footer={<SiteFooter />} initialDate={initialDate} />;
+  return (
+    <>
+      {/* The calendar's design has no visible title; this gives the page its heading for search engines and screen readers. */}
+      <h1 className="sr-only">Art events calendar</h1>
+      <CalendarClient events={events} footer={<SiteFooter />} initialDate={initialDate} />
+    </>
+  );
 }

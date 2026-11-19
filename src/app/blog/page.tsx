@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { REGION_ADJECTIVE } from '@/lib/site';
+import { REGION_ADJECTIVE, absoluteUrl } from '@/lib/site';
 import { BLOG_POSTS, blogPostCardTitle, blogPostPath } from '@/lib/blogPosts';
 import BlogCardLink from '@/components/analytics/BlogCardLink';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
@@ -12,6 +12,7 @@ import s from '@/components/blog/BlogIndex.module.css';
 export const metadata: Metadata = {
   title: 'Blog',
   description: `Writing about art events, the ${REGION_ADJECTIVE} art scene, and how to get the most out of The Big Art Calendar.`,
+  alternates: { canonical: absoluteUrl('/blog') },
 };
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
