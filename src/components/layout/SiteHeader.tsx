@@ -21,8 +21,8 @@ type PanelKey = keyof HeaderMenu;
 
 const LINKS: { label: string; href: string; panel?: PanelKey }[] = [
   { label: 'Calendar', href: '/calendar', panel: 'calendar' },
-  // The homepage's editor's choice band for the current month.
-  { label: 'This month', href: '/#this-month', panel: 'thisMonth' },
+  // The calendar, which opens on the current month.
+  { label: 'This month', href: '/calendar', panel: 'thisMonth' },
   { label: 'Spaces', href: '/places', panel: 'spaces' },
   { label: 'Shops', href: '/places?category=shop', panel: 'shops' },
   { label: 'Blog', href: '/blog' },
@@ -143,7 +143,7 @@ export default function SiteHeader({
           <nav aria-label="Main" className="site-header-nav hidden xl:flex">
             <ul>
               {LINKS.map((l) => (
-                <li key={l.href} onMouseEnter={() => show(l.panel)}>
+                <li key={l.label} onMouseEnter={() => show(l.panel)}>
                   <Link
                     href={l.href}
                     onFocus={() => show(l.panel)}
