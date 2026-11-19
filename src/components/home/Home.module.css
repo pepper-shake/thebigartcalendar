@@ -206,6 +206,17 @@
   padding: clamp(56px, 6.3vw, 91px) 0 clamp(48px, 5.1vw, 74px);
   text-align: center;
 }
+/* Title + subline (Figma 411:2360): a 788px centred column, 10px apart; the
+   subline wraps at 582px. */
+.newsletterText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 788px;
+  max-width: 100%;
+  margin: 0 auto;
+}
 .newsletterTitle {
   font-family: var(--font-serif);
   font-weight: 400; /* Figma: Newsreader Regular */
@@ -214,8 +225,7 @@
   letter-spacing: -0.01em;
 }
 .newsletterLead {
-  max-width: 1000px;
-  margin: 10px auto 0;
+  max-width: 582px;
   font-family: var(--font-serif);
   font-weight: 400; /* Figma: Newsreader Regular */
   font-size: clamp(19px, 1.7vw, 24px);

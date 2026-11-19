@@ -36,7 +36,8 @@
    links 24px apart, 80px after the wordmark, a blush "Where art happens"
    button with oxblood text on the right. 42px gutters (24px on phones) and a 102px bar at
    desktop, 64px on phones. On the homepage it starts as the "White" variant
-   (Figma 417:4438) over the hero: 70% oxblood with cream text. It gets the
+   (Figma 417:4438) over the hero: an oxblood gradient (70% at the top to
+   clear at the bottom) with cream text. It gets the
    cream bar once the page scrolls (data-scrolled) or a panel opens
    (data-open); elsewhere a spacer holds its place in the flow. */
 .site-header {
@@ -47,11 +48,14 @@
   flex-direction: column;
   padding: 0 24px;
   color: var(--page);
-  background-color: rgb(90 31 46 / 0.7);
+  background-color: transparent;
+  background-image: linear-gradient(180deg, rgb(90 31 46 / 0.7) 0%, rgb(90 31 46 / 0) 100%);
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
+/* The bar: a gradient can't transition, so it is dropped and the cream fades in. */
 .site-header[data-scrolled] {
   background-color: var(--page);
+  background-image: none;
   color: #5a1f2e;
 }
 .site-header-row {
@@ -210,6 +214,7 @@
 @media (min-width: 1280px) {
   .site-header[data-open] {
     background-color: var(--page);
+    background-image: none;
     color: #5a1f2e;
     /* An open panel is an overlay: the one shadow the style allows. */
     box-shadow: 0 4px 20px rgb(56 52 48 / 0.15);
