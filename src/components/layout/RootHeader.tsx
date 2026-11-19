@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation';
 import MenuPanel from './MenuPanel';
 import SiteHeader from './SiteHeader';
 import { isBlogLandingPath } from '@/lib/blogPosts';
+import type { HeaderMenu } from '@/lib/headerMenu';
 
-export default function RootHeader({ hiddenHrefs = [], month }: { hiddenHrefs?: string[]; month: number }) {
+export default function RootHeader({ hiddenHrefs = [], menu }: { hiddenHrefs?: string[]; menu: HeaderMenu }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -41,7 +42,7 @@ export default function RootHeader({ hiddenHrefs = [], month }: { hiddenHrefs?: 
   // the homepage, a cream bar everywhere else.
   return (
     <>
-      <SiteHeader onOpenMenu={() => setIsMenuOpen(true)} overHero={pathname === '/'} pathname={pathname} month={month} />
+      <SiteHeader onOpenMenu={() => setIsMenuOpen(true)} overHero={pathname === '/'} pathname={pathname} menu={menu} />
       <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
     </>
   );

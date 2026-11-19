@@ -31,28 +31,32 @@
   }
 }
 
-/* Site header (SiteHeader; Figma "Calendar" 387:2619, "Home page" 387:2803 /
-   411:2361). A fixed cream bar with oxblood text: one-line wordmark
-   (Newsreader 300, 32/42), Geist 16 links 24px apart, an oxblood "Where art
-   happens" button with blush text on the right. 50px gutters and a 102px bar
-   at desktop, 64px on phones. On the homepage it starts transparent with cream
-   text over the hero and gets the bar once the page scrolls (data-scrolled);
-   elsewhere a spacer holds its place in the flow. */
+/* Site header (SiteHeader; Figma "Header" component 415:2859). A fixed cream
+   bar with oxblood text: one-line wordmark (Newsreader 300, 32/42), Geist 16
+   links 24px apart, 80px after the wordmark, an oxblood "Where art happens"
+   button with blush text on the right. 50px gutters and a 102px bar at desktop,
+   64px on phones. On the homepage it starts transparent with cream text over
+   the hero and gets the bar once the page scrolls (data-scrolled) or a panel
+   opens (data-open); elsewhere a spacer holds its place in the flow. */
 .site-header {
   position: fixed;
   inset: 0 0 auto;
   z-index: 30;
   display: flex;
-  align-items: center;
-  height: 64px;
+  flex-direction: column;
   padding: 0 24px;
   color: var(--page);
   background-color: transparent;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 .site-header[data-scrolled] {
   background-color: var(--page);
   color: #5a1f2e;
+}
+.site-header-row {
+  display: flex;
+  align-items: center;
+  height: 64px;
 }
 .site-header-logo {
   font-family: var(--font-serif);
@@ -63,8 +67,9 @@
   white-space: nowrap;
 }
 .site-header-nav {
-  margin-left: 76px;
+  margin-left: 80px;
   font-family: var(--font-meta);
+  font-weight: 400;
   font-size: 16px;
   line-height: 18px;
 }
@@ -72,9 +77,12 @@
   display: flex;
   gap: 24px;
 }
-.site-header-nav a:hover,
-.site-header-logo:hover {
-  opacity: 0.6;
+.site-header-nav a {
+  display: block;
+  padding: 12px 0; /* a taller hover target, same look */
+}
+.site-header-nav li a[data-active] {
+  font-weight: 600;
 }
 .site-header-cta {
   margin-left: auto;
@@ -82,14 +90,94 @@
   background-color: #5a1f2e;
   color: #e4b6d1;
   font-family: var(--font-meta);
+  font-weight: 400;
   font-size: 16px;
   line-height: 18px;
   white-space: nowrap;
-  transition: opacity 0.2s ease;
 }
-.site-header-cta:hover {
-  opacity: 0.85;
+
+/* Drop-down panel (desktop only — the links show from xl): a 300px blurb +
+   "See all →" on the left, three 12px-apart preview cards in a 998px row on
+   the right. */
+.site-header-panel {
+  display: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 42px;
+  padding: 24px 0 60px;
+  color: #5a1f2e;
 }
+.site-header-panel-intro {
+  display: flex;
+  flex: 0 0 300px;
+  flex-direction: column;
+  gap: 16px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+}
+.site-header-panel-more {
+  align-self: flex-start;
+  font-weight: 400; /* Figma: Newsreader Regular */
+}
+.site-header-panel-cards {
+  display: grid;
+  flex: 0 1 998px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.site-header-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background-color: #e5e1d3;
+  color: #5a1f2d;
+}
+.site-header-card-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+}
+.site-header-card-chip {
+  padding: 8px 16px;
+  background-color: rgb(255 255 255 / 0.5);
+}
+.site-header-card-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-family: var(--font-serif);
+  font-weight: 400; /* Figma 415:3105: Newsreader Regular */
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+.site-header-card-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+.site-header-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  color: #977276;
+  font-family: var(--font-meta);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+}
+
 /* Holds the fixed header's place on every page but the homepage. */
 .site-header-spacer {
   flex: none;
@@ -97,15 +185,28 @@
 }
 @media (min-width: 768px) {
   .site-header {
-    height: 102px;
     padding: 0 50px;
+  }
+  .site-header-row,
+  .site-header-spacer {
+    height: 102px;
   }
   .site-header-logo {
     font-size: 32px;
     line-height: 42px;
   }
-  .site-header-spacer {
-    height: 102px;
+}
+/* Panels only where the links show (xl), so one opened on a wide window
+   never lingers, squeezed, after the window is narrowed. */
+@media (min-width: 1280px) {
+  .site-header[data-open] {
+    background-color: var(--page);
+    color: #5a1f2e;
+    /* An open panel is an overlay: the one shadow the style allows. */
+    box-shadow: 0 4px 20px rgb(56 52 48 / 0.15);
+  }
+  .site-header-panel:not([hidden]) {
+    display: flex;
   }
 }
 @media (prefers-reduced-motion: reduce) {
