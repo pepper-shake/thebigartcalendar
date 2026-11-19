@@ -5,7 +5,7 @@
 Page: [`src/app/where-art-happens/page.tsx`](../../src/app/where-art-happens/page.tsx); styles: [`WhereArtHappens.module.css`](../../src/components/where-art-happens/WhereArtHappens.module.css).
 
 ## Layout
-Everything runs full width with the header's gutters (50px at desktop), so the headings line up with the wordmark and the photo row on any screen width.
+Everything runs full width with 50px gutters at desktop, so the headings line up with the photo row on any screen width (the header itself now has 24px padding).
 - **Header** — the site header ([`SiteHeader`](../../src/components/layout/SiteHeader.tsx)), as on every page; its "Where art happens" button has `aria-current="page"` here.
 - **Intro** (cream) — the `<h1>` (Newsreader 300, 52px) on the left; on the right, in a 497px column, the pitch (24/32) and an underlined "Share your space" link (32px). Region wording follows `REGION`.
 - **Photos** — three photos 359px tall, 10px apart, starting at the left gutter and running off the right edge: [`studio-1.jpg`](../../public/where-art-happens/studio-1.jpg), the homepage hero (`/home/hero.jpg`, same photo as in Figma), [`studio-2.jpg`](../../public/where-art-happens/studio-2.jpg). On phones the row scrolls sideways.

@@ -67,7 +67,7 @@ export default function DateStrip({ eventDates, selectedDate, onChange, scrollab
             ref={isActive ? activeRef : null}
             onClick={() => onChange(dateStr)}
             aria-current={isActive ? 'date' : undefined}
-            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap text-ink transition-opacity hover:opacity-60"
+            className="flex-none flex items-baseline gap-1.5 whitespace-nowrap text-oxblood transition-opacity hover:opacity-60"
             // Figma (283:2080): Newsreader Light 18px, full day names; the
             // selected day is italic semibold instead of underlined.
             style={{
