@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import { REGION } from '@/lib/site';
 import SiteFooter from '@/components/layout/SiteFooter';
 export const metadata: Metadata = {
-  title: 'About — The Big Art Calendar',
+  title: 'About',
   description: `The Big Art Calendar is a free portal that aggregates art events across ${REGION} — exhibitions, workshops, fairs, performances, and more — so you never miss what matters.`,
 };
 
 export default function AboutPage() {
   return (
     <div className="min-h-full flex flex-col" style={{ backgroundColor: 'var(--page)' }}>
-      <main className="flex-1 px-6 py-16 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-6 md:px-[42px] py-16 max-w-2xl mx-auto w-full">
 
         <h1
           className="text-ink lowercase mb-12"
@@ -29,7 +29,7 @@ export default function AboutPage() {
           style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
         >
           <p>
-            The Big Art Calendar is a free portal for art events across {REGION}. The calendar is the main page — every visitor lands there and can browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
+            The Big Art Calendar is a free portal for art events across {REGION}. The calendar lets you browse upcoming exhibitions, workshops, lectures, short courses, competitions, and meetups.
           </p>
 
           <p>

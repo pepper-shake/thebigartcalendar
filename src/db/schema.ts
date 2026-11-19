@@ -86,3 +86,16 @@ export type OpeningHours = Partial<Record<'mon' | 'tue' | 'wed' | 'thu' | 'fri' 
 
 export type Place = typeof places.$inferSelect;
 export type NewPlace = typeof places.$inferInsert;
+
+// Newsletter sign-ups from the homepage form. Collect-only for now: nothing
+// sends email yet (a sending provider comes later). The email is the key
+// (lower-cased), so signing up twice is a no-op. Personal data — see
+// docs/SECURITY.md. Added by hand (CREATE TABLE IF NOT EXISTS), see
+// docs/product/homepage.md.
+export const newsletterSubscribers = pgTable('newsletter_subscribers', {
+  email: text('email').primaryKey(),
+  source: text('source').notNull(),                         // where they signed up, e.g. 'home'
+  consentText: text('consent_text').notNull(),              // the wording they agreed to
+  status: text('status').notNull().default('subscribed'),   // 'subscribed' | 'unsubscribed'
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});

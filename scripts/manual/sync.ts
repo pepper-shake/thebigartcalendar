@@ -27,15 +27,17 @@ const rows: NewEvent[] = MANUAL_EVENTS.map((e) => {
     city: v.city,
     country: v.country,
     address: v.address,
-    organiserName: v.venue,
-    organiserUrl: v.url,
+    organiserName: e.organiser?.name ?? v.venue,
+    organiserUrl: e.organiser?.url ?? v.url,
     description: [e.description, e.ticketsUrl ? null : v.bookingNote].filter(Boolean).join(' '),
     imageUrl: e.imageUrl ?? v.imageUrl,
     ticketsUrl: e.ticketsUrl ?? v.url,
     price: e.price ?? null,
     tags: [e.type, ...(e.tags ?? []), v.city.toLowerCase()],
     sourceUrl: v.url,
-    sourceName: v.venue,
+    // The place matcher falls back to source_name for the organiser, so a
+    // visiting organiser must not inherit the venue's name here.
+    sourceName: e.organiser?.name ?? v.venue,
     externalId: sourceUrl,
     scrapedAt: new Date(),
   };

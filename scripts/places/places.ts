@@ -32,6 +32,24 @@ export const PLACES: NewPlace[] = [
     instagramUrl: 'https://www.instagram.com/ajudalab',
   },
   {
+    id: 'amazonas',
+    slug: 'amazonas',
+    name: 'Amazonas',
+    aliases: ['Amazonas Market', 'Amazonas - Events', 'amazonas.events'],
+    kind: 'both',
+    category: 'other',
+    description:
+      'Lisbon curators of independent markets and events at 8 Marvila: handpicked artists, designers and makers selling their own work, with workshops, exhibitions and live music.',
+    imageUrl: 'https://amazonas-events.com/8-marvila.webp',
+    address: '8 Marvila, Praça David Leandro da Silva 8, 1950-064 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7422845, // Eventbrite's pin for 8 Marvila
+    lng: -9.1020918,
+    websiteUrl: 'https://amazonas-events.com/',
+    instagramUrl: 'https://www.instagram.com/amazonas.events/',
+  },
+  {
     id: 'disco-wheel',
     slug: 'disco-wheel',
     name: 'Disco Wheel',
@@ -131,6 +149,24 @@ export const PLACES: NewPlace[] = [
     city: 'Lisbon',
     country: 'Portugal',
     instagramUrl: 'https://www.instagram.com/arthome.lisbon',
+  },
+  {
+    id: 'collage-working-club',
+    slug: 'collage-working-club',
+    name: 'Collage Working Club',
+    aliases: ['CWC', 'collageworkingclub'],
+    kind: 'both',
+    category: 'workshop-space',
+    description:
+      'Lisbon collage community and open workspace for artists working with paper. Runs drop-in Scissor Sessions and workshops with guest artists at Jardins do Bombarda, plus sessions at partner venues. No experience needed; materials are provided.',
+    imageUrl: '/venues/collage-working-club.jpg',
+    address: 'Jardins do Bombarda, Rua Gomes Freire 161, Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7251103,
+    lng: -9.1410369,
+    websiteUrl: 'https://www.eventbrite.pt/o/collage-working-club-55562553233',
+    instagramUrl: 'https://www.instagram.com/collageworkingclub/',
   },
   {
     id: 'collage-club-ldn',
@@ -463,6 +499,23 @@ export const PLACES: NewPlace[] = [
     },
   },
   {
+    id: 'espaco-62',
+    slug: 'espaco-62',
+    name: 'Espaço 62',
+    aliases: ['Espaco 62', 'espaco62'],
+    kind: 'both',
+    category: 'studio',
+    description:
+      'Shared artists\' studio with a street-front space near Praça da Alegria in Lisbon. Its resident artists also show together, including a group exhibition with an art and art-book market at the Convento dos Cardaes in 2025. Shows are announced on Instagram.',
+    imageUrl: '/venues/espaco-62.jpg',
+    address: 'Rua da Conceição da Glória 62, 1250-082 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7168574, // street-level (Nominatim had no house number)
+    lng: -9.1458271,
+    instagramUrl: 'https://www.instagram.com/espaco62/',
+  },
+  {
     id: 'hall-atelier',
     slug: 'hall-atelier',
     name: 'hALL',
@@ -543,5 +596,52 @@ export const PLACES: NewPlace[] = [
       wed: '11:00-19:00', thu: '11:00-19:00', fri: '11:00-19:00',
       sat: '11:00-19:00', sun: '11:00-19:00',
     },
+  },
+  // Operator, 2026-11-16 (Google Maps link + Instagram bio, sent in chat).
+  // Coords from that Google Maps pin (Nominatim only knows the street).
+  {
+    id: 'meia-lua-mercearia',
+    slug: 'meia-lua-mercearia',
+    name: 'Meia-Lua Mercearia',
+    aliases: ['Méia-Lua Mercearia', 'Meia Lua Mercearia', 'meialuamercearia'],
+    kind: 'venue',
+    category: 'shop',
+    description:
+      'Bakery and café with a small grocery (mercearia) in Ajuda, Lisbon: eat in or take away, plus regular workshops and pop-ups.',
+    imageUrl:
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/places/meia-lua-mercearia-KijEX2lPzpHDDPE0jFQZXh7DhH5Fg6.jpg',
+    address: 'Rua das Mercês 71A, 1300-405 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7035507,
+    lng: -9.1982774,
+    websiteUrl: null,
+    instagramUrl: 'https://www.instagram.com/meialuamercearia/',
+    openingHours: {
+      tue: '10:00-18:30', wed: '10:00-18:30', thu: '10:00-18:30', fri: '10:00-18:30',
+      sat: '10:00-15:00',
+    },
+  },
+  // Operator, 2026-11-19 (Google Maps link sent in chat). Details from
+  // omomento.pt; coords from Nominatim (the building at no. 32). Pinned first in
+  // the header's Shops panel (PINNED_SHOPS in src/lib/headerMenu.ts).
+  {
+    id: 'o-momento',
+    slug: 'o-momento',
+    name: 'O Momento',
+    aliases: ['omomento', 'omomento.pt'],
+    kind: 'venue',
+    category: 'shop',
+    description:
+      'Paper shop, print shop and coworking space in the Baixa, Lisbon: special papers, notebooks, envelopes and posters; digital printing and binding; desks and a meeting room, plus workshops.',
+    imageUrl:
+      'https://omomento.pt/cdn/shop/files/unnamed_1b6622ee-1375-4165-8be5-91287da712f4.jpg?v=1783001054&width=800',
+    address: 'Rua do Crucifixo 32, 1100-183 Lisboa',
+    city: 'Lisbon',
+    country: 'Portugal',
+    lat: 38.7097607,
+    lng: -9.1386216,
+    websiteUrl: 'https://omomento.pt/',
+    instagramUrl: 'https://www.instagram.com/omomento.pt/',
   },
 ];

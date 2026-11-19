@@ -15,17 +15,19 @@ interface Props {
   events: ArtEvent[];
   /** The server-rendered SiteFooter, shown at the end of each scroll pane. */
   footer?: React.ReactNode;
+  /** Open on this day (YYYY-MM-DD), from /calendar?date=… (homepage day links). */
+  initialDate?: string;
 }
 
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
-export default function CalendarClient({ events, footer }: Props) {
+export default function CalendarClient({ events, footer, initialDate }: Props) {
   const today = useMemo(() => new Date(), []);
   // The year/month the user asked for; what's shown is resolved against the
   // months that actually have events (below).
-  const [requestedYear, setYear] = useState(today.getFullYear());
-  const [requestedMonth, setMonth] = useState(today.getMonth());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [requestedYear, setYear] = useState(initialDate ? Number(initialDate.slice(0, 4)) : today.getFullYear());
+  const [requestedMonth, setMonth] = useState(initialDate ? Number(initialDate.slice(5, 7)) - 1 : today.getMonth());
+  const [selectedDate, setSelectedDate] = useState<string | null>(initialDate ?? null);
   const [filters, setFilters] = useState<CalendarFilters>(DEFAULT_FILTERS);
 
   // Only offer years, months, types and cities that lead to events, each
@@ -154,9 +156,19 @@ export default function CalendarClient({ events, footer }: Props) {
       {/* ── Desktop ─────────────────────────────────────── */}
       <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: 'var(--page)' }}>
 
-        {/* Pinned navigation: filters + month strip + date strip stay on screen;
-            only the cards below scroll. */}
+        {/* Pinned under the site header (Figma "Scrolling" 417:4139): the
+            month and day strips stay on screen... */}
         <div className="flex-none">
+          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
+          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
+        </div>
+
+        {/* ...while the filter row scrolls away with the cards. */}
+        <div
+          ref={scrollRef}
+          className="flex-1 min-h-0 overflow-y-auto"
+          onScroll={handleScroll}
+        >
           <AppHeader
             year={year}
             years={facets.years}
@@ -166,20 +178,7 @@ export default function CalendarClient({ events, footer }: Props) {
             cities={facets.cities}
             types={facets.types}
           />
-          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
-          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
-        </div>
-
-        {/* Scrollable: cards only */}
-        <div
-          ref={scrollRef}
-          className="flex-1 min-h-0 overflow-y-auto"
-          onScroll={handleScroll}
-        >
-          {/* At least one header-collapse range (120px, see RootHeader) taller
-              than the viewport, so the wordmark can always shrink fully with
-              the scroll — even on a day with a single row of cards. */}
-          <main className="px-6 py-4 min-h-[calc(100%+120px)]">
+          <main className="px-[42px] py-4">
             {selectedEvents.length === 0 ? (
               <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
@@ -187,7 +186,7 @@ export default function CalendarClient({ events, footer }: Props) {
             ) : (
               <div className="event-grid">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}

@@ -3,13 +3,14 @@
 import { CalendarFilters, EventType } from '@/types';
 import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
 import { FilterSelect } from '@/components/ui/FilterSelect';
+import { REGION } from '@/lib/site';
 
 const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
 
-/** Type filter options: "All Types" plus only the types that have events. */
+/** Type filter options: "All types" plus only the types that have events. */
 export function typeOptions(types: EventType[]): { value: EventType | 'all'; label: string }[] {
   return [
-    { value: 'all', label: 'All Types' },
+    { value: 'all', label: 'All types' },
     ...EVENT_TYPES.filter((t) => types.includes(t)).map((t) => ({
       value: t,
       label: eventTypeColors[t].label,
@@ -26,12 +27,12 @@ interface Props {
 
 export default function FilterBar({ filters, onChange, cities, types }: Props) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex items-center gap-3 flex-wrap">
       <FilterSelect
         value={filters.city}
         onChange={(v) => onChange({ ...filters, city: v ?? 'all' })}
         options={[
-          { value: 'all', label: 'All Portugal' },
+          { value: 'all', label: REGION },
           ...cities.map((c) => ({ value: c, label: c })),
         ]}
       />

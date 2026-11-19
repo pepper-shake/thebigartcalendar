@@ -18,7 +18,7 @@ export default async function TypeLandingPage({ meta }: { meta: EventTypeMeta })
     <PageShell wide>
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: meta.plural, href: `/${meta.slug}` },
         ]}
       />

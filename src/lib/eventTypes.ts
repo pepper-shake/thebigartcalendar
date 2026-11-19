@@ -24,8 +24,8 @@ export const EVENT_TYPES: EventTypeMeta[] = [
   {
     type: 'fair',
     slug: 'art-fairs',
-    label: 'Art Fair',
-    plural: 'Art Fairs',
+    label: 'Art fair',
+    plural: 'Art fairs',
     blurb: `Art fairs and large-scale showcases across ${REGION}.`,
   },
   {

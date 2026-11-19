@@ -8,6 +8,7 @@ import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
 import { typeOptions } from '@/components/filters/FilterBar';
+import { REGION } from '@/lib/site';
 
 interface Props {
   year: number;
@@ -58,22 +59,31 @@ export default function MobileAgenda({
   return (
     <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: 'var(--page)' }}>
 
-      {/* ── Scrollable area: filters, strips and cards all scroll together
-          under the fixed header (Figma 296:5212 → 296:5353). ── */}
+      {/* ── Pinned under the fixed header, as on desktop (Figma "Scrolling"
+          417:4139): the month and day strips stay on screen... ── */}
+      <div className="flex-none">
+        <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
+        <DateStrip
+          eventDates={eventDates}
+          selectedDate={selectedDate}
+          onChange={onSelectedDateChange}
+          scrollable
+        />
+      </div>
+
+      {/* ── ...while the filters scroll away with the cards. ── */}
       <div
         ref={scrollRef}
         className="flex-1 min-h-0 overflow-y-auto"
         onScroll={handleScroll}
       >
-        {/* At least one header-collapse range (72px, see RootHeader) taller than
-            the viewport, so the wordmark can always shrink fully with the scroll. */}
-        <div className="min-h-[calc(100%+72px)]">
-          <div className="flex items-center justify-between px-4 pt-[14px] pb-4">
+        <div>
+          <div className="flex items-center justify-between px-4 py-4">
             <FilterSelect
               size="sm"
               value={filters.city}
               onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
-              options={[{ value: 'all', label: 'All Portugal' }, ...cities.map((c) => ({ value: c, label: c }))]}
+              options={[{ value: 'all', label: REGION }, ...cities.map((c) => ({ value: c, label: c }))]}
             />
             <FilterSelect
               size="sm"
@@ -89,16 +99,8 @@ export default function MobileAgenda({
             />
           </div>
 
-          <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
-          <DateStrip
-            eventDates={eventDates}
-            selectedDate={selectedDate}
-            onChange={onSelectedDateChange}
-            scrollable
-          />
-
           {/* Event cards */}
-          <div className="p-6">
+          <div className="px-6 pb-6">
             {selectedEvents.length === 0 ? (
               <div
                 className="flex items-center justify-center h-48 text-ink/60 italic"
@@ -109,7 +111,7 @@ export default function MobileAgenda({
             ) : (
               <div className="flex flex-col gap-6">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}

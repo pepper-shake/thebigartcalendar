@@ -16,14 +16,16 @@ interface Props {
 
 export default function AppHeader({ year, years, onYearChange, filters, onFiltersChange, cities, types }: Props) {
   return (
-    <div className="flex-none flex items-center justify-between px-6 pb-[1.5vh]">
+    // Figma "Calendar" 387:2619: under the day strip, place and type left, the
+    // year right, in a 76px row (16px above and below the 44px controls).
+    <div className="flex-none flex items-center justify-between px-[42px] py-4">
+      <FilterBar filters={filters} onChange={onFiltersChange} cities={cities} types={types} />
+
       <FilterSelect
         value={String(year)}
         onChange={(v) => onYearChange(Number(v ?? year))}
         options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
       />
-
-      <FilterBar filters={filters} onChange={onFiltersChange} cities={cities} types={types} />
     </div>
   );
 }

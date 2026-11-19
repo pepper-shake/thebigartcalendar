@@ -12,9 +12,10 @@ interface Props {
 }
 
 const NAV_LINKS = [
-  { label: 'Calendar',     href: '/' },
+  { label: 'Home',         href: '/' },
+  { label: 'Calendar',     href: '/calendar' },
   { label: 'Exhibitions',  href: '/exhibitions' },
-  { label: 'Art Fairs',    href: '/art-fairs' },
+  { label: 'Art fairs',    href: '/art-fairs' },
   { label: 'Workshops',    href: '/workshops' },
   { label: 'Performances', href: '/performances' },
   { label: 'Auctions',     href: '/auctions' },
@@ -67,9 +68,11 @@ export default function MenuPanel({ isOpen, onClose, hiddenHrefs = [] }: Props) 
         'w-full md:w-[348px]',
         'flex flex-col items-end',
         'pl-8 pr-4 py-4',
-        'transition-transform duration-300 ease-in-out',
+        // visibility flips after the slide, so the closed drawer can't be
+        // panned into view or tabbed into.
+        'transition-[transform,visibility] duration-300 ease-in-out',
         // Drawers are the one surface that gets a shadow (Style Reference 1 §8).
-        isOpen ? 'translate-x-0 shadow-[0_4px_20px_rgb(56_52_48/0.15)]' : 'translate-x-full',
+        isOpen ? 'visible translate-x-0 shadow-[0_4px_20px_rgb(56_52_48/0.15)]' : 'invisible translate-x-full',
       ].join(' ')}
     >
       {/* Close button */}

@@ -4,9 +4,18 @@ import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
 import { absoluteUrl } from '@/lib/site';
 import { listPlaces } from '@/lib/places';
+import { BLOG_POSTS, blogPostPath } from '@/lib/blogPosts';
 
 // Regenerated per request so new scraped events appear without a redeploy.
 export const dynamic = 'force-dynamic';
+
+// Next writes `url` and `images` into the XML verbatim, so a scraped image URL
+// with `&` in its query string makes the whole sitemap invalid for Google.
+const xmlEscape = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+
+// Google rejects relative image URLs (local place photos are stored as `/venues/…`).
+const toAbsolute = (src: string) => (/^https?:\/\//.test(src) ? src : absoluteUrl(src));
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, cities, places, activeTypes] = await Promise.all([
@@ -19,8 +28,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: absoluteUrl('/'), lastModified: now, changeFrequency: 'daily', priority: 1 },
+    { url: absoluteUrl('/calendar'), lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: absoluteUrl('/cities'), lastModified: now, changeFrequency: 'daily', priority: 0.6 },
     { url: absoluteUrl('/places'), lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: absoluteUrl('/where-art-happens'), lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: absoluteUrl('/about'), lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
     { url: absoluteUrl('/blog'), lastModified: now, changeFrequency: 'weekly', priority: 0.5 },
     { url: absoluteUrl('/contact'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
@@ -45,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,
-    images: e.image ? [e.image] : undefined,
+    images: e.image ? [toAbsolute(e.image)] : undefined,
   }));
 
   const placePages: MetadataRoute.Sitemap = places.map(({ place }) => ({
@@ -53,8 +64,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: place.updatedAt,
     changeFrequency: 'weekly',
     priority: 0.6,
-    images: place.imageUrl ? [place.imageUrl] : undefined,
+    images: place.imageUrl ? [toAbsolute(place.imageUrl)] : undefined,
   }));
 
-  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...eventPages];
+  const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: absoluteUrl(blogPostPath(post.slug)),
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+    images: [absoluteUrl(post.image)],
+  }));
+
+  return [...staticPages, ...typePages, ...cityPages, ...placePages, ...blogPages, ...eventPages].map((entry) => ({
+    ...entry,
+    url: xmlEscape(entry.url),
+    images: entry.images?.map(xmlEscape),
+  }));
 }

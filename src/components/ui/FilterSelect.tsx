@@ -15,21 +15,22 @@ export function FilterSelect({
   size?: 'sm' | 'md';
 }) {
   const label = options.find((o) => o.value === value)?.label ?? value;
+  // Figma: Newsreader 300, 24/32, -0.48px, oxblood (desktop); phones keep 24/24.
   const textStyle =
     size === 'sm'
       ? { fontSize: 24, lineHeight: '24px', letterSpacing: '-0.48px' }
-      : { fontSize: 32, lineHeight: '32px', letterSpacing: '-0.64px' };
+      : { fontSize: 24, lineHeight: '32px', letterSpacing: '-0.48px' };
 
   return (
     <SelectPrimitive.Root value={value} onValueChange={onChange}>
       <SelectPrimitive.Trigger className="flex items-center gap-[5px] px-[8px] py-[6px] cursor-pointer outline-none select-none transition-colors hover:bg-ink/5 aria-expanded:bg-ink/5">
         <span
-          className="font-light text-ink whitespace-nowrap"
+          className="font-light text-oxblood whitespace-nowrap"
           style={{ fontFamily: 'var(--font-serif)', ...textStyle }}
         >
           {label}
         </span>
-        <ChevronsUpDown className="size-5 text-ink shrink-0" strokeWidth={1.25} />
+        <ChevronsUpDown className="size-5 text-oxblood shrink-0" strokeWidth={1.25} />
       </SelectPrimitive.Trigger>
 
       <SelectPrimitive.Portal>
@@ -46,7 +47,7 @@ export function FilterSelect({
                 <SelectPrimitive.Item
                   key={opt.value}
                   value={opt.value}
-                  className="flex items-center px-[8px] cursor-pointer outline-none select-none font-light text-[20px] leading-[20px] text-ink h-[44px] whitespace-nowrap data-[selected]:italic data-[highlighted]:bg-ink/5"
+                  className="flex items-center px-[8px] cursor-pointer outline-none select-none font-light text-[20px] leading-[20px] text-oxblood h-[44px] whitespace-nowrap data-[selected]:italic data-[highlighted]:bg-ink/5"
                   style={{ fontFamily: 'var(--font-serif)' }}
                 >
                   <SelectPrimitive.ItemText>{opt.label}</SelectPrimitive.ItemText>

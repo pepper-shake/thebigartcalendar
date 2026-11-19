@@ -15,8 +15,8 @@ export const SITE_NAME = 'The Big Art Calendar';
 export const REGION = PORTUGAL_ONLY_MODE ? 'Portugal' : 'Europe';
 /** Adjective form: "Portuguese" / "European". */
 export const REGION_ADJECTIVE = PORTUGAL_ONLY_MODE ? 'Portuguese' : 'European';
-/** Site tagline, e.g. in the default <title>: "Art Events Across Portugal". */
-export const SITE_TAGLINE = `Art Events Across ${REGION}`;
+/** Site tagline, e.g. in the default <title>: "Art events across Portugal". */
+export const SITE_TAGLINE = `Art events across ${REGION}`;
 
 export const SITE_DESCRIPTION = `Discover art events across ${REGION} — exhibitions, art fairs, workshops, performances, and auctions. Updated daily, free to browse.`;
 

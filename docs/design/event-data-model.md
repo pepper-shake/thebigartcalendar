@@ -102,6 +102,8 @@ Which one is **primary** depends on `attendance_mode`:
 - `online` → **primary = viewer's local time** (no venue to travel to); venue time secondary/omitted.
 - `is_all_day` → show the **date only**; do **not** show a "My time" conversion (converting an all-day event across zones produces nonsense like "starts 11pm your time").
 
+> **Current UI (2026-11-19):** cards and the event page show **venue local time only** (`City, Country` / `Mon D, YYYY · HH:MM`); the viewer-converted "My time" suffix was removed as noise. Revisit only if online events become common.
+
 No per-user timezone is stored — anonymous SEO traffic, no accounts. Conversion is stateless in the render layer via `Intl.DateTimeFormat`. For SEO/JSON-LD, emit `Event.startDate` as ISO-8601 **with offset** (`2026-10-28T18:00:00+01:00`), derived per-date from instant + zone so DST is correct.
 
 ## Recurrence: materialize, don't RRULE at query time

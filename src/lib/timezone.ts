@@ -21,11 +21,6 @@ export function eventTimeZone(country: string): string | null {
   return COUNTRY_TZ[country] ?? null;
 }
 
-/** "Europe/London" → "London"; "America/New_York" → "New York". */
-export function zoneCity(tz: string): string {
-  return tz.split('/').pop()?.replace(/_/g, ' ') ?? tz;
-}
-
 /** Milliseconds to add to a UTC instant to get wall-clock time in `tz`. */
 function tzOffsetMs(instant: Date, tz: string): number {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -53,40 +48,6 @@ function zonedWallToUtc(year: number, month: number, day: number, hour: number, 
   let utc = guess - tzOffsetMs(new Date(guess), tz);
   utc = guess - tzOffsetMs(new Date(utc), tz);
   return new Date(utc);
-}
-
-/** "HH:MM" (24h) for an instant rendered in `tz`. */
-function formatHHMM(instant: Date, tz: string): string {
-  return new Intl.DateTimeFormat('en-GB', {
-    timeZone: tz,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(instant);
-}
-
-/**
- * The event's start time expressed in the viewer's timezone, as "15:00 London".
- * Returns null when there's nothing useful to show — unknown zones, or when the
- * viewer's clock time matches the event's (same instant), so we don't render a
- * redundant duplicate.
- */
-export function viewerLocalTime(
-  dateStr: string,
-  timeStr: string,
-  eventTz: string,
-  viewerTz: string,
-): string | null {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  const [hour, minute] = timeStr.split(':').map(Number);
-  if (!year || !month || !day || Number.isNaN(hour) || Number.isNaN(minute)) return null;
-
-  const instant = zonedWallToUtc(year, month, day, hour, minute, eventTz);
-  const eventHHMM = formatHHMM(instant, eventTz);
-  const viewerHHMM = formatHHMM(instant, viewerTz);
-  if (viewerHHMM === eventHHMM) return null;
-
-  return `${viewerHHMM} ${zoneCity(viewerTz)}`;
 }
 
 /**

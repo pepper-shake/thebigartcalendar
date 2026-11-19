@@ -12,16 +12,17 @@ import { run as peanutBlu } from './parsers/peanut-blu';
 import { run as dobarro } from './parsers/dobarro';
 import { run as macs } from './parsers/macs';
 import { run as lisbonDrawingClub } from './parsers/lisbon-drawing-club';
-import { run as bryonStudios } from './parsers/bryon-studios';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
 import { run as pinkDolphin } from './parsers/pink-dolphin';
 import { run as dviTaures } from './parsers/dvi-taures';
 import { run as collageClub } from './parsers/collage-club';
+import { run as collageWorkingClub } from './parsers/collage-working-club';
 import { run as discoWheel } from './parsers/disco-wheel';
 import { run as ajudaLab } from './parsers/ajuda-lab';
 import { run as galeria1758 } from './parsers/galeria-1758';
 import { run as saltedBooks } from './parsers/salted-books';
+import { run as amazonas } from './parsers/amazonas';
 
 // Load .env.local for local development. In CI, env vars are injected via secrets.
 // We parse manually so we can overwrite empty-string vars (process.loadEnvFile skips them).
@@ -56,16 +57,17 @@ const parsers = [
   { name: 'DoBarro', fn: dobarro },
   { name: 'MACS', fn: macs },
   { name: 'Lisbon Drawing Club', fn: lisbonDrawingClub },
-  { name: 'Bryon Studios', fn: bryonStudios },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },
   { name: 'Pink Dolphin', fn: pinkDolphin },
   { name: '2 Taurės', fn: dviTaures },
   { name: 'Collage Club', fn: collageClub },
+  { name: 'Collage Working Club', fn: collageWorkingClub },
   { name: 'Disco Wheel', fn: discoWheel },
   { name: 'Ajuda Lab', fn: ajudaLab },
   { name: 'Galeria 1758', fn: galeria1758 },
   { name: 'Salted Books', fn: saltedBooks },
+  { name: 'Amazonas', fn: amazonas },
 ];
 
 interface NewRow {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { springScrollTo } from '@/lib/springScroll';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -20,13 +20,22 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
   const stripRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
+  const placedRef = useRef(false);
 
-  useEffect(() => {
+  // Centre the active item. The first time, jump there before paint so the
+  // page opens on it (not on the start of the strip, sliding over); later
+  // changes spring.
+  useLayoutEffect(() => {
     const strip = stripRef.current;
     const active = activeRef.current;
     if (!strip || !active || !scrollable) return;
     cancelRef.current?.();
     const target = active.offsetLeft - strip.offsetWidth / 2 + active.offsetWidth / 2;
+    if (!placedRef.current) {
+      placedRef.current = true;
+      strip.scrollLeft = target;
+      return;
+    }
     cancelRef.current = springScrollTo(strip, target);
     return () => cancelRef.current?.();
   }, [month, scrollable]);
@@ -36,10 +45,10 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
       ref={stripRef}
       className={`flex-none flex items-center border-t border-b border-rule h-[84px] ${
         scrollable
-          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6'
+          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6 md:px-[42px]'
           : spread
             ? 'justify-between px-[120px]'
-            : 'justify-center gap-[72px] px-6'
+            : 'justify-center gap-[72px] px-[42px]'
       }`}
     >
       {visible.map((i) => {
@@ -51,7 +60,7 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
             ref={isActive ? activeRef : null}
             onClick={() => onChange(i)}
             aria-current={isActive ? 'true' : undefined}
-            className="flex-none text-ink transition-opacity hover:opacity-60"
+            className="flex-none text-oxblood transition-opacity hover:opacity-60"
             // Figma (283:2067): Newsreader Light 24px; the active month is
             // marked by italic semibold instead of an underline.
             style={{

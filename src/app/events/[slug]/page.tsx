@@ -58,7 +58,7 @@ export default async function EventPage({ params }: Params) {
     <PageShell size="full">
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: meta.plural, href: `/${meta.slug}` },
           { name: event.title, href: `/events/${slug}` },
         ]}

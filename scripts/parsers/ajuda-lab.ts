@@ -38,6 +38,17 @@ const WORKSHOPS: Workshop[] = [
     tags: ['workshop', 'jewellery', 'wax-casting', 'lisbon'],
   },
   {
+    // One-off intro session by the teacher of the painting course below; listed
+    // first so the broader /pintura/ match doesn't swallow it.
+    match: /pinceladas|inicia[cç][aã]o\s+(?:[aà]\s+)?pintura/i,
+    title: "Iniciação à Pintura — Pinceladas do Mercado d'Ajuda",
+    page: `${BASE}/workshop-de-pintura/`,
+    imageUrl: `${BASE}/wp-content/uploads/2026/03/workshop_painting_lisbon-1.jpg`,
+    durationHours: 3,
+    description: 'A roughly 3-hour introductory painting session at Ajuda Lab in Mercado da Ajuda, Lisbon.',
+    tags: ['workshop', 'painting', 'beginners', 'lisbon'],
+  },
+  {
     match: /pintura|desenho/i,
     title: 'Pintura e Desenho à Vista',
     page: `${BASE}/workshop-de-pintura/`,
@@ -93,9 +104,10 @@ const MONTHS: Record<string, number> = {
 };
 
 // "11 Outubro 15H 35€" / "12 de Setembro 10h 35€" / "25 Outubro 11h30 35€" /
-// "28 Novembro Horário: 10h00 | Duração: aprox. 3 horas | desde 100€*"
+// "28 Novembro Horário: 10h00 | Duração: aprox. 3 horas | desde 100€*" /
+// "29 Novembro. Horário 10h00 apróxi. 3 horas, 35€" ("desde" is sometimes typo'd "desded")
 const DATE_RE =
-  /(\d{1,2})\s+(?:de\s+)?([a-zç]+)[\s|]+(?:hor[aá]rio:?\s*)?(\d{1,2})\s*h\s*(\d{2})?.*?(desde\s+)?(\d+)\s*€/i;
+  /(\d{1,2})\s+(?:de\s+)?([a-zç]+)[\s|.,]+(?:hor[aá]rio:?\s*)?(\d{1,2})\s*h\s*(\d{2})?.*?(desde\w*\s+)?(\d+)\s*€/i;
 
 function extractOptions(html: string): string[] {
   const m = html.match(/FB_PUBLIC_LOAD_DATA_ = (\[[\s\S]*?\]);<\/script>/);
@@ -126,6 +138,7 @@ export async function run(): Promise<void> {
   const now = new Date();
   const today = now.toISOString().split('T')[0];
   const events: NewEvent[] = [];
+  const seenDays = new Set<string>();
 
   for (const option of options) {
     if (!option.trim() || SKIP.test(option)) continue;
@@ -154,15 +167,21 @@ export async function run(): Promise<void> {
       ? `${String(startHour + workshop.durationHours).padStart(2, '0')}:${min ?? '00'}`
       : null;
 
-    // Teacher is "... com Name |" or the trailing " - Name" segment.
+    // Teacher is "... com Name |" / "... com Name - 29 Novembro" or the trailing " - Name" segment.
     const parts = option.split(/\s+-\s+/);
     const teacher =
-      option.match(/\bcom\s+([^|]+?)\s*\|/i)?.[1] ?? (parts.length > 1 ? parts.at(-1)?.trim() : undefined);
+      option.match(/\bcom\s+(.+?)\s*(?:\||\s-\s)/i)?.[1] ?? (parts.length > 1 ? parts.at(-1)?.trim() : undefined);
     const description = teacher ? `${workshop.description} With ${teacher}.` : workshop.description;
 
     const sourceUrl = workshop.page ?? REGISTRATION_URL;
+    // Same workshop twice a day (10h + 15h) would share an id and the second
+    // would overwrite the first. The day's first session keeps the plain
+    // title+date id (so existing rows don't churn); later ones add the time.
+    const dayKey = `${workshop.title}|${startDate}`;
+    const idDate = seenDays.has(dayKey) ? `${startDate} ${startTime}` : startDate;
+    seenDays.add(dayKey);
     events.push({
-      id: makeId(sourceUrl, workshop.title, startDate),
+      id: makeId(sourceUrl, workshop.title, idDate),
       title: workshop.title,
       type: 'workshop',
       startDate,
