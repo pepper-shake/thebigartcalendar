@@ -18,6 +18,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 | `--page` / `bg-page` | `#F2EFE4` | Page background |
 | `--ink` / `text-ink` | `#383430` | Default text and icons on the page |
 | `--rule` / `border-rule` | `#B1B1B1` | Hairlines around the month and day strips |
+| `--oxblood` / `text-oxblood` | `#5A1F2E` | Calendar controls: place/type/year filters (place and type on the left, year on the right), month and day strips |
 | `--font-serif` | Newsreader | Everything |
 | `--font-meta` | Geist | Card and event meta, chips |
 

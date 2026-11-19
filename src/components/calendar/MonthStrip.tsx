@@ -60,7 +60,7 @@ export default function MonthStrip({ month, months, onChange, scrollable = false
             ref={isActive ? activeRef : null}
             onClick={() => onChange(i)}
             aria-current={isActive ? 'true' : undefined}
-            className="flex-none text-ink transition-opacity hover:opacity-60"
+            className="flex-none text-oxblood transition-opacity hover:opacity-60"
             // Figma (283:2067): Newsreader Light 24px; the active month is
             // marked by italic semibold instead of an underline.
             style={{

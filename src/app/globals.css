@@ -155,23 +155,23 @@
 .home-header-logo:hover {
   opacity: 0.6;
 }
+/* "Where art happens" button (Figma "Calendar" 415:3494): oxblood with blush
+   text; on hover the two colours swap. */
 .home-header-cta {
   margin-left: auto;
   padding: 10px 14px;
   background-color: #5a1f2e;
-  color: var(--page);
+  color: #e4b6d1;
   font-family: var(--font-meta);
   font-size: 16px;
   line-height: 18px;
   white-space: nowrap;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
-.home-header-cta:hover {
-  opacity: 0.85;
-}
-/* On "Where art happens" itself the button's text turns blush. */
-.home-header-cta[aria-current='page'] {
-  color: #e4b6d1;
+.home-header-cta:hover,
+.home-header-cta:focus-visible {
+  background-color: #e4b6d1;
+  color: #5a1f2e;
 }
 /* Holds the fixed header's place on pages without a hero (`solid`). */
 .home-header-spacer {
@@ -181,7 +181,6 @@
 @media (min-width: 768px) {
   .home-header {
     height: 102px;
-    padding: 0 50px;
   }
   .home-header-logo {
     font-size: 32px;
@@ -210,6 +209,7 @@
   /* Site palette — see docs/design/style.md */
   --color-page: var(--page);
   --color-ink: var(--ink);
+  --color-oxblood: var(--oxblood);
   --color-rule: var(--rule);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -255,6 +255,7 @@
   --page: #F2EFE4;  /* page background */
   --ink: #383430;   /* default text / icons on the page */
   --rule: #B1B1B1;  /* hairline dividers between strips */
+  --oxblood: #5A1F2E; /* calendar controls (filters, month + day strips) */
   /* Small sans for card meta lines and chips (Figma uses Geist there). */
   --font-meta: var(--font-geist-sans), system-ui, sans-serif;
 
