@@ -67,7 +67,7 @@ Ten pairs are needed because the busiest days carry about 8 different events and
 ## Deviations from Figma (kept to the reference's rules)
 - Figma sets the event-page title in Host Grotesk SemiBold and the description in Oxygen. We use Newsreader 300 for both ("one serif, one weight").
 - Figma rounds the event-page image (17px). We keep it square.
-- Figma marks the active month/day with Newsreader **SemiBold** Italic. We follow Figma here, which is the one place a heavier weight appears.
+- Figma marks the active month/day with Newsreader **SemiBold** Italic. We follow Figma here. The homepage editor's-choice card titles are the other exception: Newsreader 400 (24/24, −0.48px), per Figma.
 - Place page: Figma sets the title and band headings in Newsreader Regular and the website link in Host Grotesk. We use Newsreader 300 and Geist Light. The Instagram heading reads "on Instagram" (Figma: "in Instagram") and links to the profile. Opening hours aren't in the frame but are kept. Past events are not shown. Instagram posts have no cream card frame.
 - Figma's header has no year selector. The year select is kept, because it's needed to reach next year's events.
 

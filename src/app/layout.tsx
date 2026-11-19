@@ -35,7 +35,7 @@ const geistMono = Geist_Mono({
 // Newsreader stands in for the commercial Times Now). Geist is kept for small
 // meta lines and chips, as in the Figma cards.
 const newsreader = Newsreader({
-  weight: ["300", "600"],
+  weight: ["300", "400", "600"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-serif",
