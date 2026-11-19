@@ -17,6 +17,7 @@ import { run as laBiennale } from './parsers/la-biennale';
 import { run as pinkDolphin } from './parsers/pink-dolphin';
 import { run as dviTaures } from './parsers/dvi-taures';
 import { run as collageClub } from './parsers/collage-club';
+import { run as shesGotYou } from './parsers/shes-got-you';
 import { run as collageWorkingClub } from './parsers/collage-working-club';
 import { run as discoWheel } from './parsers/disco-wheel';
 import { run as ajudaLab } from './parsers/ajuda-lab';
@@ -62,6 +63,7 @@ const parsers = [
   { name: 'Pink Dolphin', fn: pinkDolphin },
   { name: '2 Taurės', fn: dviTaures },
   { name: 'Collage Club', fn: collageClub },
+  { name: 'She’s Got You', fn: shesGotYou },
   { name: 'Collage Working Club', fn: collageWorkingClub },
   { name: 'Disco Wheel', fn: discoWheel },
   { name: 'Ajuda Lab', fn: ajudaLab },
