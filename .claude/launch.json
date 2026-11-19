@@ -4,8 +4,21 @@
     {
       "name": "artcal",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000,
+      "autoPort": false
+    },
+    {
+      "name": "local-db",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "db:local"
+      ],
+      "port": 5432,
       "autoPort": false
     }
   ]

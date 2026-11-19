@@ -1,0 +1,70 @@
+/* See ScrollScene.tsx. --p (0–1) is written by JS; --len is the scene length
+   in screens. */
+.scene {
+  --p: 0;
+  position: relative;
+}
+.stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.pin,
+.pinDesktop {
+  height: calc(var(--len) * 100svh);
+}
+.pin > .stage,
+.pinDesktop > .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+.cover,
+.coverDesktop {
+  z-index: 1;
+  margin-top: calc(var(--cover, 1) * -100svh);
+}
+.view > .stage {
+  min-height: 100svh;
+}
+
+/* Below 1024px: the mobile hold/cover lengths, and `cover="desktop"` doesn't
+   overlap (it follows a scene that may not be pinned there). */
+@media (max-width: 1023px) {
+  .pin,
+  .pinDesktop {
+    height: calc(var(--len-m, var(--len)) * 100svh);
+  }
+  .cover {
+    margin-top: calc(var(--cover-m, var(--cover, 1)) * -100svh);
+  }
+  .coverDesktop {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .pinDesktop {
+    height: auto;
+  }
+  .pinDesktop > .stage {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin,
+  .pinDesktop {
+    height: auto;
+  }
+  .cover,
+  .coverDesktop {
+    margin-top: 0;
+  }
+  .pin > .stage,
+  .pinDesktop > .stage {
+    position: relative;
+  }
+}

@@ -1,0 +1,159 @@
+/* "Where art happens" (Figma "Calendar" 411:2479). Desktop: a heading on the
+   left, copy in a 497px column on the right (x=901 at 1440px), 42px gutters
+   (24px on phones), as on every page.
+   Oxblood text on cream, sky and sand bands; the FAQ is in ink. Fluid sizes
+   reach the Figma values at 1440px. */
+.page {
+  --gap: 24px;
+  color: #5a1f2e;
+}
+@media (min-width: 768px) {
+  .page {
+    --gap: 42px;
+  }
+}
+
+/* Full width with the page gutters, so headings line up with the photo row
+   on any screen width (no centred max-width). */
+.wrap {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 var(--gap);
+}
+
+.split {
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 497px);
+    column-gap: 64px;
+  }
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(38px, 3.62vw, 52px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(30px, 2.92vw, 42px);
+  line-height: 1.1429; /* 48px at 42px */
+  letter-spacing: -0.02em;
+}
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(19px, 1.67vw, 24px);
+  line-height: 1.33;
+  letter-spacing: -0.01em;
+}
+.cta {
+  align-self: flex-start;
+  margin-top: -8px;
+  font-size: clamp(24px, 2.23vw, 32px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: from-font;
+}
+.cta:hover {
+  opacity: 0.6;
+}
+
+/* Intro: title + pitch, then a row of studio photos running off the right
+   edge (359px tall at desktop, 10px apart); it scrolls sideways on phones. */
+.intro {
+  padding: clamp(16px, 2.1vw, 30px) 0 clamp(40px, 5.3vw, 76px);
+}
+.photos {
+  display: flex;
+  gap: 10px;
+  margin-bottom: clamp(32px, 3.5vw, 50px);
+  padding-left: var(--gap);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.photos::-webkit-scrollbar {
+  display: none;
+}
+.photo {
+  position: relative;
+  flex: none;
+  height: clamp(220px, 25vw, 359px);
+  overflow: hidden;
+}
+.photo img {
+  object-fit: cover;
+}
+
+/* Bands */
+.sky {
+  padding: clamp(40px, 3.5vw, 50px) 0 clamp(48px, 4.6vw, 66px);
+  background-color: #92b8da;
+}
+.sand {
+  padding: clamp(40px, 3.5vw, 50px) 0;
+  background-color: #e5e1d3;
+}
+
+/* FAQ: native <details>, so it works without JS and the answers are in the
+   HTML for crawlers. 866px list, #E5E1D3 hairlines, "+" / "−" icons. */
+.faq {
+  padding: clamp(40px, 3.5vw, 50px) 0;
+  color: var(--ink);
+}
+.faq .heading {
+  margin-bottom: 32px;
+}
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 866px;
+}
+.faqList summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e1d3;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 28px;
+}
+.faqList summary::-webkit-details-marker {
+  display: none;
+}
+.faqList summary:hover {
+  opacity: 0.7;
+}
+.faqList summary img {
+  flex: none;
+}
+.minus,
+.faqList details[open] .plus {
+  display: none;
+}
+.faqList details[open] .minus {
+  display: block;
+}
+.answer {
+  padding: 32px 0 32px 30px;
+  font-family: var(--font-serif);
+  font-weight: 400; /* Figma 414:2757: Newsreader Regular */
+  font-size: 18px;
+  line-height: 32px;
+}

@@ -1,20 +1,66 @@
 import type { Metadata } from 'next';
-import { getAllEvents } from '@/db/queries';
-import { toArtEvent } from '@/lib/transform';
-import CalendarClient from '@/components/calendar/CalendarClient';
-import { SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from '@/lib/site';
+import Image from 'next/image';
+import { getCurrentEvents, listActiveTypes, todayISO } from '@/lib/events';
+import { selectEditorChoice } from '@/lib/editorPicks';
+import { nextEventDays } from '@/lib/nextEventDays';
+import { itemListJsonLd } from '@/lib/jsonld';
+import EditorChoice from '@/components/home/EditorChoice';
+import NewsletterSignup from '@/components/home/NewsletterSignup';
+import NextDays from '@/components/home/NextDays';
+import s from '@/components/home/Home.module.css';
+import JsonLd from '@/components/seo/JsonLd';
+import SiteFooter from '@/components/layout/SiteFooter';
+import { SITE_NAME, SITE_DESCRIPTION, SITE_TAGLINE, absoluteUrl } from '@/lib/site';
+
+// Regenerated at most every 10 minutes instead of on every visit: the homepage
+// gets the most traffic, and per-request DB reads are what eat Neon's compute
+// allowance. New scrapes and curation edits still show up within 10 minutes.
+export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: { absolute: `${SITE_NAME} — Art Events Across Europe` },
+  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
   description: SITE_DESCRIPTION,
   alternates: { canonical: absoluteUrl('/') },
   openGraph: { url: absoluteUrl('/') },
 };
 
 export default async function HomePage() {
-  const rows = await getAllEvents();
-  const events = rows.map(toArtEvent);
-  const cities = [...new Set(events.map((e) => e.city).filter(Boolean))].sort();
+  const today = todayISO();
+  const [current, activeTypes] = await Promise.all([getCurrentEvents(), listActiveTypes()]);
+  const { events, curated } = selectEditorChoice(current, today);
+  const nextDays = nextEventDays(current, today);
 
-  return <CalendarClient events={events} cities={cities} />;
+  return (
+    <div className={`${s.home} min-h-full flex flex-col`} style={{ backgroundColor: 'var(--page)' }}>
+      <main className="flex-1">
+        {/* Figma "Home page" 387:2803: a full-bleed photo with the wordmark as
+            the page's h1. The fixed SiteHeader lies over its top. */}
+        <section className={s.hero}>
+          <Image
+            src="/home/hero.jpg"
+            alt="Brushes, paint tubes and a half-finished abstract painting on a table covered in newspaper"
+            fill
+            sizes="100vw"
+            preload
+          />
+          <h1 className="lowercase">
+            the big
+            <br />
+            art calendar.
+          </h1>
+          <p className={s.heroTagline}>
+            We promote art and culture by sharing inspiring upcoming creative workshops. Join!
+          </p>
+        </section>
+
+        <NextDays days={nextDays} today={today} />
+
+        <EditorChoice events={events} curated={curated} month={Number(today.slice(5, 7))} activeTypes={activeTypes} />
+
+        <NewsletterSignup />
+      </main>
+      <SiteFooter flush />
+      {events.length > 0 && <JsonLd data={itemListJsonLd(events)} />}
+    </div>
+  );
 }

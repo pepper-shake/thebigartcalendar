@@ -34,7 +34,7 @@ Vercel shows the exact records to add; the standard ones are:
 
 ## 4. After it's live
 - Verify over HTTPS: `https://thebigartcalendar.com/`, `/sitemap.xml`, `/robots.txt` — and that `www.` redirects to the apex.
-- **Google Search Console**: add the domain property, verify (DNS `TXT`), submit `https://thebigartcalendar.com/sitemap.xml`.
+- **Google Search Console** (done 2026-11-07): Domain property, verified by a DNS `TXT` record at Imena.ua (keep it), sitemap `https://thebigartcalendar.com/sitemap.xml` submitted.
 - (Optional) **Bing Webmaster Tools**: same.
 - (Optional) Switch the Retool upload-query base URL to the custom domain — see [retool.md](retool.md). The route works on either host; no rush.
 

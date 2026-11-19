@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import PageShell from '@/components/seo/PageShell';
 import PageHeading from '@/components/seo/PageHeading';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
@@ -10,18 +11,20 @@ import { EventTypeMeta } from '@/lib/eventTypes';
 // Shared body for the five type landing pages (/exhibitions, /workshops, …).
 export default async function TypeLandingPage({ meta }: { meta: EventTypeMeta }) {
   const events = await getEventsByType(meta.type);
+  // No upcoming events of this type → no page (it reappears automatically).
+  if (events.length === 0) notFound();
 
   return (
     <PageShell wide>
       <Breadcrumbs
         items={[
-          { name: 'Calendar', href: '/' },
+          { name: 'Calendar', href: '/calendar' },
           { name: meta.plural, href: `/${meta.slug}` },
         ]}
       />
       <PageHeading sub={meta.blurb}>{meta.plural}</PageHeading>
       <EventList events={events} />
-      {events.length > 0 && <JsonLd data={itemListJsonLd(events)} />}
+      <JsonLd data={itemListJsonLd(events)} />
     </PageShell>
   );
 }

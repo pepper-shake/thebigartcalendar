@@ -1,29 +1,52 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { ArtEvent, CalendarFilters } from '@/types';
+import { toDateString } from '@/lib/calendarUtils';
+import { computeFacets, monthForYear, monthsInYear, resolveMonth } from '@/lib/calendarFacets';
 import AppHeader from '@/components/layout/AppHeader';
 import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
-import EventModal from '@/components/events/EventModal';
 import MobileAgenda from '@/components/mobile/MobileAgenda';
 
 interface Props {
   events: ArtEvent[];
-  cities: string[];
+  /** The server-rendered SiteFooter, shown at the end of each scroll pane. */
+  footer?: React.ReactNode;
+  /** Open on this day (YYYY-MM-DD), from /calendar?date=… (homepage day links). */
+  initialDate?: string;
 }
 
 const DEFAULT_FILTERS: CalendarFilters = { type: 'all', city: 'all' };
 
-export default function CalendarClient({ events, cities }: Props) {
+export default function CalendarClient({ events, footer, initialDate }: Props) {
   const today = useMemo(() => new Date(), []);
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  // The year/month the user asked for; what's shown is resolved against the
+  // months that actually have events (below).
+  const [requestedYear, setYear] = useState(initialDate ? Number(initialDate.slice(0, 4)) : today.getFullYear());
+  const [requestedMonth, setMonth] = useState(initialDate ? Number(initialDate.slice(5, 7)) - 1 : today.getMonth());
+  const [selectedDate, setSelectedDate] = useState<string | null>(initialDate ?? null);
   const [filters, setFilters] = useState<CalendarFilters>(DEFAULT_FILTERS);
-  const [modalEvent, setModalEvent] = useState<ArtEvent | null>(null);
+
+  // Only offer years, months, types and cities that lead to events, each
+  // reacting to the other filters (see src/lib/calendarFacets.ts).
+  const facets = useMemo(() => computeFacets(events, filters), [events, filters]);
+
+  // Show the requested month if it has events; otherwise the next month that
+  // does (e.g. on first load, or after a filter empties the current month).
+  const { year, month } = useMemo(
+    () => resolveMonth(facets.monthKeys, requestedYear, requestedMonth),
+    [facets.monthKeys, requestedYear, requestedMonth],
+  );
+  const months = useMemo(() => monthsInYear(facets.monthKeys, year), [facets.monthKeys, year]);
+
+  const handleYearChange = (y: number) => {
+    setYear(y);
+    setMonth(monthForYear(facets.monthKeys, y, month));
+    setSelectedDate(null);
+  };
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -35,55 +58,95 @@ export default function CalendarClient({ events, cities }: Props) {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Events active during this year/month (including spanning exhibitions)
+  // Desktop: only the card list scrolls, so a vertical wheel over the pinned
+  // site header / filters / month and day strips would do nothing. Forward it
+  // to the card list (the strips keep their sideways wheel scroll).
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      const list = scrollRef.current;
+      if (!list || !list.offsetParent) return; // mobile layout: list hidden
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const target = e.target instanceof Element ? e.target : null;
+      if (!target || list.contains(target) || target.closest('[role="dialog"], [role="listbox"]')) return;
+      for (let el: Element | null = target; el; el = el.parentElement) {
+        const { overflowY } = getComputedStyle(el);
+        if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) return;
+      }
+      const lines = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : 1;
+      list.scrollBy({ top: e.deltaY * lines });
+    };
+    document.addEventListener('wheel', onWheel, { passive: true });
+    return () => document.removeEventListener('wheel', onWheel);
+  }, []);
+
+  // Month boundaries as zero-padded ISO strings, so lexicographic comparison
+  // is chronological — avoids timezone pitfalls of Date parsing/comparison.
+  const { firstOfMonth, lastOfMonth } = useMemo(() => {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return {
+      firstOfMonth: `${year}-${pad(month + 1)}-01`,
+      lastOfMonth: `${year}-${pad(month + 1)}-${pad(daysInMonth)}`,
+    };
+  }, [year, month]);
+
+  // Events active at any point during the viewed month (start/end inclusive),
+  // including multi-day exhibitions that began before or run past it.
   const monthEvents = useMemo(() => {
-    const firstOfMonth = new Date(year, month, 1);
-    const lastOfMonth = new Date(year, month + 1, 0);
-
     return events.filter((e) => {
-      const start = new Date(e.date);
-      const end = e.endDate ? new Date(e.endDate) : start;
-
-      if (start > lastOfMonth || end < firstOfMonth) return false;
+      const end = e.endDate ?? e.date;
+      if (e.date > lastOfMonth || end < firstOfMonth) return false;
       if (filters.type !== 'all' && e.type !== filters.type) return false;
       if (filters.city !== 'all' && e.city !== filters.city) return false;
       return true;
     });
-  }, [events, year, month, filters]);
+  }, [events, firstOfMonth, lastOfMonth, filters]);
 
-  // Unique sorted dates — spanning events pinned to 1st of month
+  // Every in-month day covered by an event. A multi-day exhibition contributes
+  // each day it is open (clamped to the month), so it is discoverable on any of
+  // those days — not only its opening date.
   const eventDates = useMemo(() => {
-    const firstOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-    const dates = monthEvents.map((e) => {
-      const [y, m] = e.date.split('-').map(Number);
-      return y === year && m - 1 === month ? e.date : firstOfMonth;
-    });
-    return [...new Set(dates)].sort();
-  }, [monthEvents, year, month]);
+    const days = new Set<string>();
+    for (const e of monthEvents) {
+      const rawEnd = e.endDate ?? e.date;
+      const start = e.date < firstOfMonth ? firstOfMonth : e.date;
+      const end = rawEnd > lastOfMonth ? lastOfMonth : rawEnd;
+      const [y, m, d] = start.split('-').map(Number);
+      const cur = new Date(y, m - 1, d);
+      for (let s = toDateString(cur); s <= end; cur.setDate(cur.getDate() + 1), s = toDateString(cur)) {
+        days.add(s);
+      }
+    }
+    return [...days].sort();
+  }, [monthEvents, firstOfMonth, lastOfMonth]);
 
   // The date to show: keep the user's explicit selection while it's still a
-  // valid event date this month, otherwise fall back to the current day-of-month
-  // (when it has events) or the first event date. Derived during render rather
-  // than pushed into state from an effect, to avoid cascading renders.
+  // valid event date this month. Otherwise, in the current month, open on today
+  // (or the next event day after it); in any other month, open on its first
+  // event day. The strip still lists every event day of the month, so earlier
+  // days stay reachable by scrolling back. Derived during render rather than
+  // pushed into state from an effect, to avoid cascading renders.
   const effectiveSelectedDate = useMemo<string | null>(() => {
     if (eventDates.length === 0) return null;
     if (selectedDate && eventDates.includes(selectedDate)) return selectedDate;
-    const todayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    return eventDates.includes(todayStr) ? todayStr : eventDates[0];
+    if (year === today.getFullYear() && month === today.getMonth()) {
+      const todayStr = toDateString(today);
+      return eventDates.find((d) => d >= todayStr) ?? eventDates[eventDates.length - 1];
+    }
+    return eventDates[0];
   }, [eventDates, selectedDate, year, month, today]);
 
-  // Events for the selected date
+  // Events that cover the selected date (start ≤ date ≤ end).
   const selectedEvents = useMemo(() => {
     if (!effectiveSelectedDate) return [];
-    const firstOfMonth = `${year}-${String(month + 1).padStart(2, '0')}-01`;
     return monthEvents.filter((e) => {
-      const [y, m] = e.date.split('-').map(Number);
-      const effectiveDate = y === year && m - 1 === month ? e.date : firstOfMonth;
-      return effectiveDate === effectiveSelectedDate;
+      const end = e.endDate ?? e.date;
+      return e.date <= effectiveSelectedDate && end >= effectiveSelectedDate;
     });
-  }, [monthEvents, effectiveSelectedDate, year, month]);
+  }, [monthEvents, effectiveSelectedDate]);
 
   const handleMonthChange = (m: number) => {
+    setYear(year);
     setMonth(m);
     setSelectedDate(null);
   };
@@ -91,54 +154,50 @@ export default function CalendarClient({ events, cities }: Props) {
   return (
     <>
       {/* ── Desktop ─────────────────────────────────────── */}
-      <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: '#FBFAF6' }}>
+      <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: 'var(--page)' }}>
 
-        {/* Filters bar with fading bottom border on scroll */}
-        <div className="flex-none relative">
-          <AppHeader
-            year={year}
-            onYearChange={setYear}
-            filters={filters}
-            onFiltersChange={setFilters}
-            cities={cities}
-          />
-          <div
-            className="absolute bottom-0 left-0 right-0 h-px bg-[#b1b1b1] transition-opacity duration-300"
-            style={{ opacity: isScrolled ? 1 : 0 }}
-          />
+        {/* Pinned under the site header (Figma "Scrolling" 417:4139): the
+            month and day strips stay on screen... */}
+        <div className="flex-none">
+          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
+          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
         </div>
 
-        {/* Scrollable: month strip + date strip + cards */}
+        {/* ...while the filter row scrolls away with the cards. */}
         <div
           ref={scrollRef}
           className="flex-1 min-h-0 overflow-y-auto"
           onScroll={handleScroll}
         >
-          <MonthStrip month={month} onChange={handleMonthChange} />
-          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
-
-          <main className="px-6 py-4">
+          <AppHeader
+            year={year}
+            years={facets.years}
+            onYearChange={handleYearChange}
+            filters={filters}
+            onFiltersChange={setFilters}
+            cities={facets.cities}
+            types={facets.types}
+          />
+          <main className="px-[42px] py-4">
             {selectedEvents.length === 0 ? (
-              <div className="flex items-center justify-center h-48 text-zinc-400 text-sm">
+              <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
                 {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
               </div>
             ) : (
-              <div
-                className="grid gap-4"
-                style={{ gridTemplateColumns: `repeat(${Math.min(selectedEvents.length, 4)}, 1fr)` }}
-              >
+              <div className="event-grid">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} onClick={setModalEvent} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}
           </main>
+          {footer}
         </div>
 
         {/* Scroll-to-top FAB */}
         <button
           onClick={scrollToTop}
-          className="absolute bottom-9 right-6 bg-black rounded-full p-3 flex items-center justify-center transition-all duration-300"
+          className="absolute bottom-9 right-6 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
           style={{
             opacity: isScrolled ? 1 : 0,
             pointerEvents: isScrolled ? 'auto' : 'none',
@@ -146,18 +205,18 @@ export default function CalendarClient({ events, cities }: Props) {
           }}
           aria-label="Scroll to top"
         >
-          <ArrowUp className="size-6 text-white" strokeWidth={2} />
+          <ArrowUp className="size-6 text-page" strokeWidth={1.5} />
         </button>
-
-        <EventModal event={modalEvent} onClose={() => setModalEvent(null)} />
       </div>
 
       {/* ── Mobile ──────────────────────────────────────── */}
       <div className="flex md:hidden flex-col h-full overflow-hidden">
         <MobileAgenda
           year={year}
-          onYearChange={setYear}
+          years={facets.years}
+          onYearChange={handleYearChange}
           month={month}
+          months={months}
           onMonthChange={handleMonthChange}
           selectedDate={effectiveSelectedDate}
           onSelectedDateChange={setSelectedDate}
@@ -165,7 +224,9 @@ export default function CalendarClient({ events, cities }: Props) {
           selectedEvents={selectedEvents}
           filters={filters}
           onFiltersChange={setFilters}
-          cities={cities}
+          cities={facets.cities}
+          types={facets.types}
+          footer={footer}
         />
       </div>
     </>

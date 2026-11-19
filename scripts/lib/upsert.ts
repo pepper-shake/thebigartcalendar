@@ -13,6 +13,9 @@ export function makeId(sourceUrl: string, title: string, startDate: string): str
 
 export async function upsertEvents(newEvents: NewEvent[]): Promise<void> {
   if (newEvents.length === 0) return;
+  // One INSERT … ON CONFLICT can't touch the same id twice, so drop repeats
+  // within a batch (last wins) instead of failing the whole source.
+  newEvents = [...new Map(newEvents.map((e) => [e.id, e])).values()];
 
   const client = neon(process.env.DATABASE_URL!);
   const db = drizzle(client);

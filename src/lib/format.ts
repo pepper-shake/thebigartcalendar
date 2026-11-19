@@ -1,10 +1,19 @@
 import { MONTH_NAMES } from '@/lib/calendarUtils';
 
+const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 /** "2026-06-14" → "14 June 2026". Falls back to the raw string if malformed. */
 export function formatDate(dateStr: string): string {
   const [y, m, d] = dateStr.split('-').map(Number);
   if (!y || !m || !d) return dateStr;
   return `${d} ${MONTH_NAMES[m - 1]} ${y}`;
+}
+
+/** "2026-08-08" → "Aug 8, 2026". Falls back to the raw string if malformed. */
+export function formatDateShort(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  if (!y || !m || !d) return dateStr;
+  return `${MONTH_ABBR[m - 1]} ${d}, ${y}`;
 }
 
 /** Single date, or "start – end" for multi-day events. */

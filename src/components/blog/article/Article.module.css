@@ -1,0 +1,159 @@
+/* Plain article posts. One serif (Newsreader 300) for content, Geist for meta,
+   square and flat, duotone panels (docs/design/style.md). Mobile first. */
+
+.article {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 24px 72px;
+  color: var(--ink);
+}
+
+.head {
+  max-width: 720px;
+  margin: 0 auto 32px;
+}
+
+.kicker {
+  font-family: var(--font-meta);
+  font-size: 14px;
+  line-height: 20px;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 7vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.lead {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+.hero {
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+.hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero figcaption {
+  font-family: var(--font-meta);
+  font-size: 13px;
+  line-height: 18px;
+  opacity: 0.6;
+  margin-top: 8px;
+}
+
+.body {
+  max-width: 720px;
+  margin: 0 auto;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 30px;
+}
+
+.body > * + * {
+  margin-top: 20px;
+}
+
+.body h2 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 32px;
+  line-height: 38px;
+  margin-top: 48px;
+}
+
+.body ul {
+  list-style: none;
+  padding: 0;
+}
+
+.body li {
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.body li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.body a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.body a:hover {
+  opacity: 0.7;
+}
+
+/* Key facts: cobalt with sage text, one of the card schemes. */
+.info {
+  margin-top: 48px;
+  padding: 28px 24px;
+  background: #155797;
+  color: #c3d7c5;
+}
+
+.info h2 {
+  margin: 0 0 20px;
+  font-style: italic;
+  font-size: 30px;
+  line-height: 36px;
+}
+
+.info dl {
+  display: grid;
+  gap: 16px;
+}
+
+.info dt {
+  font-family: var(--font-meta);
+  font-size: 14px;
+  line-height: 20px;
+  opacity: 0.8;
+}
+
+.info dd {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.note {
+  font-family: var(--font-meta);
+  font-size: 15px;
+  line-height: 24px;
+  padding: 16px 20px;
+  background: #e3decc;
+}
+
+@media (min-width: 768px) {
+  .article {
+    padding: 32px 42px 96px;
+  }
+
+  .info {
+    padding: 36px 40px;
+  }
+
+  .info dl {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
+  }
+}

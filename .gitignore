@@ -42,3 +42,6 @@ next-env.d.ts
 
 # keep the env template tracked (it holds placeholders only)
 !.env.example
+
+# local PGlite database (npm run db:local)
+/.local-db/

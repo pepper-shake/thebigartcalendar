@@ -14,16 +14,29 @@ export interface ArtEvent {
   startTime?: string;
   endTime?: string;
   venue: string;
+  venueUrl?: string;
   city: string;
   country: string;
   address: string;
+  organiserName?: string;
+  organiserUrl?: string;
   description: string;
   image?: string;
+  imageCandidates?: string[]; // ordered image fallback ladder; client walks it on load error
   ticketsUrl?: string;
+  sourceUrl?: string; // original page the event was scraped from (redirect target)
   price?: string;
   participants?: string[];
   agenda?: AgendaItem[];
   tags?: string[];
+  venuePlace?: PlaceRef;     // linked /places entry for the venue (matched at read time)
+  organiserPlace?: PlaceRef; // linked /places entry for the organiser
+  schemeIndex?: number;      // card colour (index into CARD_SCHEMES), set by assignCardSchemes
+}
+
+export interface PlaceRef {
+  slug: string;
+  name: string;
 }
 
 export interface CalendarFilters {

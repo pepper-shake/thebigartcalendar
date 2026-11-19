@@ -7,30 +7,34 @@ import { Minus } from 'lucide-react';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  /** Links to hide, e.g. type hubs with no upcoming events ("/auctions"). */
+  hiddenHrefs?: string[];
 }
 
 const NAV_LINKS = [
-  { label: 'Calendar',     href: '/' },
+  { label: 'Home',         href: '/' },
+  { label: 'Calendar',     href: '/calendar' },
   { label: 'Exhibitions',  href: '/exhibitions' },
-  { label: 'Art Fairs',    href: '/art-fairs' },
+  { label: 'Art fairs',    href: '/art-fairs' },
   { label: 'Workshops',    href: '/workshops' },
   { label: 'Performances', href: '/performances' },
   { label: 'Auctions',     href: '/auctions' },
   { label: 'Cities',       href: '/cities' },
+  { label: 'Places',       href: '/places' },
   { label: 'About',        href: '/about' },
   { label: 'Blog',         href: '/blog' },
   { label: 'Contact',      href: '/contact' },
 ];
 
 const linkStyle = {
-  fontFamily: 'var(--font-host-grotesk)',
-  fontWeight: 800,
+  fontFamily: 'var(--font-serif)',
+  fontWeight: 300,
   fontSize: 32,
   lineHeight: '32px',
   letterSpacing: '-0.64px',
 } as const;
 
-export default function MenuPanel({ isOpen, onClose }: Props) {
+export default function MenuPanel({ isOpen, onClose, hiddenHrefs = [] }: Props) {
   // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -60,21 +64,24 @@ export default function MenuPanel({ isOpen, onClose }: Props) {
       aria-label="Site navigation"
       aria-hidden={!isOpen}
       className={[
-        'fixed top-0 right-0 h-screen bg-white z-50',
+        'fixed top-0 right-0 h-screen bg-page z-50',
         'w-full md:w-[348px]',
         'flex flex-col items-end',
         'pl-8 pr-4 py-4',
-        'transition-transform duration-300 ease-in-out',
-        isOpen ? 'translate-x-0' : 'translate-x-full',
+        // visibility flips after the slide, so the closed drawer can't be
+        // panned into view or tabbed into.
+        'transition-[transform,visibility] duration-300 ease-in-out',
+        // Drawers are the one surface that gets a shadow (Style Reference 1 §8).
+        isOpen ? 'visible translate-x-0 shadow-[0_4px_20px_rgb(56_52_48/0.15)]' : 'invisible translate-x-full',
       ].join(' ')}
     >
       {/* Close button */}
       <button
         onClick={onClose}
         aria-label="Close menu"
-        className="flex items-center justify-center size-[54px] text-black hover:opacity-60 transition-opacity shrink-0"
+        className="flex items-center justify-center size-[54px] text-ink hover:opacity-60 transition-opacity shrink-0"
       >
-        <Minus className="size-7" strokeWidth={2} />
+        <Minus className="size-8" strokeWidth={1.25} />
       </button>
 
       {/* Nav links */}
@@ -82,13 +89,13 @@ export default function MenuPanel({ isOpen, onClose }: Props) {
         className="flex flex-col items-end mt-8 w-full flex-1 min-h-0 overflow-y-auto"
         style={{ gap: 17 }}
       >
-        {NAV_LINKS.map(({ label, href }) => (
+        {NAV_LINKS.filter(({ href }) => !hiddenHrefs.includes(href)).map(({ label, href }) => (
           <Link
             key={label}
             href={href}
             onClick={onClose}
             tabIndex={isOpen ? undefined : -1}
-            className="text-black hover:opacity-50 transition-opacity"
+            className="text-ink hover:opacity-50 transition-opacity"
             style={linkStyle}
           >
             {label}

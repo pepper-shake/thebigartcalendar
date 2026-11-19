@@ -10,10 +10,10 @@ export default function PageHeading({
   return (
     <header className="mb-10">
       <h1
-        className="text-black lowercase"
+        className="text-ink lowercase"
         style={{
-          fontFamily: 'var(--font-host-grotesk)',
-          fontWeight: 800,
+          fontFamily: 'var(--font-serif)',
+          fontWeight: 300,
           fontSize: 'clamp(40px, 6vw, 68px)',
           lineHeight: 0.98,
           letterSpacing: '-1.5px',
@@ -23,9 +23,9 @@ export default function PageHeading({
       </h1>
       {sub && (
         <p
-          className="mt-4 text-black/50"
+          className="mt-4 text-ink/50"
           style={{
-            fontFamily: 'var(--font-oxygen)',
+            fontFamily: 'var(--font-serif)',
             fontWeight: 300,
             fontSize: 18,
             lineHeight: '28px',

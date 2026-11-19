@@ -1,6 +1,9 @@
 import { ArtEvent } from '@/types';
+import { type Place } from '@/db/schema';
 import { absoluteUrl, SITE_NAME, SITE_URL } from '@/lib/site';
 import { eventSlug } from '@/lib/slug';
+import { blogPostMetaTitle, blogPostPath, type BlogPost } from '@/lib/blogPosts';
+import { eventTimeZone, isoWithOffset } from '@/lib/timezone';
 
 // schema.org JSON-LD builders. These power Google's event rich results and
 // help LLM crawlers understand the content. Rendered via <JsonLd>.
@@ -14,14 +17,21 @@ const SCHEMA_TYPE: Record<string, string> = {
   auction: 'Event',
 };
 
+// Date-times carry the venue's UTC offset (DST-correct), e.g.
+// "2026-09-27T10:00:00+01:00"; date-only events stay plain dates.
+function withOffset(e: ArtEvent, date: string, time: string): string {
+  const tz = eventTimeZone(e.country);
+  return (tz && isoWithOffset(date, time, tz)) || `${date}T${time}`;
+}
+
 function startDateTime(e: ArtEvent): string {
-  return e.startTime ? `${e.date}T${e.startTime}` : e.date;
+  return e.startTime ? withOffset(e, e.date, e.startTime) : e.date;
 }
 
 function endDateTime(e: ArtEvent): string | undefined {
-  if (e.endDate && e.endTime) return `${e.endDate}T${e.endTime}`;
+  if (e.endDate && e.endTime) return withOffset(e, e.endDate, e.endTime);
   if (e.endDate) return e.endDate;
-  if (e.endTime) return `${e.date}T${e.endTime}`;
+  if (e.endTime) return withOffset(e, e.date, e.endTime);
   return undefined;
 }
 
@@ -60,12 +70,21 @@ export function eventJsonLd(event: ArtEvent): Record<string, unknown> {
     data.location = {
       '@type': 'Place',
       name: event.venue || event.city,
+      ...(event.venueUrl ? { url: event.venueUrl } : {}),
       address: {
         '@type': 'PostalAddress',
         streetAddress: event.address || undefined,
         addressLocality: event.city || undefined,
         addressCountry: event.country || undefined,
       },
+    };
+  }
+
+  if (event.organiserName) {
+    data.organizer = {
+      '@type': 'Organization',
+      name: event.organiserName,
+      ...(event.organiserUrl ? { url: event.organiserUrl } : {}),
     };
   }
 
@@ -124,5 +143,72 @@ export function organizationJsonLd(): Record<string, unknown> {
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
+  };
+}
+
+// schema.org type per place category; organiser-only places are Organizations.
+const PLACE_SCHEMA_TYPE: Record<string, string> = {
+  gallery: 'ArtGallery',
+  museum: 'Museum',
+  shop: 'Store',
+};
+
+const DAY_NAMES: Record<string, string> = {
+  mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday',
+  fri: 'Friday', sat: 'Saturday', sun: 'Sunday',
+};
+
+export function placeJsonLd(place: Place, events: ArtEvent[]): Record<string, unknown> {
+  const url = absoluteUrl(`/places/${place.slug}`);
+  const isOrgOnly = place.kind === 'organiser';
+  const data: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': isOrgOnly ? 'Organization' : (PLACE_SCHEMA_TYPE[place.category ?? ''] ?? 'LocalBusiness'),
+    name: place.name,
+    url,
+  };
+  if (place.description) data.description = place.description;
+  if (place.imageUrl) data.image = [place.imageUrl];
+  const sameAs = [place.websiteUrl, place.instagramUrl].filter(Boolean);
+  if (sameAs.length) data.sameAs = sameAs;
+
+  if (place.address || place.city) {
+    data.address = {
+      '@type': 'PostalAddress',
+      streetAddress: place.address || undefined,
+      addressLocality: place.city || undefined,
+      addressCountry: place.country || undefined,
+    };
+  }
+  if (!isOrgOnly && place.lat != null && place.lng != null) {
+    data.geo = { '@type': 'GeoCoordinates', latitude: place.lat, longitude: place.lng };
+  }
+  if (!isOrgOnly && place.openingHours) {
+    const specs = Object.entries(place.openingHours)
+      .filter(([d, v]) => DAY_NAMES[d] && typeof v === 'string' && /^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(v))
+      .map(([d, v]) => {
+        const [opens, closes] = (v as string).split('-');
+        return { '@type': 'OpeningHoursSpecification', dayOfWeek: DAY_NAMES[d], opens, closes };
+      });
+    if (specs.length) data.openingHoursSpecification = specs;
+  }
+  if (events.length) data.event = events.map((e) => eventJsonLd(e));
+  return data;
+}
+
+export function blogPostJsonLd(post: BlogPost): Record<string, unknown> {
+  const url = absoluteUrl(blogPostPath(post.slug));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: blogPostMetaTitle(post),
+    description: post.description,
+    ...(post.keywords?.length ? { keywords: post.keywords.join(', ') } : {}),
+    image: [absoluteUrl(post.image)],
+    datePublished: post.publishedAt,
+    url,
+    mainEntityOfPage: url,
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
   };
 }

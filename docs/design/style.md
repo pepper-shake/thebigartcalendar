@@ -1,0 +1,81 @@
+# Visual style
+
+The site follows **Style Reference 1** (an editorial, duotone, light-serif look) as interpreted by the Figma file **Calendar → Section 3** (node `283:1928`: "Home page" `283:2065`, "Event page" `287:4457`). Where the two disagree, Figma wins for layout and exact colours, and the reference's rules win for everything else (see *Deviations* below).
+
+## Rules
+- **One serif, one weight.** All content is set in **Newsreader 300** (stand-in for the commercial Times Now), loaded in `src/app/layout.tsx` as `--font-serif`. Hierarchy comes from size and *italics*, not bold. Base styles in `globals.css` force headings and buttons to 300.
+- **Geist for small meta only.** Card meta lines (always two: `City, Country`, then `Mon D, YYYY · HH:MM` in venue local time), type chips, event-page meta lines, pills and tags use `--font-meta` (Geist 400), as in the Figma cards.
+- **Square and flat.** `--radius` is `0`. No card shadows, gradients or rounded images. Only overlays (the filter popup and menu drawer) get a shadow: `0 4px 20px rgb(56 52 48 / .15)`. The one exception to square corners is the round scroll-to-top button (an icon button, which the reference allows).
+- **Duotone cards.** Each event card and its event-page panel use exactly one background and one foreground colour. Everything inside (title, meta, chip text, icons) takes the foreground colour.
+- **Sentence case everywhere.** Only the first letter of a title, heading, label or button is capital, plus names (places, people, cities, countries, months, weekdays, holidays, nationalities, brands, series): "Introduction to screenprinting workshop", "Art events across Portugal", "A room to read (November edition)". This covers UI copy, page `<title>`s and blog `metaTitle`s. The site name "The Big Art Calendar" is a name.
+  - **Event titles** are scraped in any casing, so [`sentenceCase()`](../../src/lib/sentenceCase.ts) rewrites them at read time inside `getPublishedEvents()` (every page, the sitemap, JSON-LD and `llms.txt` go through it; stored data is unchanged, and slugs are lower-case anyway). It keeps capitals on the first word of the title and of each part (after `:`, `(`, ` - `, ` – `, ` — `), words with inner or all capitals (PosterLab, RIBA), single letters (Level I), the event's venue, organiser, city and country, every place name and alias, and the `PROPER_NOUNS` list in that file.
+  - **When a title comes out wrong:** add a recurring name (series, brand, person) to `PROPER_NOUNS`; for a one-off, set `title_override` in Retool — overrides are shown exactly as typed and never re-cased.
+- **No uppercase or letter-spacing on labels.** Use italic instead, e.g. contact form labels. The lowercase brand wordmark and page headings are a deliberate brand choice and stay.
+
+## Tokens (`src/app/globals.css`)
+| Token | Value | Use |
+|---|---|---|
+| `--page` / `bg-page` | `#F2EFE4` | Page background |
+| `--ink` / `text-ink` | `#383430` | Default text and icons on the page |
+| `--rule` / `border-rule` | `#B1B1B1` | Hairlines around the month and day strips |
+| `--oxblood` / `text-oxblood` | `#5A1F2E` | Calendar controls: place/type/year filters (Figma `387:2619`: place and type on the left 12px apart, year on the right, in a 76px row under the day strip; Newsreader 300, 24/32, −0.48px), month and day strips |
+| `--font-serif` | Newsreader | Everything |
+| `--font-meta` | Geist | Card and event meta, chips |
+
+## Footer (`src/components/layout/SiteFooter.tsx`)
+Figma "Calendar" node `318:2384`. Olive band `#999355` with off-white text `#FFFEF9`; centred two-line wordmark, a 40%-cream hairline, then the "About us" blurb (Geist Light 16/26) beside three columns of serif links (Newsreader 300, 24/24), and a copyright + "Cookie settings" row. Mobile stacks everything in one column. Links: all events, Lisbon/Porto city hubs, Workshops (hidden when the type has no upcoming events), places, art shops (`/places?category=shop`), blog, about, contact. Figma's "Event of the month" is left out until that page exists; its "Cookie Policy" is the existing consent-reset button, since there is no policy page. It is on every page: `PageShell` pages and About/Blog/Contact render it after `<main>`; the calendar (a fixed-height shell with its own scroll panes) gets it from `src/app/calendar/page.tsx` as a `footer` prop and shows it at the end of the card list — desktop and mobile each render a copy, one hidden by CSS.
+
+## Favicon / app icons
+Two linked silver paperclips forming an "A" on the page cream (`#F2EFE4`, so the icon sits flush with the site). Next.js picks the files up by convention from `src/app/`: `favicon.ico` (16/32/48, cropped closer to the clips with contrast lifted ×1.6 so the thin wire survives 16px), `icon.png` (512) and `apple-icon.png` (180), both full-frame and opaque (iOS masks its own corners). Regenerate all three from the one 800×800 source if it changes. **Save `favicon.ico` frames as RGBA**: Turbopack's ICO decoder rejects RGB PNG frames and fails the production build ("The PNG is not in RGBA format").
+
+## Card schemes (`src/lib/eventColor.ts`)
+Used by event cards on place pages and the event page ("More events in …") and by the event-page panel. The calendar's cards are sand instead (see *Layout*).
+
+**Rule:** no two different events on the same page share a colour, but every date of one recurring event (a *series*) keeps the same colour.
+
+- **Series** = same title + venue + city (normalised), e.g. every Disco Wheel "Ceramic Workshop".
+- `assignCardSchemes()` runs once over all published events (inside `getPublishedEvents()`, so the calendar, event pages and hubs agree). Two series *conflict* if they're on at least one common day (multi-day exhibitions count every day they're open). Series are coloured greedily in order of their first date. Each takes its preferred colour (hashed from the series key) unless a conflicting series already has it, otherwise the next free one. Date order keeps colours stable as new events are scraped.
+- Result on current data: 0 of 149 days repeat a colour, and all 26 recurring series keep a single colour. With more series on a day than colours, a repeat would be unavoidable; the least-used colour is taken then.
+- `getCardScheme(event)` returns, in order: the **past scheme** for any finished event (beige `#E3DECC`, text `#72696C`, white 50% chip; Figma "Past event" `292:5169`, which also applies to pinned places), a pinned place scheme, then the assigned `schemeIndex`, then a hash of the id (fallback for events not run through `assignCardSchemes`).
+
+| bg | fg | chip | source |
+|---|---|---|---|
+| blush `#E4B6D1` | oxblood `#5A1F2D` | white 50% | Figma |
+| forest `#263322` | lime `#B0E2A0` | black 20% | Figma |
+| sky `#92B8DA` | oxblood `#5A1F2D` | white 50% | Figma |
+| butter `#FEEA8A` | cornflower `#427BB7` | white 50% | Figma |
+| olive `#AAA462` | cream `#FFE4AD` | black 20% | Figma |
+| cobalt `#155797` | sage `#C3D7C5` | black 20% | Style Reference |
+| tomato `#EB4937` | sage `#C4D5C3` | black 20% | Style Reference |
+| cocoa `#6D453E` | butter `#F4E8A9` | black 20% | Style Reference |
+| tan `#C7A086` | oxblood `#5A1F2D` | white 50% | Style Reference |
+| navy `#000E58` | sky `#92B8DA` | black 20% | Style Reference |
+
+Ten pairs are needed because the busiest days carry about 8 different events and greedy colouring needs some headroom. With the 5 Figma pairs alone, 15 of 149 days repeated a colour.
+
+**Pinned schemes:** a place can always use one scheme. `PLACE_SCHEMES` is keyed by `/places` slug and matched on the event's venue or organiser place. Disco Wheel uses wine `#5A1F2E` with pink `#ED87AF` text. Pinned schemes are reserved: they're not in the rotation, so no other event gets them. This needs place-linked events, so the calendar page loads them through `getPublishedEvents()`, like the SEO routes.
+
+## Layout (desktop, from Figma)
+- **One site header on every page except blog landings** (Figma "Header" component `415:2859`; [`SiteHeader`](../../src/components/layout/SiteHeader.tsx), `.site-header` in `globals.css`): a fixed cream `#F2EFE4` bar, 102px tall at desktop (64px on phones), oxblood `#5A1F2E` text, 42px side padding from 768px (24px on phones), the page gutter. One-line lowercase wordmark (Newsreader 300, 32/42; 24px on phones) linking home; 80px after it, Geist 16 links 24px apart — Calendar (`/calendar`), This month (`/#this-month`, the homepage editor's choice), Spaces (`/places`), Shops (`/places?category=shop`), Blog, About; and a blush `#E4B6D1` "Where art happens" button with oxblood text (`/where-art-happens`; Figma `415:3494` — on hover the two colours swap). The links and button show from `xl` (1280px); below that a "+" (tablet) / "Menu" (phone, Geist Light 18) button opens the full menu. A spacer holds the bar's place in the page flow. The cream bar ("Default") is the base style on every page; only the homepage marks the header `data-over-hero`, so only there does it start as the "White" variant over the hero photo (Figma `417:4438`: an oxblood gradient, `rgb(90 31 46 / .7)` at the top fading to clear at the bottom, with cream text and the blush button) and gets the bar once the page scrolls or a panel opens (see [homepage.md](../product/homepage.md)). Blog landings keep only their cream menu button ([blog.md](../product/blog.md)).
+- **Header drop-down panels** (desktop): hovering or focusing Calendar, This month, Spaces or Shops opens a panel under the bar (that link turns Geist SemiBold — the only hover cue on links: nothing else in the header fades or changes colour on hover except the "Where art happens" button; Escape, leaving the header or navigating closes it), with the one overlay shadow. Left: a 300px blurb (Newsreader 300 16/24) and "See all … →" (Newsreader 400); right: three preview cards in a 998px row, 12px apart — sand `#E5E1D3`, 12px padding, a white-50% type chip (Geist Regular 12), a 26/32 title in **Newsreader Regular 400** (two lines max), grey `#977276` Geist Regular 16 meta; the header's Geist links and button are Regular 400 too (the page default is 300). Calendar: the next three events to start (one date per title); This month: the first three editor's picks; Spaces: the three art places (not shops) with a photo and the most upcoming events, with category chip, "N upcoming events" and a 110px photo; Shops (`415:3292`): three art shops — any pinned in `PINNED_SHOPS` first (O Momento, since 2026-11-19), then those with a photo — name, a 110px photo (the site image if a shop has none) and city. The cards are built in the root layout by [`getHeaderMenu()`](../../src/lib/headerMenu.ts) (empty if the DB is unreachable) and stay in the HTML while hidden, so their links are crawlable from every page.
+- **The page never moves sideways.** `html, body` have `overflow-x: clip` and `overscroll-behavior-x: none` (`globals.css`), and the closed menu drawer is `invisible` as well as off-screen. Sideways scrolling happens only inside the calendar's month/day strips.
+- **Page gutters: 42px left and right on every page from 768px up, 24px on phones** (Figma `387:2803`, `411:2479`, Header `415:2858`) — the header, homepage sections (`--site-gap`), Where art happens (`--gap`), the calendar, `PageShell`, About/Contact, place pages and the footer. Gutter-aligned content is not capped at a max width, so on wide windows it stays 42px from the edges and lines up with the header's wordmark and button.
+- **Calendar order and scrolling** (Figma "Calendar" `387:2619`, "Scrolling" `417:4139`): header bar, month strip, day strip, then the place / type / year row and the cards. The header and both strips are pinned; the filter row scrolls away with the cards (`CalendarClient`). Phones (`MobileAgenda`) follow the same order and pinning; their strips scroll sideways. The place filter's "all" option reads the region ("Portugal", via `REGION`).
+- Cards are 3 per row (2 on tablet, 1 on mobile), filling the row with a 16px gap inside the page gutters. Scheme cards (place pages, "More events in …") are 552px tall and the image fills the space left under the text.
+- **Calendar cards** (`EventCard variant="calendar"`, Figma "Calendar" `387:2649`) are sand `#E5E1D3` with oxblood `#5A1F2E` text and a `#F2F0E9` type chip, not the event's scheme. Lines: chip, title (Newsreader 300, 32/36, −0.64px, two lines max), "Nov 19, 2026 · 19:00", then "Lisbon, Portugal", then a 350px image (`#FBFAF6` when there is none) pinned to the card's foot, so chips and images line up across a row. 592px with a two-line title; a row stretches to its tallest card. On hover the whole card zooms to `1.015` (250ms ease-out); it is a transform, so the grid never reflows and the card grows only ~3px per side into the gap.
+- Month strip: 24px serif, spread across the row (`px-[120px]`). Day strip: 18px serif with full day names and a 44px gap. In both, the active item is *italic semibold* instead of underlined. Where a strip scrolls, the active item is centred: on first load it jumps there before paint (so the calendar opens on today or the next event day, not on the 1st sliding over); later changes spring (`springScrollTo`).
+- Event page: the panel is the full-strength card scheme. The title is in the serif, meta lines and pills are in Geist, and "More events in …" is a 3-up grid of cards.
+- Place page (Figma "Place page" `416:3836`): a breadcrumb (Newsreader 300 18/24, grey `#909090` trail, the place name in oxblood) 42px under the header, then 16px below it a cream `#FBFAF6` panel with a 568×630 image on the right. On the left, all in oxblood `#5A1F2E`: the title (Newsreader **400**, 52/42), the italic meta lines (Newsreader 400 22px; address in grey `#909090`, "Category · City, Country" with the city underlined and linked), the description and hours (Geist Light 22/38) and the full website URL pinned to the bottom. Below it are full-width bands (`PageShell size="bleed"`) with 42/48 headings and 50px vertical padding, content spanning the window inside the 42px gutters. "Upcoming events" is a cream band with an oxblood heading and the calendar's sand cards (`EventCard variant="calendar"`; per-place tweaks in `UPCOMING_OVERRIDES`: Disco Wheel shows only the next 6, text-only via `hideImage`). "‹Place› in IG" is an oxblood `#5A1F2E` band with a blush `#E4B6D1` heading. Both band colours are fixed from Figma and the same on every place page.
+
+## Deviations from Figma (kept to the reference's rules)
+- Figma sets the event-page title in Host Grotesk SemiBold and the description in Oxygen. We use Newsreader 300 for both ("one serif, one weight").
+- Figma rounds the event-page image (17px). We keep it square.
+- Figma marks the active month/day with Newsreader **SemiBold** Italic. We follow Figma here. The homepage editor's-choice card titles are the other exception: Newsreader 400 (24/24, −0.48px), per Figma.
+- Place page: Figma sets the title and band headings in Newsreader Regular and the website link in Host Grotesk. We use Newsreader 300 and Geist Light. The Instagram heading reads "on Instagram" (Figma: "in Instagram") and links to the profile. Opening hours aren't in the frame but are kept. Past events are not shown. Instagram posts have no cream card frame.
+- **Newsreader 400 where Figma uses Regular** — the homepage newsletter title and subline, the Where art happens FAQ answers, and the header panels below. Geist text set Regular in Figma (card meta, chips, `#type` links, header links) needs an explicit `font-weight: 400`, because the page default is 300.
+- **Newsreader 400 in the header panels.** Figma's header (`415:2859`, card `415:3105`) sets the preview-card titles and "See all" links in Newsreader Regular, so the font is loaded at 300, 400 and 600 and the panels follow Figma there; everywhere else content stays 300.
+- Figma's header has no year selector. The year select is kept, because it's needed to reach next year's events.
+
+## Not yet restyled
+- The places directory cards (`/places`) keep the single `PLACE_COLOR` (`#EDEBE1`), which sits close to the new page background. The place page itself is restyled (see above).
+- Mobile has no Figma frame yet. It reuses the desktop tokens.

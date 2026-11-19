@@ -7,3 +7,4 @@
 - **Versioned migrations.** Project uses `db:push` with no migration files ([#0005](../design/decisions.md)). To switch to `generate`/`migrate`, baseline the existing schema first (mark the initial migration as already-applied).
 - **Docs CI + doc-gardening.** Add a linter (valid links, referenced files exist, AGENTS.md size bounded, schema doc matches `src/db/schema.ts`) and a recurring agent that opens fix-up PRs for stale docs. (See [docs/README.md](../README.md).)
 - **Rate-limiting** on `/api/admin/upload` — currently auth-only. Fine for a single-operator admin tool; revisit if exposed more widely.
+- **Newsletter form has no rate limit.** Only a honeypot field stops bots (`src/app/actions/newsletter.ts`). If junk sign-ups appear, add a per-IP limit (e.g. Vercel Firewall rule on the action's POST) or a CAPTCHA.

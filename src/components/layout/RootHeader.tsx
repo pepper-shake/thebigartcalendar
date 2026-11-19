@@ -1,42 +1,49 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import MenuPanel from './MenuPanel';
+import SiteHeader from './SiteHeader';
+import { isBlogLandingPath } from '@/lib/blogPosts';
+import type { HeaderMenu } from '@/lib/headerMenu';
 
-export default function RootHeader() {
+export default function RootHeader({ hiddenHrefs = [], menu }: { hiddenHrefs?: string[]; menu: HeaderMenu }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  return (
-    <>
-      <div className="flex-none flex items-start justify-between px-6 pt-[2vh] pb-[1vh]">
-        <div className="mt-1 w-[54px]" />
-
-        <Link
-          href="/"
-          className="text-center text-black lowercase"
-          style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 800,
-            fontSize: 'clamp(42px, 6.5vh, 82px)',
-            lineHeight: 'clamp(38px, 6vh, 76px)',
-            letterSpacing: '-2px',
-          }}
-        >
-          the big<br />art calendar.
-        </Link>
-
+  // Blog landings are standalone pages with their own wordmark; they keep only
+  // the menu button (cream, top-right, scrolling away with the page): the "+"
+  // from 768px (Figma "Application/plus" 355:2860), "Menu" on phones.
+  if (isBlogLandingPath(pathname)) {
+    return (
+      <>
         <button
           onClick={() => setIsMenuOpen(true)}
           aria-label="Open menu"
-          className="flex items-center justify-center size-[54px] text-black hover:opacity-60 transition-opacity -mt-1 -mr-2"
+          className="absolute z-30 right-3 top-3.5 hidden md:flex items-center justify-center size-[54px] hover:opacity-60 transition-opacity"
         >
-          <Plus className="size-7" strokeWidth={2} />
+          {/* eslint-disable-next-line @next/next/no-img-element -- 54px vector icon */}
+          <img src="/blog/menu-plus.svg" alt="" width={54} height={54} />
         </button>
-      </div>
+        {/* Phones (Figma "Mob" 370:3952): a cream "Menu" label, Geist Light 18. */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute z-30 right-6 top-6 md:hidden text-[#f2efe4] hover:opacity-60 transition-opacity"
+          style={{ fontFamily: 'var(--font-meta)', fontWeight: 300, fontSize: 18, lineHeight: '23px' }}
+        >
+          Menu
+        </button>
+        <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
+      </>
+    );
+  }
 
-      <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+  // Every other page: the site header (SiteHeader), over the hero photo on
+  // the homepage, a cream bar everywhere else.
+  return (
+    <>
+      <SiteHeader onOpenMenu={() => setIsMenuOpen(true)} overHero={pathname === '/'} pathname={pathname} menu={menu} />
+      <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
     </>
   );
 }

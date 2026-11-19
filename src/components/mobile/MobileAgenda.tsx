@@ -7,22 +7,15 @@ import { FilterSelect } from '@/components/ui/FilterSelect';
 import MonthStrip from '@/components/calendar/MonthStrip';
 import DateStrip from '@/components/calendar/DateStrip';
 import EventCard from '@/components/events/EventCard';
-import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
-import EventModal from '@/components/events/EventModal';
-
-const EVENT_TYPES: EventType[] = ['gallery', 'performance', 'fair', 'auction', 'workshop'];
-
-const YEARS = [2024, 2025, 2026, 2027, 2028];
-
-const ALL_TYPES: { value: EventType | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Types' },
-  ...EVENT_TYPES.map((t) => ({ value: t, label: eventTypeColors[t].label })),
-];
+import { typeOptions } from '@/components/filters/FilterBar';
+import { REGION } from '@/lib/site';
 
 interface Props {
   year: number;
+  years: number[]; // only years that have events
   onYearChange: (y: number) => void;
   month: number;
+  months: number[]; // only months (0-indexed) of `year` that have events
   onMonthChange: (m: number) => void;
   selectedDate: string | null;
   onSelectedDateChange: (d: string) => void;
@@ -31,12 +24,16 @@ interface Props {
   filters: CalendarFilters;
   onFiltersChange: (f: CalendarFilters) => void;
   cities: string[];
+  types: EventType[];
+  footer?: React.ReactNode;
 }
 
 export default function MobileAgenda({
   year,
+  years,
   onYearChange,
   month,
+  months,
   onMonthChange,
   selectedDate,
   onSelectedDateChange,
@@ -45,8 +42,9 @@ export default function MobileAgenda({
   filters,
   onFiltersChange,
   cities,
+  types,
+  footer,
 }: Props) {
-  const [modalEvent, setModalEvent] = useState<ArtEvent | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -59,72 +57,73 @@ export default function MobileAgenda({
   };
 
   return (
-    <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: '#fbfaf6' }}>
+    <div className="relative flex flex-col h-full overflow-hidden" style={{ backgroundColor: 'var(--page)' }}>
 
-      {/* ── Scrollable area: controls + cards ── */}
+      {/* ── Pinned under the fixed header, as on desktop (Figma "Scrolling"
+          417:4139): the month and day strips stay on screen... ── */}
+      <div className="flex-none">
+        <MonthStrip month={month} months={months} onChange={onMonthChange} scrollable />
+        <DateStrip
+          eventDates={eventDates}
+          selectedDate={selectedDate}
+          onChange={onSelectedDateChange}
+          scrollable
+        />
+      </div>
+
+      {/* ── ...while the filters scroll away with the cards. ── */}
       <div
         ref={scrollRef}
         className="flex-1 min-h-0 overflow-y-auto"
         onScroll={handleScroll}
       >
-        {/* Controls scroll away naturally — no layout reflow */}
-        <div className="flex items-center justify-between px-2 pt-[20px] pb-3">
-          <FilterSelect
-            size="sm"
-            value={filters.city}
-            onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
-            options={[{ value: 'all', label: 'All Cities' }, ...cities.map((c) => ({ value: c, label: c }))]}
-          />
-          <FilterSelect
-            size="sm"
-            value={filters.type}
-            onChange={(v) => onFiltersChange({ ...filters, type: (v ?? 'all') as EventType | 'all' })}
-            options={ALL_TYPES}
-          />
-          <FilterSelect
-            size="sm"
-            value={String(year)}
-            onChange={(v) => onYearChange(Number(v ?? year))}
-            options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
-          />
-        </div>
+        <div>
+          <div className="flex items-center justify-between px-4 py-4">
+            <FilterSelect
+              size="sm"
+              value={filters.city}
+              onChange={(v) => onFiltersChange({ ...filters, city: v ?? 'all' })}
+              options={[{ value: 'all', label: REGION }, ...cities.map((c) => ({ value: c, label: c }))]}
+            />
+            <FilterSelect
+              size="sm"
+              value={filters.type}
+              onChange={(v) => onFiltersChange({ ...filters, type: (v ?? 'all') as EventType | 'all' })}
+              options={typeOptions(types)}
+            />
+            <FilterSelect
+              size="sm"
+              value={String(year)}
+              onChange={(v) => onYearChange(Number(v ?? year))}
+              options={(years.length ? years : [year]).map((y) => ({ value: String(y), label: String(y) }))}
+            />
+          </div>
 
-        <MonthStrip month={month} onChange={onMonthChange} scrollable />
-        <DateStrip
-          eventDates={eventDates}
-          selectedDate={selectedDate}
-          onChange={onSelectedDateChange}
-          fullDayNames
-        />
-
-        {/* Event cards */}
-        <div className="px-6 py-6">
-          {selectedEvents.length === 0 ? (
-            <div
-              className="flex items-center justify-center h-48 text-black/40"
-              style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 16 }}
-            >
-              {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-6">
-              {selectedEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onClick={setModalEvent}
-                  fullWidth
-                />
-              ))}
-            </div>
-          )}
+          {/* Event cards */}
+          <div className="px-6 pb-6">
+            {selectedEvents.length === 0 ? (
+              <div
+                className="flex items-center justify-center h-48 text-ink/60 italic"
+                style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, fontSize: 16 }}
+              >
+                {eventDates.length === 0 ? 'No events this month' : 'Select a date above'}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-6">
+                {selectedEvents.map((event) => (
+                  <EventCard key={event.id} event={event} variant="calendar" />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+        {footer}
       </div>
 
       {/* ── Scroll-to-top FAB ── */}
       <button
         onClick={scrollToTop}
-        className="absolute bottom-9 right-6 bg-black rounded-full p-3 flex items-center justify-center transition-all duration-300"
+        className="absolute bottom-[42px] right-3 bg-ink rounded-full p-3 flex items-center justify-center transition-all duration-300"
         style={{
           opacity: isScrolled ? 1 : 0,
           pointerEvents: isScrolled ? 'auto' : 'none',
@@ -132,10 +131,8 @@ export default function MobileAgenda({
         }}
         aria-label="Scroll to top"
       >
-        <ArrowUp className="size-6 text-white" strokeWidth={2} />
+        <ArrowUp className="size-6 text-page" strokeWidth={1.5} />
       </button>
-
-      <EventModal event={modalEvent} onClose={() => setModalEvent(null)} />
     </div>
   );
 }

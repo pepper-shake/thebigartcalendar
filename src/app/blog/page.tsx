@@ -1,35 +1,90 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
+import { REGION_ADJECTIVE } from '@/lib/site';
+import { BLOG_POSTS, blogPostCardTitle, blogPostPath } from '@/lib/blogPosts';
+import BlogCardLink from '@/components/analytics/BlogCardLink';
+import NewsletterSignup from '@/components/home/NewsletterSignup';
+import SiteFooter from '@/components/layout/SiteFooter';
+import home from '@/components/home/Home.module.css';
+import wah from '@/components/where-art-happens/WhereArtHappens.module.css';
+import s from '@/components/blog/BlogIndex.module.css';
+
 export const metadata: Metadata = {
-  title: 'Blog — The Big Art Calendar',
-  description: 'Writing about art events, the European art scene, and how to get the most out of The Big Art Calendar.',
+  title: 'Blog',
+  description: `Writing about art events, the ${REGION_ADJECTIVE} art scene, and how to get the most out of The Big Art Calendar.`,
 };
 
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** "November · 2026" */
+function monthYear(iso: string): string {
+  const [y, m] = iso.split('-').map(Number);
+  return `${MONTHS[m - 1]} · ${y}`;
+}
+
+// Figma "Blog" (Calendar 409:2165): title + intro on cream, an olive band of
+// post cards (the first one large), then the newsletter and the footer.
 export default function BlogPage() {
+  // Oldest first, as in the design: the first post is the large feature.
+  const posts = [...BLOG_POSTS].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
   return (
-    <div className="min-h-full flex flex-col" style={{ backgroundColor: '#FBFAF6' }}>
-      <main className="flex-1 px-6 py-16 max-w-2xl mx-auto w-full">
+    <div className={`${home.home} ${wah.page} min-h-full flex flex-col`} style={{ backgroundColor: 'var(--page)' }}>
+      <main className="flex-1">
+        <section className={s.intro}>
+          <div className={`${wah.wrap} ${wah.split}`}>
+            <h1 className={wah.title}>Blog</h1>
+            <div className={wah.copy}>
+              <p>
+                For creative people who want to find art events near them and connect with others. Open calls, our
+                picks of events worth going to, and honest thoughts on creative life, written with care
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <h1
-          className="text-black lowercase mb-12"
-          style={{
-            fontFamily: 'var(--font-host-grotesk)',
-            fontWeight: 800,
-            fontSize: 'clamp(56px, 8vw, 82px)',
-            lineHeight: 0.95,
-            letterSpacing: '-2px',
-          }}
-        >
-          Blog
-        </h1>
+        <section aria-label="Posts" className={s.posts}>
+          <div className={wah.wrap}>
+            {posts.length === 0 ? (
+              <p className={s.title}>No posts yet — check back soon.</p>
+            ) : (
+              <ul className={s.grid}>
+                {posts.map((post, i) => {
+                  const feature = i === 0;
+                  return (
+                    <li key={post.slug} className={feature ? s.feature : undefined}>
+                      <BlogCardLink slug={post.slug} href={blogPostPath(post.slug)} className={s.card}>
+                        <div className={s.cover}>
+                          <Image
+                            src={post.cover}
+                            alt={post.coverAlt}
+                            fill
+                            sizes={
+                              feature
+                                ? '(min-width: 1024px) 43vw, 100vw'
+                                : '(min-width: 1024px) 22vw, (min-width: 640px) 50vw, 100vw'
+                            }
+                            preload={feature}
+                          />
+                        </div>
+                        <div className={s.text}>
+                          <p className={s.date}>
+                            <time dateTime={post.publishedAt}>{monthYear(post.publishedAt)}</time>
+                          </p>
+                          <h2 className={s.title}>{blogPostCardTitle(post)}</h2>
+                          {feature && <p className={s.excerpt}>{post.excerpt ?? post.description}</p>}
+                        </div>
+                      </BlogCardLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </section>
 
-        <p
-          className="text-black/40"
-          style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 18, lineHeight: '28px' }}
-        >
-          No posts yet — check back soon.
-        </p>
-
+        <NewsletterSignup source="blog" />
       </main>
+      <SiteFooter flush />
     </div>
   );
 }

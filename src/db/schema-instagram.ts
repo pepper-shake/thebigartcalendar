@@ -88,6 +88,10 @@ export const eventCandidates = pgTable('event_candidates', {
   status: text('status').notNull().default('pending'), // pending | needs_review | merged | rejected
   canonicalEventId: text('canonical_event_id').references(() => events.id), // set on merge (Phase 4/5)
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+
+  // Dedup ledger (added to the live DB after this file's original commit).
+  dedupKey: text('dedup_key'),      // stable key to collapse duplicate candidates
+  mergedInto: text('merged_into'),  // id of the candidate this one was merged into
 });
 
 export type IgAccount = typeof igAccounts.$inferSelect;

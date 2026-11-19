@@ -1,11 +1,28 @@
 import { readFileSync } from 'fs';
-import { run as bryonStudios } from './parsers/bryon-studios';
+import { neon } from '@neondatabase/serverless';
+import { submitToIndexNow } from './lib/indexnow';
+import { eventSlug, citySlug } from '../src/lib/slug';
+import { typeMeta } from '../src/lib/eventTypes';
+import { PORTUGAL_ONLY_MODE, VISIBLE_COUNTRIES } from '../src/config/feature-flags';
+import type { ArtEvent, EventType } from '../src/types';
+import { run as fableLisbon } from './parsers/fable-lisbon';
+import { run as moniqueClara } from './parsers/monique-clara';
+import { run as oficinaMescla } from './parsers/oficina-mescla';
+import { run as peanutBlu } from './parsers/peanut-blu';
+import { run as dobarro } from './parsers/dobarro';
+import { run as macs } from './parsers/macs';
+import { run as lisbonDrawingClub } from './parsers/lisbon-drawing-club';
 import { run as nacreCreative } from './parsers/nacre-creative';
 import { run as laBiennale } from './parsers/la-biennale';
 import { run as pinkDolphin } from './parsers/pink-dolphin';
 import { run as dviTaures } from './parsers/dvi-taures';
 import { run as collageClub } from './parsers/collage-club';
+import { run as collageWorkingClub } from './parsers/collage-working-club';
 import { run as discoWheel } from './parsers/disco-wheel';
+import { run as ajudaLab } from './parsers/ajuda-lab';
+import { run as galeria1758 } from './parsers/galeria-1758';
+import { run as saltedBooks } from './parsers/salted-books';
+import { run as amazonas } from './parsers/amazonas';
 
 // Load .env.local for local development. In CI, env vars are injected via secrets.
 // We parse manually so we can overwrite empty-string vars (process.loadEnvFile skips them).
@@ -33,29 +50,95 @@ try {
 }
 
 const parsers = [
-  { name: 'Bryon Studios', fn: bryonStudios },
+  { name: 'Fable', fn: fableLisbon },
+  { name: 'Monique Clara', fn: moniqueClara },
+  { name: 'Oficina Mescla', fn: oficinaMescla },
+  { name: 'Peanut Blu', fn: peanutBlu },
+  { name: 'DoBarro', fn: dobarro },
+  { name: 'MACS', fn: macs },
+  { name: 'Lisbon Drawing Club', fn: lisbonDrawingClub },
   { name: 'Nacre Creative', fn: nacreCreative },
   { name: 'La Biennale', fn: laBiennale },
   { name: 'Pink Dolphin', fn: pinkDolphin },
   { name: '2 Taurės', fn: dviTaures },
   { name: 'Collage Club', fn: collageClub },
+  { name: 'Collage Working Club', fn: collageWorkingClub },
   { name: 'Disco Wheel', fn: discoWheel },
+  { name: 'Ajuda Lab', fn: ajudaLab },
+  { name: 'Galeria 1758', fn: galeria1758 },
+  { name: 'Salted Books', fn: saltedBooks },
+  { name: 'Amazonas', fn: amazonas },
 ];
+
+interface NewRow {
+  id: string;
+  title: string;
+  city: string | null;
+  country: string | null;
+  type: string;
+}
+
+// Public pages that became live because of rows added in this run: the new
+// events, plus the hubs that list them (home, their city, their type).
+function pagesFor(rows: NewRow[]): string[] {
+  const visible = VISIBLE_COUNTRIES.map((c) => c.toLowerCase());
+  const shown = rows.filter((r) => !PORTUGAL_ONLY_MODE || visible.includes((r.country ?? '').toLowerCase()));
+  if (shown.length === 0) return [];
+  const paths = new Set<string>(['/']);
+  for (const r of shown) {
+    paths.add(`/events/${eventSlug({ id: r.id, title: r.title, city: r.city ?? '' } as ArtEvent)}`);
+    if (r.city) paths.add(`/cities/${citySlug(r.city)}`);
+    paths.add(`/${typeMeta(r.type as EventType).slug}`);
+  }
+  return [...paths];
+}
 
 async function main() {
   console.log(`Scrape started at ${new Date().toISOString()}`);
 
+  // Snapshot existing ids so new events can be announced to IndexNow afterwards.
+  const sql = neon(process.env.DATABASE_URL!);
+  const before = new Set((await sql`select id from events`).map((r) => r.id as string));
+
+  const failures: { name: string; message: string }[] = [];
   for (const { name, fn } of parsers) {
     console.log(`\n--- ${name} ---`);
     try {
       await fn();
     } catch (err) {
-      // Log and continue — one failed site should not block the others
-      console.error(`[${name}] Error:`, err instanceof Error ? err.message : err);
+      // Log and continue — one failed site should not block the others — but
+      // remember it, so the run is marked failed at the end (see below).
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[${name}] Error:`, message);
+      failures.push({ name, message });
     }
   }
 
+  const added = (await sql`
+    select id, title, city, country, type from events
+    where status = 'published' and coalesce(end_date, start_date) >= current_date
+  `).filter((r) => !before.has(r.id as string)) as NewRow[];
+  console.log(`\n${added.length} new upcoming event(s) this run`);
+  await submitToIndexNow(pagesFor(added));
+
   console.log(`\nScrape finished at ${new Date().toISOString()}`);
+
+  // Fail loudly: any failed source turns the GitHub Actions run red (and
+  // emails the repo owner), instead of a green run that silently scraped
+  // nothing — e.g. the Anthropic API running out of credit.
+  if (failures.length > 0) {
+    const credit = failures.some((f) => /credit balance/i.test(f.message));
+    console.error(`\n✗ ${failures.length} of ${parsers.length} source(s) failed: ${failures.map((f) => f.name).join(', ')}`);
+    if (credit) {
+      console.error('  → Anthropic API credit is used up: top up at console.anthropic.com → Plans & Billing.');
+      // GitHub Actions annotation, shown on the run summary page.
+      if (process.env.GITHUB_ACTIONS) console.log('::error title=Anthropic API credit used up::Top up at console.anthropic.com → Plans & Billing');
+    }
+    for (const f of failures) {
+      if (process.env.GITHUB_ACTIONS) console.log(`::warning title=${f.name} failed::${f.message.slice(0, 300)}`);
+    }
+    process.exitCode = 1;
+  }
 }
 
 main().catch((err) => {

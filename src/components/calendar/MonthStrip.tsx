@@ -1,27 +1,41 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import { springScrollTo } from '@/lib/springScroll';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 interface Props {
   month: number; // 0-indexed
+  months?: number[]; // 0-indexed months to show (those with events); default all 12
   onChange: (m: number) => void;
   scrollable?: boolean;
 }
 
-export default function MonthStrip({ month, onChange, scrollable = false }: Props) {
+export default function MonthStrip({ month, months, onChange, scrollable = false }: Props) {
+  const visible = months ?? MONTHS.map((_, i) => i);
+  // With all 12 months the desktop strip spreads edge to edge; fewer months
+  // are centred instead of being pushed to the far edges.
+  const spread = visible.length === 12;
   const stripRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<(() => void) | null>(null);
+  const placedRef = useRef(false);
 
-  useEffect(() => {
+  // Centre the active item. The first time, jump there before paint so the
+  // page opens on it (not on the start of the strip, sliding over); later
+  // changes spring.
+  useLayoutEffect(() => {
     const strip = stripRef.current;
     const active = activeRef.current;
     if (!strip || !active || !scrollable) return;
     cancelRef.current?.();
     const target = active.offsetLeft - strip.offsetWidth / 2 + active.offsetWidth / 2;
+    if (!placedRef.current) {
+      placedRef.current = true;
+      strip.scrollLeft = target;
+      return;
+    }
     cancelRef.current = springScrollTo(strip, target);
     return () => cancelRef.current?.();
   }, [month, scrollable]);
@@ -29,23 +43,32 @@ export default function MonthStrip({ month, onChange, scrollable = false }: Prop
   return (
     <div
       ref={stripRef}
-      className={`flex-none flex items-center border-t border-b border-[#b1b1b1] h-[84px] ${
-        scrollable ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6' : 'justify-between px-[120px]'
+      className={`flex-none flex items-center border-t border-b border-rule h-[84px] ${
+        scrollable
+          ? 'overflow-x-auto scrollbar-hide gap-[44px] px-6 md:px-[42px]'
+          : spread
+            ? 'justify-between px-[120px]'
+            : 'justify-center gap-[72px] px-[42px]'
       }`}
     >
-      {MONTHS.map((name, i) => {
+      {visible.map((i) => {
+        const name = MONTHS[i];
         const isActive = i === month;
         return (
           <button
             key={i}
             ref={isActive ? activeRef : null}
             onClick={() => onChange(i)}
-            className="flex-none transition-colors"
+            aria-current={isActive ? 'true' : undefined}
+            className="flex-none text-oxblood transition-opacity hover:opacity-60"
+            // Figma (283:2067): Newsreader Light 24px; the active month is
+            // marked by italic semibold instead of an underline.
             style={{
-              fontFamily: 'var(--font-oxygen)',
-              fontWeight: isActive ? 700 : 300,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: isActive ? 600 : 300,
+              fontStyle: isActive ? 'italic' : 'normal',
               fontSize: 24,
-              color: '#000000',
+              lineHeight: '24px',
             }}
           >
             {name}

@@ -1,4 +1,4 @@
-import { extractEventsFromHtml, stripHtml } from '../lib/extract';
+import { extractEventsFromHtml, extractOgImage, stripHtml } from '../lib/extract';
 import { upsertEvents } from '../lib/upsert';
 
 const CALENDAR_URL = 'https://www.2tauresmeno.lt/rengini-kalendorius';
@@ -33,10 +33,13 @@ export async function run(): Promise<void> {
   // Fetch each ticket page with a small delay to be polite. Keep only the top
   // of each page (title, dated line, venue, description, price, image); the
   // long footer/boilerplate below is repeated noise.
-  const pages: { url: string; text: string }[] = [];
+  const pages: { url: string; text: string; imageUrl: string | null }[] = [];
   for (const url of eventUrls) {
     const r = await fetch(url);
-    if (r.ok) pages.push({ url, text: stripHtml(await r.text()).slice(0, 3000) });
+    if (r.ok) {
+      const raw = await r.text();
+      pages.push({ url, text: stripHtml(raw).slice(0, 3000), imageUrl: extractOgImage(raw) });
+    }
     await new Promise((resolve) => setTimeout(resolve, 300));
   }
 
@@ -53,7 +56,7 @@ export async function run(): Promise<void> {
       defaultVenue: 'Dvi Taurės meno tapybos studija',
       defaultAddress: 'S. Konarskio g. 35A, Vilnius',
     },
-    { maxChars: 100_000 },
+    { maxChars: 100_000, pages: pages.map((p) => ({ url: p.url, imageUrl: p.imageUrl })) },
   );
 
   console.log(`[2 Taurės] ${events.length} upcoming event(s) found`);

@@ -1,155 +1,246 @@
 import Link from 'next/link';
 import { ArtEvent } from '@/types';
-import { EventTypeBadge } from '@/components/calendar/EventTypeBadge';
+import { EventImage } from '@/components/events/EventImage';
+import EventActions from '@/components/events/EventActions';
+import { getCardScheme } from '@/lib/eventColor';
+import { formatDateShort } from '@/lib/format';
 import { typeMeta } from '@/lib/eventTypes';
-import { citySlug } from '@/lib/slug';
-import { formatDateRange, formatTimeRange } from '@/lib/format';
+import { citySlug, eventSlug } from '@/lib/slug';
+import { absoluteUrl } from '@/lib/site';
 
-// Full server-rendered event page body: semantic <h1>, meta, description, and
-// internal links to the event's city + type hubs. This is the indexable content
-// behind the Event JSON-LD.
+// Server-rendered event page body. Two Figma layouts share the same building
+// blocks:
+//  • Desktop (node 249:1475): title + copy/source actions on top, then the
+//    place/date/time, organiser & venue pills and description on the left with
+//    the image + tags on the right.
+//  • Mobile (nodes 207:2760 / 254:1989): a full-bleed tinted panel — actions
+//    alone at the top (right-aligned), the image (with a type pill overlaid
+//    bottom-left), then the title, meta, pills, description and tags stacked.
+// Semantic <h1> and internal links keep it indexable (this is the content
+// behind the JSON-LD).
+
+// The panel is the event's card scheme at full strength (Figma 287:4572): one
+// background, one foreground for every word, pill and icon in it. Meta lines
+// and pills use Geist like the cards; title and description the light serif.
+const metaStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
+  fontWeight: 400,
+  fontSize: 22,
+  lineHeight: '26px',
+};
+
+const pillBase: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
+  fontWeight: 400,
+  fontSize: 22,
+  lineHeight: '18px',
+  height: 44,
+  padding: '0 16px',
+};
+
 export default function EventDetail({ event }: { event: ArtEvent }) {
-  const meta = typeMeta(event.type);
-  const time = formatTimeRange(event);
+  const scheme = getCardScheme(event);
+  const pillStyle: React.CSSProperties = { ...pillBase, backgroundColor: scheme.chip };
+  const eventUrl = absoluteUrl(`/events/${eventSlug(event)}`);
+  const typeLabel = typeMeta(event.type).label;
 
-  return (
-    <article>
-      {event.image && (
-        <div className="overflow-hidden mb-8" style={{ borderRadius: 20, aspectRatio: '16 / 9' }}>
-          <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
-        </div>
-      )}
+  // A finished event's hero is shown in grayscale (it's kept for reference but
+  // no longer promoted).
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isPast = (event.endDate ?? event.date) < todayStr;
 
-      <div className="mb-4">
-        <Link href={`/${meta.slug}`} aria-label={`Browse ${meta.plural}`}>
-          <EventTypeBadge type={event.type} size="md" />
-        </Link>
-      </div>
-
-      <h1
-        className="text-black"
-        style={{
-          fontFamily: 'var(--font-host-grotesk)',
-          fontWeight: 800,
-          fontSize: 'clamp(34px, 5vw, 56px)',
-          lineHeight: 1,
-          letterSpacing: '-1.5px',
-        }}
-      >
-        {event.title}
-      </h1>
-
-      <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
-        <Meta label="Date">{formatDateRange(event)}</Meta>
-        {time && <Meta label="Time">{time}</Meta>}
-        {event.venue && <Meta label="Venue">{event.venue}</Meta>}
-        {(event.city || event.country) && (
-          <Meta label="Location">
-            {event.city ? (
-              <Link
-                href={`/cities/${citySlug(event.city)}`}
-                className="underline underline-offset-2 hover:text-black"
-              >
-                {event.city}
-              </Link>
-            ) : null}
-            {event.country ? `${event.city ? ', ' : ''}${event.country}` : ''}
-          </Meta>
-        )}
-        {event.price && <Meta label="Price">{event.price}</Meta>}
-      </dl>
-
-      {event.description && (
-        <div className="mt-10">
-          <SectionTitle>About</SectionTitle>
-          <p
-            className="text-black/80 whitespace-pre-line"
-            style={{
-              fontFamily: 'var(--font-oxygen)',
-              fontWeight: 300,
-              fontSize: 18,
-              lineHeight: '28px',
-            }}
-          >
-            {event.description}
-          </p>
-        </div>
-      )}
-
-      {event.tags && event.tags.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-2">
-          {event.tags.map((t) => (
-            <span
-              key={t}
-              className="text-black/50 bg-black/5 rounded-full px-3 py-1"
-              style={{ fontFamily: 'var(--font-oxygen)', fontSize: 13 }}
-            >
-              #{t}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {event.ticketsUrl && event.ticketsUrl !== '#' && (
-        <div className="mt-10">
-          <a
-            href={event.ticketsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-black text-white rounded-full px-6 py-3 hover:opacity-80 transition-opacity"
-            style={{ fontFamily: 'var(--font-host-grotesk)', fontWeight: 600, fontSize: 16 }}
-          >
-            Get tickets
-          </a>
-        </div>
-      )}
-
-      <nav
-        className="mt-12 pt-6 border-t border-black/10 flex flex-wrap gap-x-6 gap-y-2 text-black/60"
-        style={{ fontFamily: 'var(--font-oxygen)', fontSize: 15 }}
-      >
-        <Link href={`/${meta.slug}`} className="hover:text-black hover:underline">
-          More {meta.plural.toLowerCase()}
-        </Link>
-        {event.city && (
-          <Link
-            href={`/cities/${citySlug(event.city)}`}
-            className="hover:text-black hover:underline"
-          >
-            More events in {event.city}
-          </Link>
-        )}
-        <Link href="/" className="hover:text-black hover:underline">
-          Browse the calendar
-        </Link>
-      </nav>
-    </article>
+  const titleEl = (
+    <h1
+      style={{
+        fontFamily: 'var(--font-serif)',
+        fontWeight: 300,
+        fontSize: 42,
+        lineHeight: '46px',
+        letterSpacing: '-0.02em',
+      }}
+    >
+      {event.title}
+    </h1>
   );
-}
 
-function Meta({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <dt className="text-black/40" style={{ fontFamily: 'var(--font-oxygen)', fontSize: 13 }}>
-        {label}
-      </dt>
-      <dd
-        className="text-black/90 mt-0.5"
-        style={{ fontFamily: 'var(--font-oxygen)', fontWeight: 300, fontSize: 17 }}
-      >
-        {children}
-      </dd>
+  const actionsEl = <EventActions eventUrl={eventUrl} sourceUrl={event.sourceUrl} scheme={scheme} />;
+
+  const attendance = event.city || event.venue ? 'Offline' : 'Online';
+
+  const metaLines = (
+    <div className="flex flex-col" style={{ gap: 18 }}>
+      <p style={metaStyle}>
+        {event.city ? (
+          <Link href={`/cities/${citySlug(event.city)}`} className="hover:underline underline-offset-2">
+            {event.city}
+          </Link>
+        ) : null}
+        {event.country ? `${event.city ? ', ' : ''}${event.country}` : !event.city ? 'Virtual' : ''}
+      </p>
+      <p style={metaStyle}>
+        {formatDateShort(event.date)}
+        {event.startTime && ` · ${event.startTime}`}
+      </p>
+      <p style={metaStyle}>
+        {attendance}
+        {event.price ? ` · Price ${event.price}` : ''}
+      </p>
     </div>
   );
-}
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h2
-      className="text-xs font-semibold uppercase tracking-widest text-black/40 mb-3"
-      style={{ fontFamily: 'var(--font-host-grotesk)' }}
+  // Organiser / venue pills. A linked place (/places/<slug>) wins over the
+  // external website; when organiser and venue are the same place (or name),
+  // show a single pill.
+  const entityPill = (key: string, name: string, place?: { slug: string }, url?: string) =>
+    place ? (
+      <Link
+        key={key}
+        href={`/places/${place.slug}`}
+        style={pillStyle}
+        className="inline-flex items-center hover:opacity-80 transition-opacity"
+      >
+        {name}
+      </Link>
+    ) : url ? (
+      <a
+        key={key}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={pillStyle}
+        className="inline-flex items-center hover:opacity-80 transition-opacity"
+      >
+        {name}
+      </a>
+    ) : (
+      <span key={key} style={pillStyle} className="inline-flex items-center">
+        {name}
+      </span>
+    );
+
+  // The organiser can also come from a place matched on the source name (e.g.
+  // an Instagram-sourced event with no organiser field).
+  const organiserName = event.organiserName ?? event.organiserPlace?.name;
+  const sameEntity =
+    !!organiserName &&
+    !!event.venue &&
+    (event.organiserPlace && event.venuePlace
+      ? event.organiserPlace.slug === event.venuePlace.slug
+      : organiserName.trim().toLowerCase() === event.venue.trim().toLowerCase());
+
+  const entityPills =
+    organiserName || event.venue ? (
+      <div className="flex flex-wrap items-start" style={{ gap: 16 }}>
+        {organiserName &&
+          entityPill('organiser', organiserName, event.organiserPlace, event.organiserUrl)}
+        {event.venue &&
+          !sameEntity &&
+          entityPill('venue', event.venue, event.venuePlace, event.venueUrl)}
+      </div>
+    ) : null;
+
+  const description = event.description ? (
+    <p
+      className="whitespace-pre-line"
+      style={{
+        fontFamily: 'var(--font-serif)',
+        fontWeight: 300,
+        fontSize: 22,
+        lineHeight: '34px',
+      }}
     >
-      {children}
-    </h2>
+      {event.description}
+    </p>
+  ) : null;
+
+  const tagsEl =
+    event.tags && event.tags.length > 0 ? (
+      <div className="flex flex-wrap" style={{ gap: 8 }}>
+        {event.tags.map((t) => (
+          <span
+            key={t}
+            style={{
+              backgroundColor: scheme.chip,
+              fontFamily: 'var(--font-meta)',
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: '22px',
+              padding: '8px 16px',
+            }}
+          >
+            #{t}
+          </span>
+        ))}
+      </div>
+    ) : null;
+
+  // `withTypePill` overlays the event type in the bottom-left of the image
+  // (mobile only, per Figma node 207:2856).
+  const renderImage = (withTypePill = false) => (
+    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '568 / 438' }}>
+      <EventImage
+        candidates={event.imageCandidates ?? []}
+        alt={event.title}
+        className="w-full h-full object-cover"
+        style={isPast ? { filter: 'grayscale(1)' } : undefined}
+      />
+      {withTypePill && (
+        <span
+          className="absolute left-[14px] bottom-[14px]"
+          style={{
+            backgroundColor: scheme.bg,
+            color: scheme.fg,
+            fontFamily: 'var(--font-meta)',
+            fontWeight: 400,
+            fontSize: 18,
+            lineHeight: '22px',
+            padding: '8px 16px',
+          }}
+        >
+          {typeLabel} event
+        </span>
+      )}
+    </div>
+  );
+
+  return (
+    <div
+      className="-mx-6 w-[calc(100%+3rem)] lg:w-full px-6 py-8 lg:mx-0 lg:px-[42px] lg:py-[62px]"
+      style={{ backgroundColor: scheme.bg, color: scheme.fg }}
+    >
+      {/* Desktop: title + actions on top, then meta/pills/description | image + tags.
+          Figma: left column flexes, image column is a fixed 568px (so the left
+          column is the wider of the two, never dwarfed by the image). */}
+      <div className="hidden lg:flex lg:flex-col" style={{ gap: 32 }}>
+        <div className="flex items-start justify-between gap-4 w-full">
+          {titleEl}
+          {actionsEl}
+        </div>
+        <div className="flex items-start" style={{ gap: 32 }}>
+          <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 32 }}>
+            {metaLines}
+            {entityPills}
+            {description}
+          </div>
+          <div className="shrink-0 flex flex-col w-[568px]" style={{ gap: 16 }}>
+            {renderImage()}
+            {tagsEl}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: actions (right-aligned) → image (with type pill) → title →
+          meta → pills → description → tags. */}
+      <div className="flex flex-col lg:hidden" style={{ gap: 28 }}>
+        <div className="flex justify-end">{actionsEl}</div>
+        {renderImage(true)}
+        {titleEl}
+        {metaLines}
+        {entityPills}
+        {description}
+        {tagsEl}
+      </div>
+    </div>
   );
 }
