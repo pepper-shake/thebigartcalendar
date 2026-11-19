@@ -7,7 +7,6 @@ import { formatDateShort } from '@/lib/format';
 import { typeMeta } from '@/lib/eventTypes';
 import { citySlug, eventSlug } from '@/lib/slug';
 import { absoluteUrl } from '@/lib/site';
-import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 
 // Server-rendered event page body. Two Figma layouts share the same building
 // blocks:
@@ -78,15 +77,11 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           </Link>
         ) : null}
         {event.country ? `${event.city ? ', ' : ''}${event.country}` : !event.city ? 'Virtual' : ''}
-        {` · ${formatDateShort(event.date)}`}
       </p>
-      {event.startTime && (
-        <p style={metaStyle}>
-          {event.startTime}
-          {event.city ? ` ${event.city}` : ''}
-          <ViewerLocalTime event={event} />
-        </p>
-      )}
+      <p style={metaStyle}>
+        {formatDateShort(event.date)}
+        {event.startTime && ` · ${event.startTime}`}
+      </p>
       <p style={metaStyle}>
         {attendance}
         {event.price ? ` · Price ${event.price}` : ''}

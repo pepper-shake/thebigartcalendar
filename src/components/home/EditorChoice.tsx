@@ -5,7 +5,6 @@ import { MONTH_NAMES } from '@/lib/calendarUtils';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
-import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 import s from './Home.module.css';
 
 function placeLabel(e: ArtEvent): string {
@@ -30,16 +29,11 @@ function Item({ event, position }: { event: ArtEvent; position: number }) {
       </div>
       <div>
         <div className={s.meta}>
+          <p>{placeLabel(event)}</p>
           <p>
-            {placeLabel(event)} · {formatDateShort(event.date)}
+            {formatDateShort(event.date)}
+            {event.startTime && ` · ${event.startTime}`}
           </p>
-          {event.startTime && (
-            <p>
-              {event.startTime}
-              {event.city ? ` ${event.city}` : ''}
-              <ViewerLocalTime event={event} />
-            </p>
-          )}
         </div>
         <h3 className={s.title}>{event.title}</h3>
       </div>

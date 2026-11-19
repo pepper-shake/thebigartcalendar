@@ -53,10 +53,13 @@ function Card({ item, lead, position }: { item: WhatsNewItem; lead: boolean; pos
           <img src={event.image} alt={event.title} loading="lazy" />
         )}
       </div>
-      <p className={s.feedMeta}>
-        {placeLabel(event.city, event.country)} · {formatDateShort(event.date)}
-        {event.startTime ? ` · ${event.startTime}` : ''}
-      </p>
+      <div className={s.feedMeta}>
+        <p>{placeLabel(event.city, event.country)}</p>
+        <p>
+          {formatDateShort(event.date)}
+          {event.startTime ? ` · ${event.startTime}` : ''}
+        </p>
+      </div>
       <h3 className={s.feedTitle}>{event.title}</h3>
       {lead && event.description && <p className={`${s.feedExcerpt} line-clamp-4`}>{event.description}</p>}
     </TrackedLink>
