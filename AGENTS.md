@@ -42,6 +42,7 @@ See [README.md](README.md) for the product intro and [docs/README.md](docs/READM
 | Portugal-only mode (feature flag) | [docs/product/portugal-only-mode.md](docs/product/portugal-only-mode.md) |
 | Places directory (add/edit places) | [docs/product/places.md](docs/product/places.md) |
 | Homepage + monthly editor's choice | [docs/product/homepage.md](docs/product/homepage.md) |
+| Where art happens (share-your-space page) | [docs/product/where-art-happens.md](docs/product/where-art-happens.md) |
 | Blog posts (landing pages, scroll scenes) | [docs/product/blog.md](docs/product/blog.md) |
 | Integrations (Vercel Blob, Retool) | [docs/references/](docs/references/) |
 | Analytics + consent banner (GA, Clarity) | [docs/references/analytics.md](docs/references/analytics.md) |

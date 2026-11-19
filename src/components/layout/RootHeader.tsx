@@ -106,11 +106,12 @@ export default function RootHeader({ hiddenHrefs = [] }: { hiddenHrefs?: string[
   const pathname = usePathname();
   useScrollCollapse(headerRef);
 
-  // The homepage has its own header over the hero photo (HomeHeader).
-  if (pathname === '/') {
+  // The homepage has its own header over the hero photo (HomeHeader); "Where
+  // art happens" uses it too, as a cream bar from the start.
+  if (pathname === '/' || pathname === '/where-art-happens') {
     return (
       <>
-        <HomeHeader onOpenMenu={() => setIsMenuOpen(true)} />
+        <HomeHeader onOpenMenu={() => setIsMenuOpen(true)} solid={pathname !== '/'} pathname={pathname} />
         <MenuPanel isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} hiddenHrefs={hiddenHrefs} />
       </>
     );
