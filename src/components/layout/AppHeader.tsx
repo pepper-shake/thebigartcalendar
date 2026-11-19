@@ -16,7 +16,9 @@ interface Props {
 
 export default function AppHeader({ year, years, onYearChange, filters, onFiltersChange, cities, types }: Props) {
   return (
-    <div className="flex-none flex items-center justify-between px-6 pb-[1.5vh]">
+    // Figma "Calendar" 387:2619: the year left, place and type right, 28px
+    // under the site header bar.
+    <div className="flex-none flex items-center justify-between px-6 pt-[22px] pb-3">
       <FilterSelect
         value={String(year)}
         onChange={(v) => onYearChange(Number(v ?? year))}

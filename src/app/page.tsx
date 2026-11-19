@@ -34,7 +34,7 @@ export default async function HomePage() {
     <div className={`${s.home} min-h-full flex flex-col`} style={{ backgroundColor: 'var(--page)' }}>
       <main className="flex-1">
         {/* Figma "Home page" 387:2803: a full-bleed photo with the wordmark as
-            the page's h1. The fixed HomeHeader lies over its top. */}
+            the page's h1. The fixed SiteHeader lies over its top. */}
         <section className={s.hero}>
           <Image
             src="/home/hero.jpg"

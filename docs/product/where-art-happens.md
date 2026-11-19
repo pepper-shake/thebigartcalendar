@@ -6,12 +6,12 @@ Page: [`src/app/where-art-happens/page.tsx`](../../src/app/where-art-happens/pag
 
 ## Layout
 Everything runs full width with the header's gutters (50px at desktop), so the headings line up with the wordmark and the photo row on any screen width.
-- **Header** — the homepage header ([`HomeHeader`](../../src/components/layout/HomeHeader.tsx)) in its `solid` state: the cream bar with oxblood text from the start (no hero to lie over), plus a spacer for the fixed bar. Its "Where art happens" button has `aria-current="page"` and blush `#E4B6D1` text here.
+- **Header** — the site header ([`SiteHeader`](../../src/components/layout/SiteHeader.tsx)), as on every page; its "Where art happens" button has `aria-current="page"` here.
 - **Intro** (cream) — the `<h1>` (Newsreader 300, 52px) on the left; on the right, in a 497px column, the pitch (24/32) and an underlined "Share your space" link (32px). Region wording follows `REGION`.
 - **Photos** — three photos 359px tall, 10px apart, starting at the left gutter and running off the right edge: [`studio-1.jpg`](../../public/where-art-happens/studio-1.jpg), the homepage hero (`/home/hero.jpg`, same photo as in Figma), [`studio-2.jpg`](../../public/where-art-happens/studio-2.jpg). On phones the row scrolls sideways.
 - **"Every artwork starts somewhere"** — sky `#92B8DA` band, 42px heading left, two paragraphs right.
 - **"Photo of the month"** — sand `#E5E1D3` band, heading left, paragraph + "Share your space" right.
-- **FAQ** — ink on cream, an 866px list of native `<details name="faq">` (one open at a time, works without JS, answers in the HTML), `#E5E1D3` hairlines, "+" / "−" icons from [`public/icons/`](../../public/icons/). Emits `FAQPage` JSON-LD.
+- **FAQ** — answers in Newsreader Regular 400 (Figma), questions 300; ink on cream, an 866px list of native `<details name="faq">` (one open at a time, works without JS, answers in the HTML), `#E5E1D3` hairlines, "+" / "−" icons from [`public/icons/`](../../public/icons/). Emits `FAQPage` JSON-LD.
 - **Newsletter** — the homepage's `NewsletterSignup` with `source="where-art-happens"` (stored on the sign-up row and sent with the `newsletter_signup` event).
 - `SiteFooter` (flush).
 
