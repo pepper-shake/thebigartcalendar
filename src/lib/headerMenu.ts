@@ -35,6 +35,9 @@ export const EMPTY_MENU: HeaderMenu = { calendar: [], thisMonth: [], spaces: [],
 
 const COUNT = 3;
 
+/** Place ids shown first in the Shops panel, in this order (operator's picks). */
+const PINNED_SHOPS = ['o-momento'];
+
 function placeLine(city?: string | null, country?: string | null): string {
   return [city, country].filter(Boolean).join(', ');
 }
@@ -68,10 +71,18 @@ export async function getHeaderMenu(): Promise<HeaderMenu> {
     (a, b) => b.upcomingCount - a.upcomingCount || a.place.name.localeCompare(b.place.name),
   );
   const spaces = busiest.filter((p) => p.place.category !== 'shop' && p.place.imageUrl).slice(0, COUNT);
-  // Shops with a photo first (Figma 415:3292); any without fall back to the site image.
+  // Pinned shops, then shops with a photo (Figma 415:3292); any without fall
+  // back to the site image.
+  const pin = (id: string) => {
+    const i = PINNED_SHOPS.indexOf(id);
+    return i === -1 ? PINNED_SHOPS.length : i;
+  };
   const shops = busiest
     .filter((p) => p.place.category === 'shop')
-    .sort((a, b) => Number(!!b.place.imageUrl) - Number(!!a.place.imageUrl))
+    .sort(
+      (a, b) =>
+        pin(a.place.id) - pin(b.place.id) || Number(!!b.place.imageUrl) - Number(!!a.place.imageUrl),
+    )
     .slice(0, COUNT);
 
   return {
