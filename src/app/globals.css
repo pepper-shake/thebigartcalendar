@@ -84,13 +84,13 @@
 .site-header-nav li a[data-active] {
   font-weight: 600;
 }
-/* "Where art happens" button (Figma "Calendar" 415:3494): oxblood with blush
+/* "Where art happens" button (Figma "Calendar" 415:3494): blush with oxblood
    text; on hover the two colours swap. */
 .site-header-cta {
   margin-left: auto;
   padding: 10px 14px;
-  background-color: #5a1f2e;
-  color: #e4b6d1;
+  background-color: #e4b6d1;
+  color: #5a1f2e;
   font-family: var(--font-meta);
   font-weight: 400;
   font-size: 16px;
@@ -100,8 +100,8 @@
 }
 .site-header-cta:hover,
 .site-header-cta:focus-visible {
-  background-color: #e4b6d1;
-  color: #5a1f2e;
+  background-color: #5a1f2e;
+  color: #e4b6d1;
 }
 
 /* Drop-down panel (desktop only — the links show from xl): a 300px blurb +
