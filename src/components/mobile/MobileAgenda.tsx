@@ -108,7 +108,7 @@ export default function MobileAgenda({
             ) : (
               <div className="flex flex-col gap-6">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}

@@ -186,7 +186,7 @@ export default function CalendarClient({ events, footer, initialDate }: Props) {
             ) : (
               <div className="event-grid">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}
