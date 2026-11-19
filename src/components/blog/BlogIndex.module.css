@@ -1,0 +1,93 @@
+/* /blog index (Figma "Calendar" 409:2165). The intro reuses the "Where art
+   happens" title + copy split; this file is the olive band of post cards.
+   Desktop: the first post as a 619px feature on the left, the rest in 310px
+   cards two across on the right (x = 42 / 744 / 1088 at 1440px). */
+.intro {
+  padding: clamp(16px, 2.1vw, 30px) 0 clamp(48px, 6.9vw, 100px);
+}
+
+.posts {
+  padding: clamp(24px, 2.92vw, 42px) 0 clamp(48px, 3.4vw, 49px);
+  background: #aaa462;
+  color: #fffef9;
+}
+
+.grid {
+  display: grid;
+  gap: 48px 24px;
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .feature {
+    grid-column: 1 / -1;
+  }
+}
+/* 668 = the 619px feature + 49px, so the gap before the cards is 83px while
+   the cards sit 34px apart. */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: minmax(0, 668fr) minmax(0, 310fr) minmax(0, 310fr);
+    column-gap: 34px;
+    row-gap: 42px;
+  }
+  .feature {
+    grid-column: 1;
+    grid-row: span 2;
+    padding-right: 7.335%; /* 49 / 668 */
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.feature .card {
+  gap: 32px;
+}
+
+.cover {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 310 / 240;
+}
+.feature .cover {
+  aspect-ratio: 619 / 494;
+}
+.cover img {
+  object-fit: cover;
+  transition: transform 300ms ease-out;
+}
+.card:hover .cover img {
+  transform: scale(1.015);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.date {
+  font-family: var(--font-meta);
+  font-size: 16px;
+  line-height: 18px;
+  color: #ffe4ad;
+}
+.title {
+  font-family: var(--font-serif);
+  font-weight: 400; /* Figma: Newsreader Regular */
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.02em;
+}
+.feature .title {
+  font-size: clamp(28px, 2.64vw, 38px);
+  line-height: 1.2105; /* 46px at 38px */
+}
+.excerpt {
+  font-family: var(--font-meta);
+  font-size: 16px;
+  line-height: 28px;
+}
