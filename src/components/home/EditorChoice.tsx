@@ -6,7 +6,6 @@ import { MONTH_NAMES } from '@/lib/calendarUtils';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
 import { EVENT_TYPES } from '@/lib/eventTypes';
-import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 import s from './Home.module.css';
 
 // Figma "Home page": the olive card scheme's background with the footer's
@@ -34,20 +33,13 @@ function Item({ event, lead, position }: { event: ArtEvent; lead: boolean; posit
           <img src={event.image} alt={event.title} />
         )}
       </div>
-      {/* The lead card has the width for place, date and time on one line;
-          small cards break before the time. */}
+      {/* Place, then date · time (the venue's local time). */}
       <div className={s.meta}>
+        <p>{placeLabel(event)}</p>
         <p>
-          {placeLabel(event)} · {formatDateShort(event.date)}
-          {lead && event.startTime && ' · '}
+          {formatDateShort(event.date)}
+          {event.startTime && ` · ${event.startTime}`}
         </p>
-        {event.startTime && (
-          <p>
-            {event.startTime}
-            {event.city ? ` ${event.city}` : ''}
-            <ViewerLocalTime event={event} />
-          </p>
-        )}
       </div>
       <h3 className={s.title}>{event.title}</h3>
       {lead && event.description && <p className={`${s.excerpt} line-clamp-4`}>{event.description}</p>}

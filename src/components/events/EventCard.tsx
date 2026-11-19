@@ -6,7 +6,6 @@ import { eventTypeColors } from '@/components/calendar/EventTypeBadge';
 import { getCardScheme } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
 import { eventSlug } from '@/lib/slug';
-import ViewerLocalTime from '@/components/events/ViewerLocalTime';
 
 function placeLabel(event: ArtEvent): string {
   const parts = [event.city, event.country].filter(Boolean);
@@ -89,18 +88,15 @@ export default function EventCard({ event, hideImage = false }: Props) {
           {event.title}
         </h3>
 
-        {/* Place · date, then time (event-local + viewer-local) */}
+        {/* Place, then date · time (the venue's local time) */}
         <div className="flex-none flex flex-col w-full" style={{ gap: 8 }}>
           <p className="w-full" style={metaStyle}>
-            {placeLabel(event)} · {formatDateShort(event.date)}
+            {placeLabel(event)}
           </p>
-          {event.startTime && (
-            <p className="w-full" style={metaStyle}>
-              {event.startTime}
-              {event.city ? ` ${event.city}` : ''}
-              <ViewerLocalTime event={event} />
-            </p>
-          )}
+          <p className="w-full" style={metaStyle}>
+            {formatDateShort(event.date)}
+            {event.startTime && ` · ${event.startTime}`}
+          </p>
         </div>
 
         {/* Image — square-cornered, grows to fill remaining space */}

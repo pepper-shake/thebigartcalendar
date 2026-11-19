@@ -114,9 +114,6 @@
 .item:first-child .meta {
   font-size: var(--font-size-xxs);
 }
-.item:first-child .meta p {
-  display: inline;
-}
 
 .title {
   font-family: var(--font-serif);

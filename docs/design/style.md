@@ -4,7 +4,7 @@ The site follows **Style Reference 1** (an editorial, duotone, light-serif look)
 
 ## Rules
 - **One serif, one weight.** All content is set in **Newsreader 300** (stand-in for the commercial Times Now), loaded in `src/app/layout.tsx` as `--font-serif`. Hierarchy comes from size and *italics*, not bold. Base styles in `globals.css` force headings and buttons to 300.
-- **Geist for small meta only.** Card meta lines, type chips, event-page meta lines, pills and tags use `--font-meta` (Geist 400), as in the Figma cards.
+- **Geist for small meta only.** Card meta lines (always two: `City, Country`, then `Mon D, YYYY · HH:MM` in venue local time), type chips, event-page meta lines, pills and tags use `--font-meta` (Geist 400), as in the Figma cards.
 - **Square and flat.** `--radius` is `0`. No card shadows, gradients or rounded images. Only overlays (the filter popup and menu drawer) get a shadow: `0 4px 20px rgb(56 52 48 / .15)`. The one exception to square corners is the round scroll-to-top button (an icon button, which the reference allows).
 - **Duotone cards.** Each event card and its event-page panel use exactly one background and one foreground colour. Everything inside (title, meta, chip text, icons) takes the foreground colour.
 - **Sentence case everywhere.** Only the first letter of a title, heading, label or button is capital, plus names (places, people, cities, countries, months, weekdays, holidays, nationalities, brands, series): "Introduction to screenprinting workshop", "Art events across Portugal", "A room to read (November edition)". This covers UI copy, page `<title>`s and blog `metaTitle`s. The site name "The Big Art Calendar" is a name.
