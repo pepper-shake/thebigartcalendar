@@ -13,6 +13,10 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx scripts/seed.ts",
     "scrape": "tsx scripts/run-all.ts",
+    "radar": "tsx scripts/ig-radar/run.ts",
+    "radar:seed": "tsx scripts/ig-radar/seed-accounts.ts",
+    "radar:gate": "tsx scripts/ig-radar/gate-run.ts",
+    "radar:extract": "tsx scripts/ig-radar/extract-run.ts",
     "places:sync": "tsx scripts/places/sync.ts",
     "events:manual": "tsx scripts/manual/sync.ts",
     "db:local": "pglite-server --db=.local-db --port=5432 --max-connections=10"
