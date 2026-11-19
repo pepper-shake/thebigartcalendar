@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 // heading, the calendar's sand cards) and the place's Instagram posts
 // (oxblood, blush heading). Content is centred at the calendar's 1440px with
 // 42px gutters on desktop.
-const INNER = 'mx-auto w-full max-w-[1440px] px-6 lg:px-[42px]';
+const INNER = 'mx-auto w-full max-w-[1440px] px-6 md:px-[42px]';
 
 // Band colours are fixed from Figma, the same on every place page.
 const UPCOMING_BAND = { bg: 'var(--page)', fg: '#5A1F2E' }; // cream / oxblood (416:3848)

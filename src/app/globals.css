@@ -34,7 +34,7 @@
 /* Site header (SiteHeader; Figma "Header" component 415:2859). A fixed cream
    bar with oxblood text: one-line wordmark (Newsreader 300, 32/42), Geist 16
    links 24px apart, 80px after the wordmark, a blush "Where art happens"
-   button with oxblood text on the right. 24px gutters and a 102px bar at
+   button with oxblood text on the right. 42px gutters (24px on phones) and a 102px bar at
    desktop, 64px on phones. On the homepage it starts as the "White" variant
    (Figma 417:4438) over the hero: an oxblood gradient (70% at the top to
    clear at the bottom) with cream text. It gets the
@@ -197,6 +197,9 @@
   height: 64px;
 }
 @media (min-width: 768px) {
+  .site-header {
+    padding: 0 42px; /* the page gutter (Figma "Header" 415:2858) */
+  }
   .site-header-row,
   .site-header-spacer {
     height: 102px;
