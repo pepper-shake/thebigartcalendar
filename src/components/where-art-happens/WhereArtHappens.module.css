@@ -1,9 +1,10 @@
 /* "Where art happens" (Figma "Calendar" 411:2479). Desktop: a heading on the
-   left, copy in a 497px column on the right (x=893 at 1440px), 50px gutters.
+   left, copy in a 497px column on the right (x=893 at 1440px), 24px gutters
+   (the header's padding).
    Oxblood text on cream, sky and sand bands; the FAQ is in ink. Fluid sizes
    reach the Figma values at 1440px. */
 .page {
-  --gap: clamp(24px, 3.5vw, 50px);
+  --gap: 24px;
   color: #5a1f2e;
 }
 
