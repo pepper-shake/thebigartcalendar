@@ -96,8 +96,7 @@ export default function EventCard({ event, hideImage = false, variant = 'scheme'
         </h3>
 
         {/* Place and date · time (the venue's local time). The calendar card
-            puts the date first and names the time's city: "Aug 8, 2026 ·
-            16:30 Lisbon", then "Lisbon, Portugal". */}
+            puts the date first: "Aug 8, 2026 · 16:30", then "Lisbon, Portugal". */}
         <div className={`flex-none flex w-full ${calendar ? 'flex-col-reverse' : 'flex-col'}`} style={{ gap: 8 }}>
           <p className="w-full" style={metaStyle}>
             {placeLabel(event)}
@@ -105,7 +104,6 @@ export default function EventCard({ event, hideImage = false, variant = 'scheme'
           <p className="w-full" style={metaStyle}>
             {formatDateShort(event.date)}
             {event.startTime && ` · ${event.startTime}`}
-            {calendar && event.startTime && event.city && ` ${event.city}`}
           </p>
         </div>
 
