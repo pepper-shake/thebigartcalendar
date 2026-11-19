@@ -13,6 +13,8 @@ export type BlogPost = {
   /** Search/social title; defaults to `${kicker} ${title}`. Used as-is (no site-name suffix). */
   metaTitle?: string;
   description: string;
+  /** Lead paragraph under the title when the post is the large card on /blog; defaults to `description`. */
+  excerpt?: string;
   /** Main keyword first, then supporting ones (meta keywords + JSON-LD). */
   keywords?: string[];
   /** ISO date (YYYY-MM-DD). */
@@ -83,6 +85,8 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle: 'Our guide to online stores for creative Christmas gifts',
     description:
       'Six small online shops I love for unique Christmas gifts: handmade slippers, colourful hats, happy towels, artist prints, beautiful stationery and jewellery.',
+    excerpt:
+      'Every year, somewhere around the first grey week of November, I make the same promise to myself: this time, no last-minute candles. No gift sets grabbed at the checkout. This time, every present will feel like it was chosen for one person only.',
     keywords: [
       'creative Christmas gifts online',
       'unique Christmas gifts',
