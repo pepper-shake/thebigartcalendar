@@ -156,9 +156,19 @@ export default function CalendarClient({ events, footer, initialDate }: Props) {
       {/* ── Desktop ─────────────────────────────────────── */}
       <div className="hidden md:flex flex-col h-full overflow-hidden relative" style={{ backgroundColor: 'var(--page)' }}>
 
-        {/* Pinned navigation: filters + month strip + date strip stay on screen;
-            only the cards below scroll. */}
+        {/* Pinned under the site header (Figma "Scrolling" 417:4139): the
+            month and day strips stay on screen... */}
         <div className="flex-none">
+          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
+          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
+        </div>
+
+        {/* ...while the filter row scrolls away with the cards. */}
+        <div
+          ref={scrollRef}
+          className="flex-1 min-h-0 overflow-y-auto"
+          onScroll={handleScroll}
+        >
           <AppHeader
             year={year}
             years={facets.years}
@@ -168,16 +178,6 @@ export default function CalendarClient({ events, footer, initialDate }: Props) {
             cities={facets.cities}
             types={facets.types}
           />
-          <MonthStrip month={month} months={months} onChange={handleMonthChange} />
-          <DateStrip eventDates={eventDates} selectedDate={effectiveSelectedDate} onChange={setSelectedDate} />
-        </div>
-
-        {/* Scrollable: cards only */}
-        <div
-          ref={scrollRef}
-          className="flex-1 min-h-0 overflow-y-auto"
-          onScroll={handleScroll}
-        >
           <main className="px-6 py-4">
             {selectedEvents.length === 0 ? (
               <div className="flex items-center justify-center h-48 text-ink/60 italic text-lg">
@@ -186,7 +186,7 @@ export default function CalendarClient({ events, footer, initialDate }: Props) {
             ) : (
               <div className="event-grid">
                 {selectedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} variant="calendar" />
                 ))}
               </div>
             )}
