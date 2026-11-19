@@ -169,6 +169,15 @@
 .home-header-cta:hover {
   opacity: 0.85;
 }
+/* On "Where art happens" itself the button's text turns blush. */
+.home-header-cta[aria-current='page'] {
+  color: #e4b6d1;
+}
+/* Holds the fixed header's place on pages without a hero (`solid`). */
+.home-header-spacer {
+  flex: none;
+  height: 64px;
+}
 @media (min-width: 768px) {
   .home-header {
     height: 102px;
@@ -177,6 +186,9 @@
   .home-header-logo {
     font-size: 32px;
     line-height: 42px;
+  }
+  .home-header-spacer {
+    height: 102px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
