@@ -15,7 +15,9 @@ const MUTED = '#909090';
 const OXBLOOD = '#5A1F2E';
 const PILL_BG = '#e5e1d3';
 
-// Figma 421:4944 / 421:5046: Newsreader Regular 22, the address in grey italic.
+// Figma 421:4944 / 421:5046: Newsreader Regular 22 (the date line at -0.44px),
+// the address in grey italic. Figma sets them 18px tall, 16px apart; a 26px
+// line with an 8px gap keeps that 34px rhythm without clipping wrapped lines.
 const metaStyle: React.CSSProperties = {
   fontFamily: 'var(--font-serif)',
   fontWeight: 400,
@@ -23,16 +25,15 @@ const metaStyle: React.CSSProperties = {
   lineHeight: '26px',
 };
 
-// Description: Geist Light 22/38 (Figma 421:4945).
+// Description: Geist Light 18/32 (Figma 421:4945).
 const bodyStyle: React.CSSProperties = {
   fontFamily: 'var(--font-meta)',
   fontWeight: 300,
-  fontSize: 22,
-  lineHeight: '38px',
+  fontSize: 18,
+  lineHeight: '32px',
 };
 
-// Pills, tags and the source link are Host Grotesk Regular in Figma; we set
-// them in Geist 400, the site's meta face.
+// The source link: Geist 400 22 (Host Grotesk Regular in the first frame).
 const linkStyle: React.CSSProperties = {
   fontFamily: 'var(--font-meta)',
   fontWeight: 400,
@@ -40,16 +41,19 @@ const linkStyle: React.CSSProperties = {
   lineHeight: '30px',
 };
 
+// Organiser / venue pills: Geist Regular 18, 44px tall (Figma 421:5040).
 const pillStyle: React.CSSProperties = {
   ...linkStyle,
   backgroundColor: PILL_BG,
+  fontSize: 18,
   lineHeight: '18px',
   height: 44,
   padding: '0 16px',
 };
 
+// Tags: Geist Regular 14/22 on the page cream (Figma 421:5049).
 const tagStyle: React.CSSProperties = {
-  backgroundColor: 'rgba(251, 250, 246, 0.7)',
+  backgroundColor: 'var(--page)',
   fontFamily: 'var(--font-meta)',
   fontWeight: 400,
   fontSize: 14,
@@ -119,21 +123,22 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
 
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-8 lg:order-1 lg:px-6 lg:py-[42px]">
         <div className="flex flex-col gap-8">
-          {/* Figma 421:4941: Newsreader Regular 52/42, -1.04px. */}
+          {/* Figma 421:4941: Newsreader Regular 52/62, -1.04px. */}
           <h1
-            className="text-[40px] leading-[40px] lg:text-[52px] lg:leading-[42px]"
+            className="text-[40px] leading-[48px] lg:text-[52px] lg:leading-[62px]"
             style={{ fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '-0.02em' }}
           >
             {event.title}
           </h1>
 
-          <p style={metaStyle}>
-            {dates}
-            {event.startTime && ` · ${event.startTime}`} ({attendance})
-            {event.price ? ` · ${event.price}` : ''}
-          </p>
-
-          {where && <p style={{ ...metaStyle, fontStyle: 'italic', color: MUTED }}>{where}</p>}
+          <div className="flex flex-col" style={{ gap: 8 }}>
+            <p style={{ ...metaStyle, letterSpacing: '-0.02em' }}>
+              {dates}
+              {event.startTime && ` · ${event.startTime}`} ({attendance})
+              {event.price ? ` · ${event.price}` : ''}
+            </p>
+            {where && <p style={{ ...metaStyle, fontStyle: 'italic', color: MUTED }}>{where}</p>}
+          </div>
 
           {event.description && (
             <p className="whitespace-pre-line" style={bodyStyle}>
