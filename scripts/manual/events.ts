@@ -21,6 +21,8 @@ export interface ManualEvent {
   tags?: string[];
   /** Who runs it, when not the venue (a visiting artist). Defaults to the venue. */
   organiser?: { name: string; url: string };
+  /** Times were added after the first sync: keep the id hashed without them, so the row updates instead of duplicating. */
+  idWithoutTime?: boolean;
   /** Where the details came from (a post, a poster). Not shown on the site. */
   source?: string;
 }
@@ -272,13 +274,16 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['painting', 'ink'],
     source: 'linktr.ee/amz.amazonas + sign-up page',
   },
-  // Hours left out: the organiser's form says "11pm–8pm", an obvious typo.
+  // Hours from the poster (2026-11-20); the earlier form said "11pm–8pm".
   {
     venue: 'amazonas',
     title: 'Amazonas Christmas Market',
     type: 'fair',
     startDate: '2026-12-12',
     endDate: '2026-12-13',
+    startTime: '11:00',
+    endTime: '20:00',
+    idWithoutTime: true,
     description:
       'Christmas edition of the Amazonas market: all of 8 Marvila becomes a Christmas village with lights, decorations, music and festive food, plus gifts from independent brands and makers, workshops for kids and adults, and a visit from Santa Claus.',
     imageUrl:
