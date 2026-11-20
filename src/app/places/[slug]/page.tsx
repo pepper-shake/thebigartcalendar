@@ -73,7 +73,8 @@ export default async function PlacePage({ params }: Params) {
   return (
     <PageShell size="bleed">
       {/* Figma: breadcrumb 42px under the header bar, the panel 16px below it. */}
-      <div className={`${PAGE_INNER} pt-8 lg:pt-[48px] pb-4`}>
+      {/* With no band below, the panel keeps a band's worth of space above the footer. */}
+      <div className={`${PAGE_INNER} pt-8 lg:pt-[48px] ${upcoming.length || igPosts.length ? 'pb-4' : 'pb-12 lg:pb-[50px]'}`}>
         <Breadcrumbs
           items={[
             { name: 'Calendar', href: '/calendar' },

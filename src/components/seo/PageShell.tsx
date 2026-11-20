@@ -28,7 +28,8 @@ export default function PageShell({
         {children}
       </main>
       {newsletter && <NewsletterSignup source={newsletter} />}
-      <SiteFooter flush={!!newsletter} />
+      {/* Bleed pages end in a full-width band, which runs straight into the footer. */}
+      <SiteFooter flush={!!newsletter || resolved === 'bleed'} />
     </div>
   );
 }
