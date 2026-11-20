@@ -23,7 +23,7 @@ export interface ManualEvent {
   organiser?: { name: string; url: string };
   /** Times were added after the first sync: keep the id hashed without them, so the row updates instead of duplicating. */
   idWithoutTime?: boolean;
-  /** Where the details came from (a post, a poster). Not shown on the site. */
+  /** Where the details came from (a post, a poster). A URL here becomes the event's "original source" link; otherwise it's not shown. */
   source?: string;
 }
 
