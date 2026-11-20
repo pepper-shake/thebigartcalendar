@@ -10,7 +10,9 @@ const AGENDA = `${BASE}/agenda`;
 // with days as day-of-month lists ("1, 12, 29" or "7, 14, 21 (Outubro), 4 (Novembro)")
 // and times like "11h–14h" / "18h30–20h30". The page also keeps older months'
 // tables further down with inconsistent labels, so only the FIRST block (the one
-// headed "<Month> Workshops") is parsed. Deterministic, no LLM.
+// headed "<Month> Workshops") is parsed. Since Nov 2026 the price sits on the
+// English subtitle line ("freestyle ceramics 50€") instead of its own line.
+// Deterministic, no LLM.
 
 const IMG = 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1200,fit=crop/YBgeXyjjz9H06Bbb';
 const IMAGES = {
@@ -22,7 +24,9 @@ const IMAGES = {
 type Kind = keyof typeof IMAGES;
 
 // Short descriptions in our own words, keyed by a pattern on the PT title.
-const WORKSHOPS: [RegExp, Kind, string][] = [
+// Optional 4th field: English title, for rows whose subtitle isn't English.
+const WORKSHOPS: [RegExp, Kind, string, string?][] = [
+  [/punch needle/, 'visual', 'Punch-needle embroidery: decorate your own tote bag with a punch needle and yarn. Materials included.', 'Punch Needle Tote Bag'],
   [/fundamentos/, 'ceramics', 'Four-session course in the fundamentals of hand-building with clay.'],
   [/explora[cç][aã]o criativa/, 'ceramics', 'Four-session course for people with some clay experience, exploring creative approaches and more advanced techniques.'],
   [/cer[aâ]mica livre/, 'ceramics', 'Open three-hour clay session with no set project: work on your own ideas and surfaces with guidance. All levels; materials and firing included.'],
@@ -132,7 +136,15 @@ export async function run(): Promise<void> {
     const t = block[i];
     if (/^Oficinas de /i.test(t)) continue;
     if (isTitle(t) && !PRICE_RE.test(t)) {
-      cur = { pt: t, en: block[i + 1] ?? t, price: null, isPackage: false, dates: [] };
+      const sub = block[i + 1] ?? t;
+      const subPrice = sub.match(PRICE_RE);
+      cur = {
+        pt: t,
+        en: sub.replace(/\s*\d+\s*€.*$/, '').trim() || t,
+        price: subPrice ? `€${subPrice[1]}` : null,
+        isPackage: /pacote|aulas/i.test(sub),
+        dates: [],
+      };
       workshops.push(cur);
       pendingDays = pendingTime = null;
       i++; // skip the English subtitle
@@ -147,7 +159,9 @@ export async function run(): Promise<void> {
     }
     const time = t.match(TIME_RE);
     if (time) {
-      const hhmm: [string, string] = [`${pad(+time[1])}:${time[2] ?? '00'}`, `${pad(+time[3])}:${time[4] ?? '00'}`];
+      // "5h–18h" is a typo for 15h: no workshop starts before 9 and runs 13 hours.
+      const startH = +time[1] < 9 && +time[3] - +time[1] > 8 ? +time[1] + 10 : +time[1];
+      const hhmm: [string, string] = [`${pad(startH)}:${time[2] ?? '00'}`, `${pad(+time[3])}:${time[4] ?? '00'}`];
       if (pendingDays) { emit(pendingDays, hhmm); pendingDays = null; } else pendingTime = hhmm;
       continue;
     }
@@ -165,7 +179,7 @@ export async function run(): Promise<void> {
     const key = fold(w.pt);
     const known = WORKSHOPS.find(([re]) => re.test(key));
     const kind: Kind = known?.[1] ?? (/ceram|nerikomi|azulejo|barro/.test(key) ? 'ceramics' : 'visual');
-    const en = titleCase(w.en);
+    const en = known?.[3] ?? titleCase(w.en);
     const pt = titleCase(w.pt);
     const title = fold(en) === fold(pt) ? en : `${en} (${pt})`;
     const base = known?.[2] ?? `${en} workshop.`;
