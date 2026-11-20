@@ -15,7 +15,11 @@ const rows: NewEvent[] = MANUAL_EVENTS.map((e) => {
   // Stable id: venue + title + date (+ time, for two sessions on one day).
   const sourceUrl = `manual:${e.venue}`;
   return {
-    id: makeId(sourceUrl, e.title, e.startTime ? `${e.startDate} ${e.startTime}` : e.startDate),
+    id: makeId(
+      sourceUrl,
+      e.title,
+      e.startTime && !e.idWithoutTime ? `${e.startDate} ${e.startTime}` : e.startDate,
+    ),
     title: e.title,
     type: e.type,
     startDate: e.startDate,

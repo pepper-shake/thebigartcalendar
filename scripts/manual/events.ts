@@ -21,6 +21,8 @@ export interface ManualEvent {
   tags?: string[];
   /** Who runs it, when not the venue (a visiting artist). Defaults to the venue. */
   organiser?: { name: string; url: string };
+  /** Times were added after the first sync: keep the id hashed without them, so the row updates instead of duplicating. */
+  idWithoutTime?: boolean;
   /** Where the details came from (a post, a poster). Not shown on the site. */
   source?: string;
 }
@@ -272,20 +274,43 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['painting', 'ink'],
     source: 'linktr.ee/amz.amazonas + sign-up page',
   },
-  // Hours left out: the organiser's form says "11pm–8pm", an obvious typo.
+  // Hours from the poster (2026-11-20); the earlier form said "11pm–8pm".
   {
     venue: 'amazonas',
     title: 'Amazonas Christmas Market',
     type: 'fair',
     startDate: '2026-12-12',
     endDate: '2026-12-13',
+    startTime: '11:00',
+    endTime: '20:00',
+    idWithoutTime: true,
     description:
       'Christmas edition of the Amazonas market: all of 8 Marvila becomes a Christmas village with lights, decorations, music and festive food, plus gifts from independent brands and makers, workshops for kids and adults, and a visit from Santa Claus.',
     imageUrl:
-      'https://ugc.production.linktr.ee/4b19e2c8-bd25-4fd1-aa00-8071ee06acb0_JS1-8135.jpeg',
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/amazonas-christmas-market-poster-3b72UgtIEwki8SK4mySu2Xv0q0ggkq.jpg',
     tags: ['market', 'christmas', 'design'],
-    source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas)',
+    source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas); image: poster (operator, 2026-11-20)',
   },
+  // --- Kinusaiga workshop by @lncsfsc, Prisma × Amazonas, poster + post
+  // (2026-11-20). Two sessions; same day Prisma opens its doors (short film
+  // screening + pop-up exhibition of Prisma artists, no times given).
+  ...['11:30', '18:00'].map(
+    (startTime): ManualEvent => ({
+      venue: 'amazonas',
+      title: 'Kinusaiga Workshop: Tree Ornaments',
+      type: 'workshop',
+      startDate: '2026-12-12',
+      startTime,
+      price: '€10',
+      description:
+        'Make your own tree ornaments using kinusaiga, a Japanese textile technique working with fabric and pressure, to create a unique handmade decoration piece and a special gift. A Prisma × Amazonas × @lncsfsc collaboration. The same day, Prisma opens its doors with a short film about the creative community behind the space and a pop-up exhibition of Prisma artists.',
+      imageUrl:
+        'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/lncsfsc-kinusaiga-tree-ornaments-TUajlRjbndRPMzGVgxUiP3BeLaelA8.jpg',
+      organiser: { name: 'lncsfsc', url: 'https://www.instagram.com/lncsfsc/' },
+      tags: ['textiles', 'christmas', 'crafts'],
+      source: 'poster + Instagram post (operator, 2026-11-20)',
+    }),
+  ),
   // --- Svet Space, October 2026 programme poster + operator notes (2026-10-25).
   // Skipped from the poster: ceramic coworking (studio time, not an event) and
   // the Portuguese speaking club (not art).
