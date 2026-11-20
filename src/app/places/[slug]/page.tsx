@@ -3,14 +3,13 @@ import { notFound } from 'next/navigation';
 import PageShell from '@/components/seo/PageShell';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
-import EventCard from '@/components/events/EventCard';
+import { Band, EventRow, PAGE_INNER } from '@/components/layout/Band';
 import PlaceDetail from '@/components/places/PlaceDetail';
 import InstagramPosts from '@/components/places/InstagramPosts';
 import { placeInstagramPosts } from '@/lib/place-instagram-posts';
 import { getPlaceBySlug, categoryLabel } from '@/lib/places';
 import { placeJsonLd } from '@/lib/jsonld';
 import { absoluteUrl, SITE_NAME } from '@/lib/site';
-import { type ArtEvent } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,9 +47,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 // Figma "Place page" (416:3836): breadcrumb and the place panel on the page
 // background, then full-width bands — "Upcoming events" (cream, oxblood
 // heading, the calendar's sand cards) and the place's Instagram posts
-// (oxblood, blush heading). Content spans the window inside the 42px page
-// gutters (24px on phones), lining up with the header at any width.
-const INNER = 'w-full px-6 md:px-[42px]';
+// (oxblood, blush heading).
 
 // Band colours are fixed from Figma, the same on every place page.
 const UPCOMING_BAND = { bg: 'var(--page)', fg: '#5A1F2E' }; // cream / oxblood (416:3848)
@@ -64,46 +61,6 @@ const UPCOMING_OVERRIDES: Record<string, { textOnly?: boolean; max?: number }> =
   'disco-wheel': { textOnly: true, max: 6 },
 };
 
-function Band({
-  title,
-  bg,
-  fg,
-  children,
-}: {
-  title: React.ReactNode;
-  bg: string;
-  fg: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section style={{ backgroundColor: bg }}>
-      <div className={`${INNER} flex flex-col gap-8 py-12 lg:py-[50px]`}>
-        {/* Figma 416:3989: Newsreader 300, 42/48, -0.84px. */}
-        <h2
-          className="text-[28px] leading-[32px] lg:text-[42px] lg:leading-[48px]"
-          style={{ color: fg, fontFamily: 'var(--font-serif)', fontWeight: 300, letterSpacing: '-0.02em' }}
-        >
-          {title}
-        </h2>
-        {children}
-      </div>
-    </section>
-  );
-}
-
-/** Mobile: horizontal scroll strip (cards peek the next one). Desktop: 3-up grid. */
-function EventRow({ events, hideImages = false }: { events: ArtEvent[]; hideImages?: boolean }) {
-  return (
-    <div className="-mx-6 flex gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pb-0">
-      {events.map((e) => (
-        <div key={e.id} className="w-[300px] shrink-0 lg:w-auto">
-          <EventCard event={e} hideImage={hideImages} variant="calendar" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default async function PlacePage({ params }: Params) {
   const { slug } = await params;
   const found = await getPlaceBySlug(slug);
@@ -116,7 +73,7 @@ export default async function PlacePage({ params }: Params) {
   return (
     <PageShell size="bleed">
       {/* Figma: breadcrumb 42px under the header bar, the panel 16px below it. */}
-      <div className={`${INNER} pt-8 lg:pt-[48px] pb-4`}>
+      <div className={`${PAGE_INNER} pt-8 lg:pt-[48px] pb-4`}>
         <Breadcrumbs
           items={[
             { name: 'Calendar', href: '/calendar' },

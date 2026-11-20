@@ -1,116 +1,89 @@
 import Link from 'next/link';
 import { ArtEvent } from '@/types';
 import { EventImage } from '@/components/events/EventImage';
-import EventActions from '@/components/events/EventActions';
-import { getCardScheme } from '@/lib/eventColor';
 import { formatDateShort } from '@/lib/format';
-import { typeMeta } from '@/lib/eventTypes';
-import { citySlug, eventSlug } from '@/lib/slug';
-import { absoluteUrl } from '@/lib/site';
 
-// Server-rendered event page body. Two Figma layouts share the same building
-// blocks:
-//  • Desktop (node 249:1475): title + copy/source actions on top, then the
-//    place/date/time, organiser & venue pills and description on the left with
-//    the image + tags on the right.
-//  • Mobile (nodes 207:2760 / 254:1989): a full-bleed tinted panel — actions
-//    alone at the top (right-aligned), the image (with a type pill overlaid
-//    bottom-left), then the title, meta, pills, description and tags stacked.
-// Semantic <h1> and internal links keep it indexable (this is the content
-// behind the JSON-LD).
+// Server-rendered event panel (Figma "Event page" 421:4938), the same cream
+// panel as the place page: title, date line, address, description, organiser /
+// venue pills and tags in oxblood on the left with the source link pinned to
+// the bottom, and a 568×630 image on the right (image first, stacked, on
+// mobile). Semantic <h1> and internal links keep it indexable (this is the
+// content behind the JSON-LD).
 
-// The panel is the event's card scheme at full strength (Figma 287:4572): one
-// background, one foreground for every word, pill and icon in it. Meta lines
-// and pills use Geist like the cards; title and description the light serif.
+const PANEL_BG = '#fbfaf6';
+const MUTED = '#909090';
+const OXBLOOD = '#5A1F2E';
+const PILL_BG = '#e5e1d3';
+
+// Figma 421:4944 / 421:5046: Newsreader Regular 22, the address in grey italic.
 const metaStyle: React.CSSProperties = {
-  fontFamily: 'var(--font-meta)',
+  fontFamily: 'var(--font-serif)',
   fontWeight: 400,
   fontSize: 22,
   lineHeight: '26px',
 };
 
-const pillBase: React.CSSProperties = {
+// Description: Geist Light 22/38 (Figma 421:4945).
+const bodyStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-meta)',
+  fontWeight: 300,
+  fontSize: 22,
+  lineHeight: '38px',
+};
+
+// Pills, tags and the source link are Host Grotesk Regular in Figma; we set
+// them in Geist 400, the site's meta face.
+const linkStyle: React.CSSProperties = {
   fontFamily: 'var(--font-meta)',
   fontWeight: 400,
   fontSize: 22,
+  lineHeight: '30px',
+};
+
+const pillStyle: React.CSSProperties = {
+  ...linkStyle,
+  backgroundColor: PILL_BG,
   lineHeight: '18px',
   height: 44,
   padding: '0 16px',
 };
 
-export default function EventDetail({ event }: { event: ArtEvent }) {
-  const scheme = getCardScheme(event);
-  const pillStyle: React.CSSProperties = { ...pillBase, backgroundColor: scheme.chip };
-  const eventUrl = absoluteUrl(`/events/${eventSlug(event)}`);
-  const typeLabel = typeMeta(event.type).label;
+const tagStyle: React.CSSProperties = {
+  backgroundColor: 'rgba(251, 250, 246, 0.7)',
+  fontFamily: 'var(--font-meta)',
+  fontWeight: 400,
+  fontSize: 14,
+  lineHeight: '22px',
+  padding: '8px 16px',
+};
 
-  // A finished event's hero is shown in grayscale (it's kept for reference but
+export default function EventDetail({ event }: { event: ArtEvent }) {
+  // A finished event's image is shown in grayscale (it's kept for reference but
   // no longer promoted).
   const now = new Date();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const isPast = (event.endDate ?? event.date) < todayStr;
 
-  const titleEl = (
-    <h1
-      style={{
-        fontFamily: 'var(--font-serif)',
-        fontWeight: 300,
-        fontSize: 42,
-        lineHeight: '46px',
-        letterSpacing: '-0.02em',
-      }}
-    >
-      {event.title}
-    </h1>
-  );
-
-  const actionsEl = <EventActions eventUrl={eventUrl} sourceUrl={event.sourceUrl} scheme={scheme} />;
-
+  // "Nov 21, 2026 · 15:00 (Offline)"; multi-day events show the date range.
   const attendance = event.city || event.venue ? 'Offline' : 'Online';
+  const dates =
+    event.endDate && event.endDate !== event.date
+      ? `${formatDateShort(event.date)} – ${formatDateShort(event.endDate)}`
+      : formatDateShort(event.date);
 
-  const metaLines = (
-    <div className="flex flex-col" style={{ gap: 18 }}>
-      <p style={metaStyle}>
-        {event.city ? (
-          <Link href={`/cities/${citySlug(event.city)}`} className="hover:underline underline-offset-2">
-            {event.city}
-          </Link>
-        ) : null}
-        {event.country ? `${event.city ? ', ' : ''}${event.country}` : !event.city ? 'Virtual' : ''}
-      </p>
-      <p style={metaStyle}>
-        {formatDateShort(event.date)}
-        {event.startTime && ` · ${event.startTime}`}
-      </p>
-      <p style={metaStyle}>
-        {attendance}
-        {event.price ? ` · Price ${event.price}` : ''}
-      </p>
-    </div>
-  );
+  // "Rua de São Paulo 150, Lisboa"; without a street address, "Venue, City".
+  const where = event.address || [event.venue, event.city].filter(Boolean).join(', ');
 
   // Organiser / venue pills. A linked place (/places/<slug>) wins over the
   // external website; when organiser and venue are the same place (or name),
   // show a single pill.
   const entityPill = (key: string, name: string, place?: { slug: string }, url?: string) =>
     place ? (
-      <Link
-        key={key}
-        href={`/places/${place.slug}`}
-        style={pillStyle}
-        className="inline-flex items-center hover:opacity-80 transition-opacity"
-      >
+      <Link key={key} href={`/places/${place.slug}`} style={pillStyle} className="inline-flex items-center hover:opacity-80 transition-opacity">
         {name}
       </Link>
     ) : url ? (
-      <a
-        key={key}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={pillStyle}
-        className="inline-flex items-center hover:opacity-80 transition-opacity"
-      >
+      <a key={key} href={url} target="_blank" rel="noopener noreferrer" style={pillStyle} className="inline-flex items-center hover:opacity-80 transition-opacity">
         {name}
       </a>
     ) : (
@@ -129,117 +102,75 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
       ? event.organiserPlace.slug === event.venuePlace.slug
       : organiserName.trim().toLowerCase() === event.venue.trim().toLowerCase());
 
-  const entityPills =
-    organiserName || event.venue ? (
-      <div className="flex flex-wrap items-start" style={{ gap: 16 }}>
-        {organiserName &&
-          entityPill('organiser', organiserName, event.organiserPlace, event.organiserUrl)}
-        {event.venue &&
-          !sameEntity &&
-          entityPill('venue', event.venue, event.venuePlace, event.venueUrl)}
-      </div>
-    ) : null;
-
-  const description = event.description ? (
-    <p
-      className="whitespace-pre-line"
-      style={{
-        fontFamily: 'var(--font-serif)',
-        fontWeight: 300,
-        fontSize: 22,
-        lineHeight: '34px',
-      }}
-    >
-      {event.description}
-    </p>
-  ) : null;
-
-  const tagsEl =
-    event.tags && event.tags.length > 0 ? (
-      <div className="flex flex-wrap" style={{ gap: 8 }}>
-        {event.tags.map((t) => (
-          <span
-            key={t}
-            style={{
-              backgroundColor: scheme.chip,
-              fontFamily: 'var(--font-meta)',
-              fontWeight: 400,
-              fontSize: 14,
-              lineHeight: '22px',
-              padding: '8px 16px',
-            }}
-          >
-            #{t}
-          </span>
-        ))}
-      </div>
-    ) : null;
-
-  // `withTypePill` overlays the event type in the bottom-left of the image
-  // (mobile only, per Figma node 207:2856).
-  const renderImage = (withTypePill = false) => (
-    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '568 / 438' }}>
-      <EventImage
-        candidates={event.imageCandidates ?? []}
-        alt={event.title}
-        className="w-full h-full object-cover"
-        style={isPast ? { filter: 'grayscale(1)' } : undefined}
-      />
-      {withTypePill && (
-        <span
-          className="absolute left-[14px] bottom-[14px]"
-          style={{
-            backgroundColor: scheme.bg,
-            color: scheme.fg,
-            fontFamily: 'var(--font-meta)',
-            fontWeight: 400,
-            fontSize: 18,
-            lineHeight: '22px',
-            padding: '8px 16px',
-          }}
-        >
-          {typeLabel} event
-        </span>
-      )}
-    </div>
-  );
-
   return (
     <div
-      className="-mx-6 w-[calc(100%+3rem)] lg:w-full px-6 py-8 lg:mx-0 lg:px-[42px] lg:py-[62px]"
-      style={{ backgroundColor: scheme.bg, color: scheme.fg }}
+      className="flex flex-col gap-6 p-4 sm:p-6 lg:flex-row lg:items-stretch lg:gap-8"
+      style={{ backgroundColor: PANEL_BG, color: OXBLOOD }}
     >
-      {/* Desktop: title + actions on top, then meta/pills/description | image + tags.
-          Figma: left column flexes, image column is a fixed 568px (so the left
-          column is the wider of the two, never dwarfed by the image). */}
-      <div className="hidden lg:flex lg:flex-col" style={{ gap: 32 }}>
-        <div className="flex items-start justify-between gap-4 w-full">
-          {titleEl}
-          {actionsEl}
-        </div>
-        <div className="flex items-start" style={{ gap: 32 }}>
-          <div className="flex-1 min-w-0 flex flex-col" style={{ gap: 32 }}>
-            {metaLines}
-            {entityPills}
-            {description}
-          </div>
-          <div className="shrink-0 flex flex-col w-[568px]" style={{ gap: 16 }}>
-            {renderImage()}
-            {tagsEl}
-          </div>
-        </div>
+      {/* On mobile the image leads; on desktop it's the fixed right column. */}
+      <div className="aspect-[568/630] w-full overflow-hidden lg:order-2 lg:aspect-auto lg:h-[630px] lg:w-[568px] lg:shrink-0">
+        <EventImage
+          candidates={event.imageCandidates ?? []}
+          alt={event.title}
+          className="w-full h-full object-cover"
+          style={isPast ? { filter: 'grayscale(1)' } : undefined}
+        />
       </div>
 
-      {/* Mobile: actions (right-aligned) → image (with type pill) → title →
-          meta → pills → description → tags. */}
-      <div className="flex flex-col lg:hidden" style={{ gap: 28 }}>
-        <div className="flex justify-end">{actionsEl}</div>
-        {renderImage(true)}
-        {titleEl}
-        {metaLines}
-        {entityPills}
-        {description}
-        {tagsEl}
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-8 lg:order-1 lg:px-6 lg:py-[42px]">
+        <div className="flex flex-col gap-8">
+          {/* Figma 421:4941: Newsreader Regular 52/42, -1.04px. */}
+          <h1
+            className="text-[40px] leading-[40px] lg:text-[52px] lg:leading-[42px]"
+            style={{ fontFamily: 'var(--font-serif)', fontWeight: 400, letterSpacing: '-0.02em' }}
+          >
+            {event.title}
+          </h1>
+
+          <p style={metaStyle}>
+            {dates}
+            {event.startTime && ` · ${event.startTime}`} ({attendance})
+            {event.price ? ` · ${event.price}` : ''}
+          </p>
+
+          {where && <p style={{ ...metaStyle, fontStyle: 'italic', color: MUTED }}>{where}</p>}
+
+          {event.description && (
+            <p className="whitespace-pre-line" style={bodyStyle}>
+              {event.description}
+            </p>
+          )}
+
+          {(organiserName || event.venue) && (
+            <div className="flex flex-wrap items-start" style={{ gap: 16 }}>
+              {organiserName && entityPill('organiser', organiserName, event.organiserPlace, event.organiserUrl)}
+              {event.venue && !sameEntity && entityPill('venue', event.venue, event.venuePlace, event.venueUrl)}
+            </div>
+          )}
+
+          {event.tags && event.tags.length > 0 && (
+            <div className="flex flex-wrap" style={{ gap: 8 }}>
+              {event.tags.map((t) => (
+                <span key={t} style={tagStyle}>
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Figma 421:4946: the source page's full URL, pinned to the bottom. */}
+        {event.sourceUrl && (
+          <a
+            href={event.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="break-all hover:underline underline-offset-2"
+            style={linkStyle}
+          >
+            {event.sourceUrl}
+          </a>
+        )}
       </div>
     </div>
   );
