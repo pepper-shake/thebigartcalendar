@@ -286,6 +286,26 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     tags: ['market', 'christmas', 'design'],
     source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas)',
   },
+  // --- Kinusaiga workshop by @lncsfsc, Prisma × Amazonas, poster + post
+  // (2026-11-20). Two sessions; same day Prisma opens its doors (short film
+  // screening + pop-up exhibition of Prisma artists, no times given).
+  ...['11:30', '18:00'].map(
+    (startTime): ManualEvent => ({
+      venue: 'amazonas',
+      title: 'Kinusaiga Workshop: Tree Ornaments',
+      type: 'workshop',
+      startDate: '2026-12-12',
+      startTime,
+      price: '€10',
+      description:
+        'Make your own tree ornaments using kinusaiga, a Japanese textile technique working with fabric and pressure, to create a unique handmade decoration piece and a special gift. A Prisma × Amazonas × @lncsfsc collaboration. The same day, Prisma opens its doors with a short film about the creative community behind the space and a pop-up exhibition of Prisma artists.',
+      imageUrl:
+        'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/lncsfsc-kinusaiga-tree-ornaments-TUajlRjbndRPMzGVgxUiP3BeLaelA8.jpg',
+      organiser: { name: 'lncsfsc', url: 'https://www.instagram.com/lncsfsc/' },
+      tags: ['textiles', 'christmas', 'crafts'],
+      source: 'poster + Instagram post (operator, 2026-11-20)',
+    }),
+  ),
   // --- Svet Space, October 2026 programme poster + operator notes (2026-10-25).
   // Skipped from the poster: ceramic coworking (studio time, not an event) and
   // the Portuguese speaking club (not art).
