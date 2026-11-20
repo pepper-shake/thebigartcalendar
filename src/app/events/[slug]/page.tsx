@@ -57,9 +57,10 @@ export default async function EventPage({ params }: Params) {
 
   // Figma "Event page" (421:4920), laid out like the place page: breadcrumb
   // 42px under the header, the cream event panel 16px below it, then the
-  // "More events in …" band (cream, oxblood heading, the calendar's sand cards).
+  // "More events in …" band (cream, oxblood heading, the calendar's sand cards),
+  // then the newsletter band above the footer.
   return (
-    <PageShell size="bleed">
+    <PageShell size="bleed" newsletter="event">
       <div className={`${PAGE_INNER} pt-8 lg:pt-[48px] pb-4`}>
         <Breadcrumbs
           items={[
