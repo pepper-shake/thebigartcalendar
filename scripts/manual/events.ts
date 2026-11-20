@@ -77,6 +77,16 @@ export const MANUAL_VENUES = {
       'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/soizic-watercolor-xmas-ornament-photo-qAGSsieidBWDNowXZt79lbQJTW2WMS.jpg',
     bookingNote: 'Details on Instagram @meialuamercearia.',
   },
+  prisma: {
+    venue: 'Prisma',
+    city: 'Lisbon',
+    country: 'Portugal',
+    address: 'Rua da Palma 268, 1100-089 Lisboa',
+    url: 'https://prismalx.com/en',
+    imageUrl:
+      'https://kryeawwitakaqldwxzpn.supabase.co/storage/v1/object/public/media/event/5ebd75ae-63d4-4f74-8a4d-d0ef90e5f373.webp',
+    bookingNote: 'Book on prismalx.com.',
+  },
 } as const;
 
 export const MANUAL_EVENTS: ManualEvent[] = [
@@ -311,6 +321,22 @@ export const MANUAL_EVENTS: ManualEvent[] = [
       source: 'poster + Instagram post (operator, 2026-11-20)',
     }),
   ),
+  // --- Prisma programme page (2026-11-20). Booked through a form on the page.
+  {
+    venue: 'prisma',
+    title: 'Cyanotype Workshop',
+    type: 'workshop',
+    startDate: '2026-11-28',
+    startTime: '14:00',
+    endTime: '17:00',
+    price: '€20',
+    description:
+      'Cyanotype printing with sunlight with Macila at Prisma, part of Late Night Creative Sessions for Stray Cats (@lncsfsc). All materials provided; to print your own picture, email it to lncsfsc@gmail.com by the Thursday before. 10 spots.',
+    ticketsUrl: 'https://prismalx.com/en/programme/cyanotype-workshop',
+    organiser: { name: 'lncsfsc', url: 'https://www.instagram.com/lncsfsc/' },
+    tags: ['cyanotype', 'photography', 'printmaking'],
+    source: 'https://prismalx.com/en/programme/cyanotype-workshop',
+  },
   // --- Svet Space, October 2026 programme poster + operator notes (2026-10-25).
   // Skipped from the poster: ceramic coworking (studio time, not an event) and
   // the Portuguese speaking club (not art).
