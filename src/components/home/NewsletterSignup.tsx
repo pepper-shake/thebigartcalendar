@@ -23,7 +23,7 @@ export default function NewsletterSignup({ source = 'home' }: { source?: Newslet
   return (
     <section
       aria-labelledby="newsletter"
-      className={s.newsletter}
+      className={`${s.home} ${s.newsletter}`}
       style={{ backgroundColor: BLUSH.bg, color: BLUSH.fg, ['--fg' as string]: BLUSH.fg, ['--bg' as string]: BLUSH.bg }}
     >
       <div className={s.wrap}>
