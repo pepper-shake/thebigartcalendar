@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import PageShell from '@/components/seo/PageShell';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import EventDetail from '@/components/seo/EventDetail';
-import EventCard from '@/components/events/EventCard';
+import { Band, EventRow, PAGE_INNER } from '@/components/layout/Band';
 import JsonLd from '@/components/seo/JsonLd';
 import { getEventBySlug, getCurrentEvents } from '@/lib/events';
 import { eventJsonLd } from '@/lib/jsonld';
@@ -47,48 +47,36 @@ export default async function EventPage({ params }: Params) {
 
   const meta = typeMeta(event.type);
 
-  // Other upcoming events in the same city, for the "More events in …" strip.
+  // Other upcoming events in the same city, for the "More events in …" band
+  // (Figma 421:4930 shows one row of three).
   const related = event.city
     ? (await getCurrentEvents())
         .filter((e) => e.id !== event.id && e.city === event.city)
-        .slice(0, 4)
+        .slice(0, 3)
     : [];
 
+  // Figma "Event page" (421:4920), laid out like the place page: breadcrumb
+  // 42px under the header, the cream event panel 16px below it, then the
+  // "More events in …" band (cream, oxblood heading, the calendar's sand cards).
   return (
-    <PageShell size="full">
-      <Breadcrumbs
-        items={[
-          { name: 'Calendar', href: '/calendar' },
-          { name: meta.plural, href: `/${meta.slug}` },
-          { name: event.title, href: `/events/${slug}` },
-        ]}
-      />
-      <EventDetail event={event} />
+    <PageShell size="bleed">
+      <div className={`${PAGE_INNER} pt-8 lg:pt-[48px] pb-4`}>
+        <Breadcrumbs
+          items={[
+            { name: 'Calendar', href: '/calendar' },
+            { name: meta.plural, href: `/${meta.slug}` },
+            { name: event.title, href: `/events/${slug}` },
+          ]}
+          colors={{ trail: '#909090', current: '#5A1F2E' }}
+          className="mb-6 lg:mb-[22px]"
+        />
+        <EventDetail event={event} />
+      </div>
 
       {related.length > 0 && (
-        <section className="mt-12">
-          <h2
-            className="text-ink"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontWeight: 300,
-              fontSize: 28,
-              lineHeight: '32px',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            More events in {event.city}
-          </h2>
-          {/* Mobile: horizontal scroll strip (cards peek the next one).
-              Desktop: 3-up grid, matching the Figma "More events" row (287:4614). */}
-          <div className="mt-8 flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-visible lg:pb-0">
-            {related.map((e) => (
-              <div key={e.id} className="w-[300px] shrink-0 lg:w-auto">
-                <EventCard event={e} />
-              </div>
-            ))}
-          </div>
-        </section>
+        <Band title={`More events in ${event.city}`} bg="var(--page)" fg="#5A1F2E">
+          <EventRow events={related} />
+        </Band>
       )}
 
       <JsonLd data={eventJsonLd(event)} />
