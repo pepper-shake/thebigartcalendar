@@ -1,15 +1,20 @@
 import SiteFooter from '@/components/layout/SiteFooter';
+import NewsletterSignup from '@/components/home/NewsletterSignup';
+import { type NewsletterSource } from '@/lib/newsletter';
 
 // Server-rendered page wrapper matching the site's about/blog pages, with the
-// shared footer (internal links) below the content.
+// shared footer (internal links) below the content. `newsletter` adds the
+// newsletter band straight above the footer (that sign-up source).
 export default function PageShell({
   children,
   wide = false,
   size,
+  newsletter,
 }: {
   children: React.ReactNode;
   wide?: boolean;
   size?: 'default' | 'wide' | 'full' | 'bleed';
+  newsletter?: NewsletterSource;
 }) {
   const resolved = size ?? (wide ? 'wide' : 'default');
   const maxWidth =
@@ -22,7 +27,9 @@ export default function PageShell({
       <main className={mainClass}>
         {children}
       </main>
-      <SiteFooter />
+      {newsletter && <NewsletterSignup source={newsletter} />}
+      {/* Bleed pages end in a full-width band, which runs straight into the footer. */}
+      <SiteFooter flush={!!newsletter || resolved === 'bleed'} />
     </div>
   );
 }
