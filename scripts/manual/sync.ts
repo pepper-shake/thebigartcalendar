@@ -38,7 +38,9 @@ const rows: NewEvent[] = MANUAL_EVENTS.map((e) => {
     ticketsUrl: e.ticketsUrl ?? v.url,
     price: e.price ?? null,
     tags: [e.type, ...(e.tags ?? []), v.city.toLowerCase()],
-    sourceUrl: v.url,
+    // The event page's "original source" button: the event's own page when we
+    // have one (a source URL, else its booking link), else the venue.
+    sourceUrl: (e.source?.startsWith('http') ? e.source : undefined) ?? e.ticketsUrl ?? v.url,
     // The place matcher falls back to source_name for the organiser, so a
     // visiting organiser must not inherit the venue's name here.
     sourceName: e.organiser?.name ?? v.venue,
