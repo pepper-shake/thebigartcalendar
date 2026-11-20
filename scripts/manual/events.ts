@@ -282,9 +282,9 @@ export const MANUAL_EVENTS: ManualEvent[] = [
     description:
       'Christmas edition of the Amazonas market: all of 8 Marvila becomes a Christmas village with lights, decorations, music and festive food, plus gifts from independent brands and makers, workshops for kids and adults, and a visit from Santa Claus.',
     imageUrl:
-      'https://ugc.production.linktr.ee/4b19e2c8-bd25-4fd1-aa00-8071ee06acb0_JS1-8135.jpeg',
+      'https://pn4cabqkop1baqwd.public.blob.vercel-storage.com/events/amazonas-christmas-market-poster-3b72UgtIEwki8SK4mySu2Xv0q0ggkq.jpg',
     tags: ['market', 'christmas', 'design'],
-    source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas)',
+    source: 'Amazonas pre-registration form (linktr.ee/amz.amazonas); image: poster (operator, 2026-11-20)',
   },
   // --- Kinusaiga workshop by @lncsfsc, Prisma × Amazonas, poster + post
   // (2026-11-20). Two sessions; same day Prisma opens its doors (short film
