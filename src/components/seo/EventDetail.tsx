@@ -159,16 +159,17 @@ export default function EventDetail({ event }: { event: ArtEvent }) {
           )}
         </div>
 
-        {/* Figma 421:4946: the source page's full URL, pinned to the bottom. */}
+        {/* Figma 421:4946: the source page link, pinned to the bottom. Long
+            URLs read badly, so it's labelled "Link →" (operator's call). */}
         {event.sourceUrl && (
           <a
             href={event.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-all hover:underline underline-offset-2"
+            className="self-start hover:underline underline-offset-2"
             style={linkStyle}
           >
-            {event.sourceUrl}
+            Link →
           </a>
         )}
       </div>
