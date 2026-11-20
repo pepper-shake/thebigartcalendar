@@ -24,8 +24,9 @@ const IMAGES = {
 type Kind = keyof typeof IMAGES;
 
 // Short descriptions in our own words, keyed by a pattern on the PT title.
-// Optional 4th field: English title, for rows whose subtitle isn't English.
-const WORKSHOPS: [RegExp, Kind, string, string?][] = [
+// Optional 4th field: English title, for rows whose subtitle isn't English;
+// optional 5th: an image of that workshop, overriding the kind's image.
+const WORKSHOPS: [RegExp, Kind, string, string?, string?][] = [
   [/punch needle/, 'visual', 'Punch-needle embroidery: decorate your own tote bag with a punch needle and yarn. Materials included.', 'Punch Needle Tote Bag'],
   [/fundamentos/, 'ceramics', 'Four-session course in the fundamentals of hand-building with clay.'],
   [/explora[cç][aã]o criativa/, 'ceramics', 'Four-session course for people with some clay experience, exploring creative approaches and more advanced techniques.'],
@@ -40,7 +41,7 @@ const WORKSHOPS: [RegExp, Kind, string, string?][] = [
   [/pinhole/, 'printing', 'Pinhole photography: make pictures with a simple lens-less camera.'],
   [/acr[ií]lico/, 'visual', 'Open acrylic painting session.'],
   [/[aá]gua e cor/, 'visual', 'Watercolour painting, wet on wet.'],
-  [/zine/, 'visual', 'Make your own zine, from idea to folded copy.'],
+  [/zine/, 'visual', 'Make your own zine, from idea to folded copy.', undefined, '/venues/dobarro-zine.jpg'],
   [/banda desenhada|lata/, 'visual', 'Comics creation workshop.'],
   [/desenhar/, 'visual', 'Drawing sessions for adults who want to start (or restart) drawing.'],
 ];
@@ -211,7 +212,7 @@ export async function run(): Promise<void> {
         organiserName: 'DoBarro',
         organiserUrl: `${BASE}/`,
         description: `${base}${sessionNote} ${studio}`,
-        imageUrl: IMAGES[kind],
+        imageUrl: known?.[4] ?? IMAGES[kind],
         ticketsUrl: AGENDA,
         price: w.isPackage && w.price ? `${w.price} (4 sessions)` : w.price,
         tags: ['workshop', 'porto', kind === 'ceramics' ? 'ceramics' : kind === 'printing' ? 'printmaking' : 'drawing-painting'],
