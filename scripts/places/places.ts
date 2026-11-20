@@ -359,8 +359,7 @@ export const PLACES: NewPlace[] = [
     category: 'studio',
     description:
       'Ceramics and visual-arts studio and shop in Porto, founded by artists and designers Marisa Grilo, Felipe Rocio and Samuel Sanção. Runs weekly workshops and courses in hand-building, nerikomi and tile painting, plus drawing, painting, printmaking (tetrapak, LEGO, cyanotype) and pinhole photography; also rents studio space and offers kiln firings.',
-    imageUrl:
-      'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1200,fit=crop/YBgeXyjjz9H06Bbb/whatsapp-image-2024-10-22-at-15.52.14-2-AMql0n3LE1Hon0Qv.jpeg',
+    imageUrl: '/venues/dobarro.jpg',
     address: 'Rua da Alegria 246, Porto',
     city: 'Porto',
     country: 'Portugal',
