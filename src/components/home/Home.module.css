@@ -266,7 +266,10 @@
   justify-content: center;
   min-width: min(390px, 100%);
   margin-top: clamp(28px, 5vh, 48px);
-  padding: 0.5em 1.4em;
+  /* Newsreader's line box sits its capitals ~0.11em above centre, so the
+     padding is shifted down by that much (same total height) to centre the
+     cap height of "Subscribe" in the button. */
+  padding: 0.61em 1.4em 0.39em;
   line-height: 1;
   background: var(--fg);
   color: var(--bg);
