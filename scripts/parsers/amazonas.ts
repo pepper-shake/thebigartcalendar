@@ -12,6 +12,7 @@ const INSTAGRAM = 'https://www.instagram.com/amazonas.events/';
 // date and time only in the link title:
 //   "Arraiolos Embroidery · 07.11 | 14:00–17:00"
 //   "Phytography · Botanical Photography Workshop | 08.11 | 12:30 & 14:30"
+//   "12 DEC · 11:30–13:30 | CHRISTMAS TREE ORNAMENTS | PRISMA"
 //   "AMAZONAS CHRISTMAS MARKET | 12 & 13 DECEMBER | 8 MARVILA"
 //   "Amazonas Xmas Market | 12+13 December | @8marvila, Lisboa · Billets Shotgun"
 // Deterministic, no LLM. Titles carry no year, so see resolveDate().
@@ -23,8 +24,13 @@ const SKIP = /registration|\bcall\b|\|\s*workshops?\s*$|^website|discogs/i;
 const SCRAPED_ELSEWHERE = /eventbrite\.[^ ]*collage-working-club|collage working club|drawing session #\d+|masterclass #\d+/i;
 
 const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+// "dec" or "december", any case.
+const MONTH_NAME = MONTHS.map((m) => `${m.slice(0, 3)}(?:${m.slice(3)})?`).join('|');
+// Name first, numeric date after: "Name · DD.MM | times".
 const WORKSHOP_TITLE = /^(.+?)[\s·|]+(\d{1,2})\.(\d{1,2})\s*(?:\|\s*(.+))?$/;
-const MARKET_DATE = new RegExp(`^((?:\\d{1,2}\\s*(?:&|\\+|,|-|–)\\s*)*\\d{1,2})\\s+(${MONTHS.join('|')})$`, 'i');
+// Date first, month by name: "DD MON · times | NAME | host". The host is dropped.
+const DATED_WORKSHOP_TITLE = new RegExp(`^(\\d{1,2})\\s+(${MONTH_NAME})\\.?\\s*[·|]\\s*([^|]*?)\\s*\\|\\s*([^|]+)`, 'i');
+const MARKET_DATE = new RegExp(`^((?:\\d{1,2}\\s*(?:&|\\+|,|-|–)\\s*)*\\d{1,2})\\s+(${MONTH_NAME})$`, 'i');
 
 interface Link extends LinktreeLink {
   id?: string;
@@ -40,6 +46,9 @@ interface Parsed {
 }
 
 const pad = (n: number | string) => String(n).padStart(2, '0');
+const monthNumber = (name: string) => MONTHS.findIndex((m) => m.startsWith(name.toLowerCase().slice(0, 3))) + 1;
+// All-caps in the Linktree: "AMAZONAS CHRISTMAS MARKET" → "Amazonas Christmas Market".
+const titleCase = (s: string) => s.toLowerCase().replace(/(^|\s)(\p{L})/gu, (_, sp, c) => sp + c.toUpperCase());
 
 // The occurrence of a day and month closest to today. An edition stays linked
 // for a while after it ends, and must not come back as next year's event.
@@ -65,13 +74,12 @@ function parseMarket(title: string, today: string): Parsed | null {
   const at = parts.findIndex((p) => MARKET_DATE.test(p));
   if (at < 1) return null;
   const [, days, monthName] = parts[at].match(MARKET_DATE)!;
-  const month = MONTHS.indexOf(monthName.toLowerCase()) + 1;
+  const month = monthNumber(monthName);
   const numbers = days.match(/\d+/g)!.map(Number);
   const startDate = resolveDate(month, numbers[0], today);
   const last = resolveDate(month, numbers.at(-1)!, today);
   return {
-    // All-caps in the Linktree: "AMAZONAS CHRISTMAS MARKET" → "Amazonas Christmas Market".
-    title: parts.slice(0, at).join(': ').toLowerCase().replace(/(^|\s)(\p{L})/gu, (_, s, c) => s + c.toUpperCase()),
+    title: titleCase(parts.slice(0, at).join(': ')),
     type: 'fair',
     startDate,
     endDate: last === startDate ? null : last,
@@ -81,6 +89,19 @@ function parseMarket(title: string, today: string): Parsed | null {
 
 function parseTitle(raw: string, today: string): Parsed | null {
   const title = raw.trim();
+  const dated = title.match(DATED_WORKSHOP_TITLE);
+  if (dated) {
+    const [, day, monthName, times, name] = dated;
+    // Title-case only when shouted: "(adultos)" alone doesn't count as lowercase.
+    const shouted = name.replace(/\([^)]*\)/g, '') === name.replace(/\([^)]*\)/g, '').toUpperCase();
+    return {
+      title: shouted ? titleCase(name.trim()) : name.trim(),
+      type: 'workshop',
+      startDate: resolveDate(monthNumber(monthName), Number(day), today),
+      endDate: null,
+      slots: parseSlots(times),
+    };
+  }
   const m = title.match(WORKSHOP_TITLE);
   if (!m) return parseMarket(title, today);
   const [, name, day, month, times] = m;
