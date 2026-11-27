@@ -4,9 +4,10 @@ import CalendarClient from '@/components/calendar/CalendarClient';
 import SiteFooter from '@/components/layout/SiteFooter';
 import { SITE_NAME, SITE_DESCRIPTION, absoluteUrl } from '@/lib/site';
 
-// Read the DB at request time (like the SEO routes) so the daily scrape and
-// curation edits appear without a redeploy, instead of freezing at build time.
-export const dynamic = 'force-dynamic';
+// Re-rendered at most hourly; the DB reads come from the shared data cache
+// (src/db/queries.ts), so the daily scrape and curation edits appear within the
+// hour without a redeploy.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: { absolute: `Art events calendar — ${SITE_NAME}` },

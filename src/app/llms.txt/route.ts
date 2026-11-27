@@ -8,7 +8,7 @@ import { absoluteUrl, REGION, SITE_DESCRIPTION, SITE_NAME } from '@/lib/site';
 // /llms.txt — a plain-Markdown map of the site for AI assistants and LLM
 // crawlers (https://llmstxt.org). Built from the same curation-safe, flag-aware
 // selectors as the pages, so it only lists what's actually visible.
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 const MAX_EVENTS = 100;
 
