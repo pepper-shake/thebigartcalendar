@@ -35,18 +35,40 @@ function endDateTime(e: ArtEvent): string | undefined {
   return undefined;
 }
 
+// Prices are scraped free text ("€45 (€55 with wine)", "45 euros (17,000 Ft)",
+// "€120 (4 sessions)"), so only a number tagged with a currency counts — a bare
+// digit (session count, group size) never becomes the price. The first EUR
+// amount wins (the base price); otherwise the first amount in another currency.
+const CURRENCY_AMOUNT =
+  /(€|£|\$)\s*(\d[\d.,]*)|(\d[\d.,]*)\s*(euros?\b|eur\b|ft\b|huf\b)/gi;
+
+function parseAmount(raw: string): string {
+  // "17,000" / "13.000" are thousands separators; "22.57" / "55,50" are decimals.
+  const s = raw.replace(/[.,]$/, '');
+  const m = s.match(/^(\d+(?:[.,]\d{3})*)(?:[.,](\d{1,2}))?$/);
+  if (!m) return s.replace(/[^0-9]/g, '');
+  const whole = m[1].replace(/[.,]/g, '');
+  return m[2] ? `${whole}.${m[2]}` : whole;
+}
+
+function currencyOf(symbol: string): string {
+  const s = symbol.toLowerCase();
+  if (s === '£') return 'GBP';
+  if (s === '$') return 'USD';
+  if (s === 'ft' || s === 'huf') return 'HUF';
+  return 'EUR';
+}
+
 function priceToOffer(price?: string): Record<string, unknown> {
   if (!price) return {};
   const trimmed = price.trim();
+  const amounts = [...trimmed.matchAll(CURRENCY_AMOUNT)].map((m) => ({
+    price: parseAmount(m[2] ?? m[3]),
+    priceCurrency: currencyOf(m[1] ?? m[4]),
+  }));
+  if (amounts.length) return amounts.find((a) => a.priceCurrency === 'EUR') ?? amounts[0];
   if (/free/i.test(trimmed)) return { price: '0', priceCurrency: 'EUR' };
-  const num = trimmed.replace(/[^0-9.]/g, '');
-  if (!num) return {};
-  const currency = trimmed.includes('£')
-    ? 'GBP'
-    : trimmed.includes('$')
-      ? 'USD'
-      : 'EUR';
-  return { price: num, priceCurrency: currency };
+  return {};
 }
 
 export function eventJsonLd(event: ArtEvent): Record<string, unknown> {
