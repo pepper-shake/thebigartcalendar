@@ -9,7 +9,7 @@ import { getEventsByCitySlug } from '@/lib/events';
 import { itemListJsonLd } from '@/lib/jsonld';
 import { absoluteUrl, SITE_NAME } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type Params = { params: Promise<{ city: string }> };
 

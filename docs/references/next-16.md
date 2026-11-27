@@ -4,7 +4,7 @@
 
 Specifics confirmed and relied on here:
 - **Route handlers** (`src/app/**/route.ts`) use the Web `Request`/`Response` APIs. `POST` is never cached. Read JSON via `await request.json()`, headers via `request.headers`. Dynamic `context.params` is a **Promise** (`await params`). No `bodyParser` config needed. (Example: the upload route.)
-- **Caching:** route handlers aren't cached by default. The calendar page reads the DB at request time, so curation edits appear on the next render. If ISR/caching is added later, you must explicitly revalidate after edits.
+- **Caching:** this app uses the previous caching model (no `cacheComponents`; guide: `01-app/02-guides/caching-without-cache-components.md`). DB reads go through `unstable_cache` and pages use `export const revalidate`, so edits appear within an hour — see [ARCHITECTURE.md](../ARCHITECTURE.md) §Caching. `revalidateTag` now takes two args (`revalidateTag(tag, 'max')`); the one-arg form is deprecated.
 - **tsconfig `target` is below es2018** — runtime-level regex flags like `/s` (dotAll) fail typecheck. Use `[\s\S]` instead of `.` with `/s`. (`next build` runs `tsc`, so this fails the build, not just the editor.)
 - **`next/image` remote images** need `images.remotePatterns` in `next.config.ts`. Currently the app uses plain `<img>`, so no patterns are configured yet (see tech-debt).
 

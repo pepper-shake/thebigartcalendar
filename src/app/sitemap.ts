@@ -6,8 +6,8 @@ import { absoluteUrl } from '@/lib/site';
 import { listPlaces } from '@/lib/places';
 import { BLOG_POSTS, blogPostPath } from '@/lib/blogPosts';
 
-// Regenerated per request so new scraped events appear without a redeploy.
-export const dynamic = 'force-dynamic';
+// Regenerated at most hourly so new scraped events appear without a redeploy.
+export const revalidate = 3600;
 
 // Next writes `url` and `images` into the XML verbatim, so a scraped image URL
 // with `&` in its query string makes the whole sitemap invalid for Google.

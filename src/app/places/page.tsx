@@ -8,7 +8,7 @@ import { listPlaces, categoryLabel } from '@/lib/places';
 import { citySlug } from '@/lib/slug';
 import { absoluteUrl, REGION, SITE_NAME } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type Props = { searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
 

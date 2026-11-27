@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { and, asc, eq, inArray, sql, type Column } from 'drizzle-orm';
 import { db } from './index';
 import { events, organiserDefaults, places, type Event, type Place } from './schema';
@@ -45,10 +46,20 @@ function capPerSourceMonth<T extends Event>(rows: T[]): T[] {
   return rows.filter((r) => !(r.sourceName in MONTHLY_CAP_BY_SOURCE) || keep.has(r.id));
 }
 
+// Shared data cache for the two reads every page makes. The DB only changes
+// once a day (scraper) plus the odd curation edit, so serving these from
+// Next's data cache lets the Neon compute sleep between refreshes instead of
+// waking on every visit and crawl (Free plan: 100 CU-hours a month). Curation
+// edits show up within DB_CACHE_SECONDS. See docs/ARCHITECTURE.md §Caching.
+const DB_CACHE_SECONDS = 3600;
+
+// The cache stores JSON, so timestamp columns come back as strings.
+const toDate = <T extends Date | null>(v: T | string): T => (typeof v === 'string' ? (new Date(v) as T) : v);
+
 /** An event row plus its organiser's default image (null if none set). */
 export type EventWithDefault = Event & { organiserDefaultImage: string | null };
 
-export async function getAllEvents(): Promise<EventWithDefault[]> {
+async function queryAllEvents(): Promise<EventWithDefault[]> {
   const rows = await db
     .select({ event: events, organiserDefaultImage: organiserDefaults.imageUrl })
     .from(events)
@@ -61,11 +72,39 @@ export async function getAllEvents(): Promise<EventWithDefault[]> {
   );
 }
 
-/** Published places, name ascending. */
-export async function getAllPlaces(): Promise<Place[]> {
+async function queryAllPlaces(): Promise<Place[]> {
   return db
     .select()
     .from(places)
     .where(and(eq(places.status, 'published'), visibleCountry(places.country)))
     .orderBy(asc(places.name));
+}
+
+const cachedEvents = unstable_cache(queryAllEvents, ['all-events'], {
+  revalidate: DB_CACHE_SECONDS,
+  tags: ['events'],
+});
+
+const cachedPlaces = unstable_cache(queryAllPlaces, ['all-places'], {
+  revalidate: DB_CACHE_SECONDS,
+  tags: ['places'],
+});
+
+/** Published events (curation status applied, capped per source/month), start
+ *  date ascending. Served from the data cache. */
+export async function getAllEvents(): Promise<EventWithDefault[]> {
+  return (await cachedEvents()).map((e) => ({
+    ...e,
+    scrapedAt: toDate(e.scrapedAt),
+    curatedAt: toDate(e.curatedAt),
+  }));
+}
+
+/** Published places, name ascending. Served from the data cache. */
+export async function getAllPlaces(): Promise<Place[]> {
+  return (await cachedPlaces()).map((p) => ({
+    ...p,
+    createdAt: toDate(p.createdAt),
+    updatedAt: toDate(p.updatedAt),
+  }));
 }

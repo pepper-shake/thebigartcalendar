@@ -3,7 +3,7 @@ import TypeLandingPage from '@/components/seo/TypeLandingPage';
 import { requireTypeBySlug } from '@/lib/eventTypes';
 import { absoluteUrl, REGION, SITE_NAME } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 const meta = requireTypeBySlug('workshops');
 

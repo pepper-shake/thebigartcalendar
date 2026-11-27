@@ -11,7 +11,7 @@ import { typeMeta } from '@/lib/eventTypes';
 import { absoluteUrl, REGION, SITE_NAME } from '@/lib/site';
 import { formatDateRange } from '@/lib/format';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type Params = { params: Promise<{ slug: string }> };
 

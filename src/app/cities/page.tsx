@@ -6,7 +6,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import { listCities } from '@/lib/events';
 import { absoluteUrl, REGION, REGION_ADJECTIVE, SITE_NAME } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Art events by city',

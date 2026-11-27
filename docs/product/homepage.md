@@ -19,7 +19,7 @@ Figma "Calendar" → **"Home page"** (`387:2803`, at the top) and **"Home page s
 Picks are set by hand each month in [`src/lib/editorPicks.ts`](../../src/lib/editorPicks.ts): `EDITOR_PICKS['2026-11'] = ['event-slug', …]` — slugs are the part after `/events/`, in display order; the homepage shows four (`EDITOR_PICKS_COUNT`). Picks that are hidden, deleted or finished drop out. A pick can be `{ slug, image }` to use a different image on the homepage card only (the event page is unchanged); put uploaded files in `public/editor-picks/<YYYY-MM>/`. Missing places are topped up with the soonest upcoming events that have an image; when **no** pick is live the label reads "Coming up in <Month>" instead of "Editor choice".
 
 ## Caching
-The page uses `export const revalidate = 600` (ISR) rather than `force-dynamic`, so it hits Neon at most every 10 minutes instead of per visit. Picks changes ship with a deploy, which rebuilds it.
+The page uses `export const revalidate = 600` (ISR); its event reads come from the shared hourly data cache (ARCHITECTURE.md §Caching), so re-rendering it doesn't wake Neon. Picks changes ship with a deploy, which rebuilds it.
 
 ## Newsletter (collect-only)
 Sign-ups go to the `newsletter_subscribers` table ([schema snapshot](../generated/db-schema.md)); **no e-mails are sent yet**. The server action lower-cases the address, ignores repeats (`ON CONFLICT DO NOTHING`), stores the consent wording from [`src/lib/newsletter.ts`](../../src/lib/newsletter.ts), and treats a filled honeypot field (`company`) as a silent success. To read the list, query the table in Retool or `npm run db:studio`.
